@@ -29,7 +29,7 @@ jobs:
       - name: Deploy on App Engine
         run: |
           cd app
-          gcloud app deploy ${{ secrets.GCLOUD_APP_NAME }} --project ${{ secrets.GCLOUD_PROJECT }}
+          gcloud app deploy
   build-back:
     name: Build back
     runs-on: ubuntu-latest
