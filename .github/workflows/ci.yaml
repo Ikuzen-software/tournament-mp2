@@ -28,6 +28,7 @@ jobs:
 
       - name: Deploy on App Engine
         run: |
+          cd app
           gcloud app deploy ${{ secrets.GCLOUD_APP_NAME }} --project ${{ secrets.GCLOUD_PROJECT }}
   build-back:
     name: Build back
