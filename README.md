@@ -47,3 +47,15 @@
     * it will open a server on localhost:4200
 
 * Once everything is running, open your navigator in localhost:4200
+
+## Deployment
+
+### Frontend
+
+```sh
+cd app
+npm run build
+gcloud app deploy
+```
+
+You will need to authenticate to gcloud. Check https://cloud.google.com/sdk/docs/authorizing

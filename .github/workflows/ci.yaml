@@ -1,10 +1,13 @@
 name: CI
 # This workflow is triggered on pushes to the repository.
-on: [push]
+on: 
+  push:
+    branches-ignore:
+      - master
 
 jobs:
   build-app:
-    name: Build App
+    name: Build App and Deploy
     runs-on: ubuntu-latest
 
     steps:
