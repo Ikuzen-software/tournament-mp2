@@ -1,0 +1,9 @@
+runtime: nodejs12
+service: backend
+
+env_variables:
+  TOURNAMENT_MONGO_USERNAME: ${TOURNAMENT_MONGO_USERNAME}
+  TOURNAMENT_MONGO_PASSWORD: ${TOURNAMENT_MONGO_PASSWORD}
+  TOURNAMENT_MONGO_DATABASE: Tournament-Masterpiece
+  TOURNAMENT_MONGO_PROTOCOL: mongodb
+  TOURNAMENT_MONGO_HOST: tournament-7h9qq.mongodb.net
