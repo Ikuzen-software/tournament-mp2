@@ -2,6 +2,8 @@ import * as express from 'express';
 import * as debug from 'debug';
 import * as config from './config';
 
+console.log("Starting Application \s")
+
 const userRoutePublic = require('./public/user-service/user-route')
 const userRoutePrivate = require('./private/user-service/user-route')
 const tournamentRoutePublic = require('./public/tournament-service/tournament-route')
@@ -40,7 +42,7 @@ app.use('/tournament', tournamentRoutePublic)
 app.use('/tournament', tournamentRoutePrivate)
 
 db.once('open', function () {
-    console.log("connected")
+    console.log("connected to the db")
 });
 
 app.get('/', (req, res) => {
