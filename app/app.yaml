@@ -1,6 +1,5 @@
-runtime: python27
-api_version: 1
-threadsafe: true
+runtime: nodejs12
+
 handlers:
 - url: /(.*\.(js|css|png|gif|svg|map|ttf|woff|woff2))$
   static_files: dist/Tournament-masterpiece/\1
@@ -14,13 +13,3 @@ handlers:
   static_files: dist/Tournament-masterpiece/index.html
   upload: dist/Tournament-masterpiece/index.html
 
-skip_files:
-  - e2e/
-  - node_modules/
-  - src/
-  - coverage
-  - ^(.*/)?\..*$
-  - ^(.*/)?.*\.json$
-  - ^(.*/)?.*\.md$
-  - ^(.*/)?.*\.yaml$
-  - ^LICENSE

@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-app:
-    name: Build App and Deploy
+    name: Build App
     runs-on: ubuntu-latest
 
     steps:
