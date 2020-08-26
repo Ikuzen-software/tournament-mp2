@@ -12,28 +12,32 @@ const cors = require('cors')
 const mongoose = require('mongoose');
 const fs = require('fs')
 
-mongoose.connect(config.uri, {useNewUrlParser:true});
+mongoose.connect(config.uri, { useNewUrlParser: true }).then(() => {
+    console.log("Connected to Database");
+}).catch((err) => {
+    console.log("Not Connected to Database ERROR! ", err);
+});
 
 const db = mongoose.connection
 const log = debug('tn:express');
 const app = express();
 const PORT = 3000;
 const BodyParser = require("body-parser");
-export let privateKey:string;
-fs.readFile('./keys/private.pem',(err,data)=>{
+export let privateKey: string;
+fs.readFile('./keys/private.pem', (err, data) => {
     privateKey = data;
 })
 
 
 app.use(cors())
 app.use(BodyParser.json());
-app.use(cors()); 
+app.use(cors());
 app.use('/token', tokenRoute)
 app.use('/login', loginRoute)
-app.use('/user',userRoutePublic)
-app.use('/user',userRoutePrivate)
-app.use('/tournament',tournamentRoutePublic)
-app.use('/tournament',tournamentRoutePrivate)
+app.use('/user', userRoutePublic)
+app.use('/user', userRoutePrivate)
+app.use('/tournament', tournamentRoutePublic)
+app.use('/tournament', tournamentRoutePrivate)
 
 db.once('open', function () {
     console.log("connected")
