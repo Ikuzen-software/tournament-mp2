@@ -11,7 +11,7 @@ export const UserSchema = new mongoose.Schema({
     role:{type: String, default: 'user'},
     register_date: {type: Date, default: Date.now}
 },
-{collection:"user"});
+{collection:"user", selectPopulatedPaths: false });
 
 UserSchema.index({username: 1}, {unique: true}); //unique name restriction
 UserSchema.pre("save", function(next) {

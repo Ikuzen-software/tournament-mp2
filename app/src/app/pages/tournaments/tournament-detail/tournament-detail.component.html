@@ -24,10 +24,10 @@
             Description : {{tournament.description}}
         </div>
         <div class="tournament-list">
-            <button *ngIf="isLoggedIn" pButton> Participate</button>
+            <button *ngIf="!isParticipating" pButton (click)="particpate()"> Participate</button>
             <p> list of participants:</p>
         <li>
-            <ul *ngFor="let user of tournament?.participants">{{user}}</ul>
+            <ul *ngFor="let user of tournament?.participants">{{user.username}}</ul>
         </li>
     </div>
 
@@ -37,5 +37,5 @@
 </div>
 
 <div *ngIf="!tournament">
-    <!-- <app-tournament-not-found></app-tournament-not-found> -->
+    <app-tournament-not-found></app-tournament-not-found>
 </div>
