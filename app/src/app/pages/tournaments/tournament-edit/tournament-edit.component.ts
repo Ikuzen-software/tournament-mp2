@@ -10,6 +10,7 @@ import * as fromAuth from '@reducers/login-page.reducer';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ValidationErrorsService } from '@tn/src/app/shared/validation/services/validation-errors.service';
 import { ToastService } from '@tn/src/app/shared/services/toast.service';
+import { User } from '../../users/user';
 
 @Component({
   selector: 'app-tournament-edit',
@@ -35,7 +36,7 @@ export class TournamentEditComponent implements OnInit {
     size: ['', [
       Validators.required
     ]],
-    startDate: ['', []]
+    startDate: ['', []],
   });
   
   get name() { return this.tournamentForm.value.name; }
@@ -73,7 +74,7 @@ export class TournamentEditComponent implements OnInit {
             size: [this.tournament?.size, [
               Validators.required
             ]],
-            startDate: [this.tournament?.startDate, []]
+            startDate: [this.utilService.formatDate(this.tournament?.startDate), []],
           });
         });
       });
@@ -87,15 +88,16 @@ export class TournamentEditComponent implements OnInit {
     if (this.tournamentForm.valid) {
       this.store.select(userSelector).subscribe((appState) => {
         const _organizer = appState.currentUser
-        const tournamentId = this.tournament._id
-        this.tournament = { name: this.name, description: this.description, game: this.game, format: this.format, size: this.size, startDate: this.startDate, organizer: _organizer };
-        this.tournamentService.update(tournamentId,this.tournament).subscribe((result) => {
+        const tournamentId = this.tournament._id;
+        console.log(this.tournament)
+        this.tournament = {...this.tournament, name: this.name, description: this.description, game: this.game, format: this.format, size: this.size, startDate: this.startDate, organizer: _organizer };
+        this.tournamentService.update(tournamentId, this.tournament).subscribe((result) => {
           this.toastService.success('Success', 'Edit successful');
           this.router.navigate([`/tournament/${result._id}`]);
         },
           (error) => {
             if (error.status) {
-              console.log(error);
+              this.toastService.showError('Error', 'Edit failed');
             }
           });
       });
@@ -103,4 +105,11 @@ export class TournamentEditComponent implements OnInit {
     }
   }
 
+  removeUser(user: User){
+    this.tournament.participants = this.tournament.participants.filter(participant => participant !== user);
+  }
+
+  goBack(){
+    this.utilService.navigate("/tournament/"+this.tournament._id)
+  }
 }

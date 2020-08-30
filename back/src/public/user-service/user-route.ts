@@ -20,10 +20,11 @@ userRouter.post("/",  async (request, response) => {
 //GET all
 userRouter.get("/", async (request, response) => {
     try {
-        const result = await UserModel.find().exec();
-        response.send(result);
+        const users = await UserModel.find().select("-password");
+        response.send(users);
     } catch (error) {
-        response.status(404).send(`users not found`);
+        console.log(error)
+        response.status(404).send(error);
     }
 });
 
@@ -31,7 +32,7 @@ userRouter.get("/", async (request, response) => {
 
 userRouter.get("/:id", async (request, response) => {
     try {
-        const user = await UserModel.findById(request.params.id).exec();
+        const user = await UserModel.findById(request.params.id).select("-password");
         response.send(user);
     } catch (error) {
         response.status(404).send(`user ${request.params.id}not found`);
@@ -42,7 +43,7 @@ userRouter.get("/:id", async (request, response) => {
 //GET by username
 userRouter.get("/username/:username",  async (request, response) => {
     try {
-        const user = await UserModel.find({ username: new RegExp(`^${request.params.username}$`) }).exec();
+        const user = await UserModel.find({ username: new RegExp(`^${request.params.username}$`) }).select("-password");
         response.send(user);
     } catch (error) {
         response.status(500).send(error);

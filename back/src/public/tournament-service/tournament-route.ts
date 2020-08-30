@@ -63,6 +63,20 @@ tournamentRouter.get("/other/games", async (request, response) => {
     }
 });
 
+tournamentRouter.get("/other/size/:id", async (request, response) => {
+    try {
+        let tournament = await TournamentModel.findById(request.params.id).exec();
+        if(tournament.size >= tournament.participants.length){
+            response.send("not full");
+        }else{
+            response.send("full")
+        }
+    } catch (error) {
+        console.log(error)
+        response.status(404).send(`tournament not found`);
+    }
+});
+
 // tournamentRouter.get("/name/:name", async (request, response) => {
 //     try {
 //         const tournament = await TournamentModel.find({name: new RegExp(`^${request.params.name}`)}).exec();

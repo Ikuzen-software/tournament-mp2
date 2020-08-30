@@ -19,7 +19,7 @@ loginRouter.post("/", async (req, res) => {
                 err: 'Username or password is incorrect'
             })
         }
-        if(!Bcrypt.compareSync(req.body.password, user.password)){
+        if(!Bcrypt.compareSync(password, user.password)){
             return res.status(401).json({
                 success: false,
                 message: 'Invalid login credentials!'
@@ -36,6 +36,7 @@ loginRouter.post("/", async (req, res) => {
         });
         
     } catch (error) {
+        console.log(error)
         res.status(500).send(error);
     }
 });

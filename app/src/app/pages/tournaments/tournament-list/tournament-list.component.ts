@@ -4,7 +4,7 @@ import { Observable, pipe } from 'rxjs';
 import { TournamentService } from '../tournament.service';
 import { take, tap } from 'rxjs/operators';
 import { SelectItem } from 'primeng/api';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FilterUtils } from 'primeng/utils';
 
 @Component({
@@ -23,11 +23,11 @@ export class TournamentListComponent implements OnInit {
   sortField: string;
   sortOrder: number;
   filters: string = "";
-  params = {game:'',status:'', page:1, limit:10};
+  params = { game: '', status: '', page: 1, limit: 10 };
   get paginationToolbar() {
     return `displaying ${this.tournaments.page * this.tournaments.limit - this.tournaments?.limit + 1} - ${Math.min(this.tournaments?.page * this.tournaments?.limit, this.tournaments.totalDocs)} of ${this.tournaments.totalDocs}`
   }
-  constructor(private tournamentService: TournamentService, private router: Router) {}
+  constructor(private tournamentService: TournamentService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.getAllTournaments().pipe(
@@ -60,26 +60,25 @@ export class TournamentListComponent implements OnInit {
     return this.tournamentService.getAll(this.params);
   }
 
-  updateTournamentListByGame(param?: string): void{
+  updateTournamentListByGame(param?: string): void {
     this.params.game = param;
     this.updateTournamentList();
   }
 
-  updateTournamentListByStatus(param?: string): void{
+  updateTournamentListByStatus(param?: string): void {
     this.params.status = param;
     this.updateTournamentList();
   }
-  
-  onPageChange(event){
-    if(!(this.params.page === parseInt(event.page)+1)){
-      this.params.page = parseInt(event.page)+1
+
+  onPageChange(event) {
+    if (!(this.params.page === parseInt(event.page) + 1)) {
+      this.params.page = parseInt(event.page) + 1
       this.updateTournamentList();
     }
   }
 
-  updateTournamentList(){
-    this.getAllTournaments().subscribe((list)=>{
-      console.log(list)
+  updateTournamentList() {
+    this.getAllTournaments().subscribe((list) => {
       this.tournaments = list;
     })
   }

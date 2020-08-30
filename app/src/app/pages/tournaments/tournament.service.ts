@@ -4,6 +4,7 @@ import { Tournament, TournamentPages } from './tournament';
 import { Observable } from 'rxjs';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 import { LoginService } from '../login/login.service';
+import { User } from '../users/user';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +41,6 @@ export class TournamentService {
     if(queryParams.page){
       params = params.set('page', queryParams.page);
     }
-    console.log(params)
     return this.http.get<TournamentPages>('http://localhost:3000/tournament', {params});
   }
 
@@ -56,6 +56,14 @@ export class TournamentService {
     return this.http.put<Tournament>(`http://localhost:3000/tournament/${id}`, tournament, this.getOptions());
   }
 
+  joinTournament(id: string, user: User) {
+    return this.http.put<Tournament>(`http://localhost:3000/tournament/join/${id}`, user, this.getOptions());
+  }
+
+  leavetournament(id: string, user: User) {
+    return this.http.put<Tournament>(`http://localhost:3000/tournament/leave/${id}`, user, this.getOptions());
+  }
+
   deleteById(id: string) {
     return this.http.delete<Tournament>(`http://localhost:3000/tournament/${id}`, this.getOptions());
 
@@ -66,6 +74,9 @@ export class TournamentService {
 
   getAllGames(){
     return this.http.get<string[]>('http://localhost:3000/tournament/other/games');
+  }
 
+  getTournamentAvailability(id: string){
+    return this.http.get<string>(`http://localhost:3000/tournament/other/size/${id}`);
   }
 }
