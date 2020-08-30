@@ -10,6 +10,7 @@ import { userSelector } from '@reducers/login-page.reducer';
 import { error } from 'console';
 import { UtilService } from '@tn/src/app/shared/services/util.service';
 import { ToastService } from '@tn/src/app/shared/services/toast.service';
+import { User } from '../../users/user';
 
 @Component({
   selector: 'app-tournament-detail',
@@ -56,42 +57,43 @@ export class TournamentDetailComponent implements OnInit {
 
   }
 
-  particpate() {
+  joinTournament() {
     if (!this.isLoggedIn) {
       this.utilService.navigate("login")
-    }
-    else if (!this.isParticipating) {
+    } else {
       this.store.pipe(select(userSelector)).subscribe((appState) => {
-        this.tournament.participants.push(appState.currentUser);
-        console.log(this.tournament)
-        console.log(this.tournament._id)
-        this.tournamentService.update(this.tournament._id, this.tournament).pipe(
+        this.tournamentService.joinTournament(this.tournament._id, appState.currentUser as User).pipe(
           take(1)
-        ).subscribe((result) => {
-          this.isParticipating = true;
+          ).subscribe((result) => {
+            this.isParticipating = true;
+            this.tournament.participants.push(appState.currentUser);
           this.toastService.success("participation", "successfully joined the tournament")
         },
           (error) => {
             this.toastService.showError("error", "something wrong happened")
           })
       })
-    } else if (this.isParticipating) { // cancel participation
+    }
+  }
+
+  leaveTournament() {
+    if (!this.isLoggedIn) {
+      this.utilService.navigate("login")
+    } else {
       this.store.pipe(select(userSelector)).subscribe((appState) => {
         this.tournament.participants = this.tournament.participants.filter(user => user.username !== appState.currentUser.username);
-        this.tournamentService.update(this.tournament._id, this.tournament).pipe(
+        this.tournamentService.leavetournament(this.tournament._id, appState.currentUser as User).pipe(
           take(1)
         ).subscribe((result) => {
           this.isParticipating = false;
-          this.toastService.success("participation", "successfully removed the tournament")
+          this.toastService.success("participation", "successfully removed from the tournament")
         },
           (error) => {
             this.toastService.showError("error", "something wrong happened")
           });
       });
     }
-    else {
-      this.toastService.showError('error', "can't participate if user is already participating")
-    }
   }
-
 }
+
+

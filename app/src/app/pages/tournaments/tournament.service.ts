@@ -4,6 +4,7 @@ import { Tournament, TournamentPages } from './tournament';
 import { Observable } from 'rxjs';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 import { LoginService } from '../login/login.service';
+import { User } from '../users/user';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +41,6 @@ export class TournamentService {
     if(queryParams.page){
       params = params.set('page', queryParams.page);
     }
-    console.log(params)
     return this.http.get<TournamentPages>('http://localhost:3000/tournament', {params});
   }
 
@@ -54,6 +54,14 @@ export class TournamentService {
 
   update(id: string, tournament: Tournament) {
     return this.http.put<Tournament>(`http://localhost:3000/tournament/${id}`, tournament, this.getOptions());
+  }
+
+  joinTournament(id: string, user: User) {
+    return this.http.put<Tournament>(`http://localhost:3000/tournament/${id}`, user, this.getOptions());
+  }
+
+  leavetournament(id: string, user: User) {
+    return this.http.put<Tournament>(`http://localhost:3000/tournament/${id}`, user, this.getOptions());
   }
 
   deleteById(id: string) {
