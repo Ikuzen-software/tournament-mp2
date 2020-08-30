@@ -30,7 +30,7 @@
             <!-- game -->
             <div class="p-grid">
                 <div class="input-label p-col">
-                    <h2>game</h2>
+                    <h2>game<span style="color: red;">*</span></h2>
                 </div>
                 <div class="input-tournament-game p-col">
                     <span class=" ui-inputgroup-addon"></span>
@@ -41,7 +41,7 @@
             <!-- format -->
             <div class="p-grid">
                 <div class="input-label p-col">
-                    <h2>format</h2>
+                    <h2>format<span style="color: red;">*</span></h2>
                 </div>
                 <div class="input-tournament-format p-col">
                     <span class=" ui-inputgroup-addon"></span>
@@ -54,7 +54,7 @@
             <!-- size -->
             <div class="p-grid">
                 <div class="input-label p-col">
-                    <h2>tournament size</h2>
+                    <h2>tournament size<span style="color: red;">*</span></h2>
                 </div>
                 <div class="input-tournament-size p-col">
                     <span class=" ui-inputgroup-addon"></span>
@@ -84,11 +84,11 @@
                     <h2>Participant list </h2>
                 </div>
                 <div class="input-tournament-list p-col">
-                    <li formControlName="participants">
-                        <div *ngFor="let user of tournament.participants" style="display: flex; align-items: center;">
-                            <ol>{{user.username}}</ol><i class="pi pi-times" (click)="removeUser(user)" style="line-height: 1.25; cursor: pointer;"></i>
+                    <ul>
+                        <div *ngFor="let user of tournament?.participants" style="display: flex; align-items: center;">
+                            <li>{{user.username}}</li><i class="pi pi-times" (click)="removeUser(user)" style="line-height: 1.25; cursor: pointer;"></i>
                         </div>
-                    </li>
+                    </ul>
                 </div>
             </div>
 

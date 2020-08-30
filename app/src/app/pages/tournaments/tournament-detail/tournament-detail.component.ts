@@ -34,7 +34,7 @@ export class TournamentDetailComponent implements OnInit {
             if (appState.currentUser.username === this.tournament.organizer.username || appState.currentUser.role === 'admin') { // if owner or admin, has edit rights
               this.isTournamentOwner = true;
             }
-            if (this.tournament.participants.includes(appState.currentUser)) {
+            if (this.tournament.participants.map(participant => participant.username).includes(appState.currentUser.username)) {
               this.isParticipating = true;
             } else {
               this.isParticipating = false;
@@ -65,6 +65,7 @@ export class TournamentDetailComponent implements OnInit {
         this.tournamentService.joinTournament(this.tournament._id, appState.currentUser as User).pipe(
           take(1)
           ).subscribe((result) => {
+            console.log(result)
             this.isParticipating = true;
             this.tournament.participants.push(appState.currentUser);
           this.toastService.success("participation", "successfully joined the tournament")

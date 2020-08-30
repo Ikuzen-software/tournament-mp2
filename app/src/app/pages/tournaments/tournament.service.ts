@@ -57,11 +57,11 @@ export class TournamentService {
   }
 
   joinTournament(id: string, user: User) {
-    return this.http.put<Tournament>(`http://localhost:3000/tournament/${id}`, user, this.getOptions());
+    return this.http.put<Tournament>(`http://localhost:3000/tournament/join/${id}`, user, this.getOptions());
   }
 
   leavetournament(id: string, user: User) {
-    return this.http.put<Tournament>(`http://localhost:3000/tournament/${id}`, user, this.getOptions());
+    return this.http.put<Tournament>(`http://localhost:3000/tournament/leave/${id}`, user, this.getOptions());
   }
 
   deleteById(id: string) {

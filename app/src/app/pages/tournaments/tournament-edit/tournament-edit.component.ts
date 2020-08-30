@@ -37,7 +37,6 @@ export class TournamentEditComponent implements OnInit {
       Validators.required
     ]],
     startDate: ['', []],
-    participants: ['',[]]
   });
   
   get name() { return this.tournamentForm.value.name; }
@@ -46,7 +45,6 @@ export class TournamentEditComponent implements OnInit {
   get format() { return this.tournamentForm.value.format; }
   get size() { return this.tournamentForm.value.size; }
   get startDate() { return this.tournamentForm.value.startDate; }
-  get participants() { return this.tournamentForm.value.participants; }
   
   constructor(private route: ActivatedRoute, private tournamentService: TournamentService, private fb: FormBuilder, private validation: ValidationErrorsService, private router: Router, private readonly store: Store<fromAuth.ApplicationState>, public utilService: UtilService, public toastService: ToastService) {
     route.params.subscribe((value) => {
@@ -77,7 +75,6 @@ export class TournamentEditComponent implements OnInit {
               Validators.required
             ]],
             startDate: [this.tournament?.startDate, []],
-            participants: [this.tournament?.participants, []]
           });
         });
       });

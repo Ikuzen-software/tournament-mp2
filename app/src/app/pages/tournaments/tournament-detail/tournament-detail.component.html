@@ -27,9 +27,9 @@
             <button *ngIf="!isParticipating" pButton (click)="joinTournament()"> Participate</button>
             <button *ngIf="isParticipating" pButton (click)="leaveTournament()"> Cancel participation</button>
             <p> list of participants:</p>
-        <li>
-            <ul *ngFor="let user of tournament?.participants">{{user.username}}</ul>
-        </li>
+        <ul>
+            <li *ngFor="let user of tournament?.participants">{{user.username}}</li>
+        </ul>
     </div>
 
 
