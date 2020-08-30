@@ -23,7 +23,6 @@ export class ToastService {
     this.messageService.add({ severity: 'warn', summary: 'Warn Message', detail: 'There are unsaved changes' });
   }
 
-
   showCustom() {
     this.messageService.add({ key: 'custom', severity: 'info', summary: 'Custom Toast', detail: 'With a Gradient' });
   }

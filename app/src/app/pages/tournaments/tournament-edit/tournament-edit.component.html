@@ -1,6 +1,6 @@
 <div id="tournament-form">
     <form [formGroup]="tournamentForm" (ngSubmit)="updateTournament()">
-        <h1 class="first">{{tournament?.name}}</h1>
+        <h1 class="first">Tournament parameters</h1>
         <div class="tournament-form-group">
             <!-- tournament name -->
             <div class="p-grid">
@@ -86,13 +86,17 @@
                 <div class="input-tournament-list p-col">
                     <ul>
                         <div *ngFor="let user of tournament?.participants" style="display: flex; align-items: center;">
-                            <li>{{user.username}}</li><i class="pi pi-times" (click)="removeUser(user)" style="line-height: 1.25; cursor: pointer;"></i>
+                            <li>{{user.username}}</li><button pButton pRipple (click)="removeUser(user)"type="button" style="margin: 5px;"icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text"></button>
+
                         </div>
                     </ul>
                 </div>
             </div>
 
         </div>
-        <button pButton type="submit" [disabled]="!tournamentForm.valid" label="update tournament"></button>
+        <div class="button-group">
+            <button pButton type="submit" [disabled]="!tournamentForm.valid" label="update tournament"></button>
+            <button pButton type="button" (click)="goBack()" label="back"></button>
+        </div>
     </form>
 </div>

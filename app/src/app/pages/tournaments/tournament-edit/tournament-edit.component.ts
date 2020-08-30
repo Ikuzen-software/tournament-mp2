@@ -74,7 +74,7 @@ export class TournamentEditComponent implements OnInit {
             size: [this.tournament?.size, [
               Validators.required
             ]],
-            startDate: [this.tournament?.startDate, []],
+            startDate: [this.utilService.formatDate(this.tournament?.startDate), []],
           });
         });
       });
@@ -109,4 +109,7 @@ export class TournamentEditComponent implements OnInit {
     this.tournament.participants = this.tournament.participants.filter(participant => participant !== user);
   }
 
+  goBack(){
+    this.utilService.navigate("/tournament/"+this.tournament._id)
+  }
 }

@@ -6,6 +6,7 @@
             </h1>
             <div class="p-grid p-justify-center">
                 <ul class="p-col-11 tournament-infos">
+                    <li>Game : <a (click)="utilService.navigate('tournaments')">{{tournament.game}}</a></li>
                     <li>Entrants : {{tournament.participants.length}}/{{tournament.size}}</li>
                     <li>Type : single elimination</li>
                     <li>Tournament start : {{tournament.startDate || 'NA'}}</li>
@@ -24,7 +25,7 @@
             Description : {{tournament.description}}
         </div>
         <div class="tournament-list">
-            <button *ngIf="!isParticipating" pButton (click)="joinTournament()"> Participate</button>
+            <button *ngIf="!isParticipating && checkAvailability()" pButton (click)="joinTournament()"> Participate</button>
             <button *ngIf="isParticipating" pButton (click)="leaveTournament()"> Cancel participation</button>
             <p> list of participants:</p>
         <ul>

@@ -25,5 +25,5 @@ export const TournamentSchema = new mongoose.Schema({
     
     {collection:"tournaments"});
     
-    TournamentSchema.plugin(mongoosePaginate);
     TournamentSchema.index({name: 1}, {unique: true}); //unique name restriction
+    TournamentSchema.plugin(mongoosePaginate);

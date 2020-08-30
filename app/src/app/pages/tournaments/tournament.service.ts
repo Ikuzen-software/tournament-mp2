@@ -74,6 +74,9 @@ export class TournamentService {
 
   getAllGames(){
     return this.http.get<string[]>('http://localhost:3000/tournament/other/games');
+  }
 
+  getTournamentAvailability(id: string){
+    return this.http.get<string>(`http://localhost:3000/tournament/other/size/${id}`);
   }
 }

@@ -11,7 +11,7 @@ userRouter.use(jwtMW)
 
 userRouter.put("/:id",  async (request, response) => {
     try {
-        const user = await UserModel.findById(request.params.id).exec();
+        const user = await UserModel.findById(request.params._id).exec();
         user.set(request.body);
         const result = await user.save();
         response.send(result);
