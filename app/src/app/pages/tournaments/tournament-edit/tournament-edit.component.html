@@ -77,6 +77,21 @@
                     <input pInput type="date" name="startDate" formControlName="startDate">
                 </div>
             </div>
+
+            <!-- participant list -->
+            <div class="p-grid">
+                <div class="input-label p-col">
+                    <h2>Participant list </h2>
+                </div>
+                <div class="input-tournament-list p-col">
+                    <li formControlName="participants">
+                        <div *ngFor="let user of tournament.participants" style="display: flex; align-items: center;">
+                            <ol>{{user.username}}</ol><i class="pi pi-times" (click)="removeUser(user)" style="line-height: 1.25; cursor: pointer;"></i>
+                        </div>
+                    </li>
+                </div>
+            </div>
+
         </div>
         <button pButton type="submit" [disabled]="!tournamentForm.valid" label="update tournament"></button>
     </form>

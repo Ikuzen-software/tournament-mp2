@@ -10,6 +10,7 @@ import * as fromAuth from '@reducers/login-page.reducer';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ValidationErrorsService } from '@tn/src/app/shared/validation/services/validation-errors.service';
 import { ToastService } from '@tn/src/app/shared/services/toast.service';
+import { User } from '../../users/user';
 
 @Component({
   selector: 'app-tournament-edit',
@@ -35,7 +36,8 @@ export class TournamentEditComponent implements OnInit {
     size: ['', [
       Validators.required
     ]],
-    startDate: ['', []]
+    startDate: ['', []],
+    participants: ['',[]]
   });
   
   get name() { return this.tournamentForm.value.name; }
@@ -44,6 +46,7 @@ export class TournamentEditComponent implements OnInit {
   get format() { return this.tournamentForm.value.format; }
   get size() { return this.tournamentForm.value.size; }
   get startDate() { return this.tournamentForm.value.startDate; }
+  get participants() { return this.tournamentForm.value.participants; }
   
   constructor(private route: ActivatedRoute, private tournamentService: TournamentService, private fb: FormBuilder, private validation: ValidationErrorsService, private router: Router, private readonly store: Store<fromAuth.ApplicationState>, public utilService: UtilService, public toastService: ToastService) {
     route.params.subscribe((value) => {
@@ -73,7 +76,8 @@ export class TournamentEditComponent implements OnInit {
             size: [this.tournament?.size, [
               Validators.required
             ]],
-            startDate: [this.tournament?.startDate, []]
+            startDate: [this.tournament?.startDate, []],
+            participants: [this.tournament?.participants, []]
           });
         });
       });
@@ -102,6 +106,10 @@ export class TournamentEditComponent implements OnInit {
       });
 
     }
+  }
+
+  removeUser(user: User){
+    this.tournament.participants = this.tournament.participants.filter(participant => participant !== user);
   }
 
 }
