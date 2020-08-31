@@ -2,7 +2,8 @@
     <ng-template let-user pTemplate="item">
         <p-card [style]="{width: '360px'}" styleClass="ui-card-shadow">
             <p-header>
-                <span style="display: flex; flex-direction: row;"><i class="pi pi-user" style="display: flex; justify-content: center; align-items: center; padding-right: 10px;"></i><h1>Player : {{user.username}}</h1></span>
+                <span style="display: flex; flex-direction: row;"><i class="pi pi-user" style="display: flex; justify-content: center; align-items: center; padding-right: 10px;"></i><h1>Player : <a
+                    (click)="utilService.navigate('user/'+user._id)">{{user.username}}</a></h1></span>
                
             </p-header>
             <div class="infos">

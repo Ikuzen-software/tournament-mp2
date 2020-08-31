@@ -10,7 +10,7 @@ import { UtilService } from 'src/app/shared/services/util.service';
 })
 export class UserListComponent implements OnInit {
 
-  constructor(private userService: UserService, private utilService: UtilService) { }
+  constructor(private userService: UserService, public utilService: UtilService) { }
   userList: User[]
   ngOnInit(): void {
     this.userService.getAll().subscribe((users)=>{

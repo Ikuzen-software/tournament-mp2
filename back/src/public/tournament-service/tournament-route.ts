@@ -32,7 +32,6 @@ tournamentRouter.get("/", async (request, response) => {
         if(_.isEmpty(tournamentQuery)){ // set to undefined for mongoose paginate
             tournamentQuery = undefined;
         }
-        console.log(tournamentQuery)
         const tournaments = await TournamentModel.paginate(tournamentQuery, paginationQuery , 1, function (error, pageCount, paginatedResults) {
             if (error) {
                 response.status(404).send(error);
