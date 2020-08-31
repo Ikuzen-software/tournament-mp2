@@ -84,32 +84,6 @@ tournamentRouter.get("/other/size/:id", async (request, response) => {
         response.status(404).send(`tournament not found`);
     }
 });
-// GET tournaments where user is participant
-tournamentRouter.get("/", async (request, response) => {
-    try {
-        let tournament = await TournamentModel.findById(request.params.id).exec();
-        if(tournament.size >= tournament.participants.length){
-            response.send("not full");
-        }else{
-            response.send("full")
-        }
-    } catch (error) {
-        response.status(404).send(`tournament not found`);
-    }
-});
-// GET tournaments where user is organizer
-tournamentRouter.get("/other/size/:id", async (request, response) => {
-    try {
-        let tournament = await TournamentModel.findById(request.params.id).exec();
-        if(tournament.size >= tournament.participants.length){
-            response.send("not full");
-        }else{
-            response.send("full")
-        }
-    } catch (error) {
-        response.status(404).send(`tournament not found`);
-    }
-});
 
 // tournamentRouter.get("/name/:name", async (request, response) => {
 //     try {
