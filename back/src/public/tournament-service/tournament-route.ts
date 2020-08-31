@@ -1,4 +1,5 @@
 import { TournamentModel } from '../../models/tournaments/tournament-model'
+import * as _ from "lodash"
 const mongoosePaginate = require('mongoose-paginate-v2');
 
 const express = require('express');
@@ -12,19 +13,26 @@ tournamentRouter.get("/", async (request, response) => {
             limit: request.query.limit,
             page: request.query.page
         }
-        let tournamentQuery;
         if (!paginationQuery.limit) {
             paginationQuery.limit = 10;
         } 
         if(!paginationQuery.page) {
             paginationQuery.page = 1
         }
-        tournamentQuery = request.query;
-        delete tournamentQuery.page;
-        delete tournamentQuery.limit;
-        if(!tournamentQuery){
-            tournamentQuery = undefined
-        }        
+        let tournamentQuery = {}
+
+        /// GET tournaments where participant is the query
+        if(request.query.participant){
+            tournamentQuery["participants.username"] = request.query.participant
+        }
+        /// GET tournaments where organizer is the query
+        if(request.query.organizer){ // 
+            tournamentQuery["organizer.username"] =  request.query.organizer
+        }
+        if(_.isEmpty(tournamentQuery)){ // set to undefined for mongoose paginate
+            tournamentQuery = undefined;
+        }
+        console.log(tournamentQuery)
         const tournaments = await TournamentModel.paginate(tournamentQuery, paginationQuery , 1, function (error, pageCount, paginatedResults) {
             if (error) {
                 response.status(404).send(error);
@@ -73,6 +81,32 @@ tournamentRouter.get("/other/size/:id", async (request, response) => {
         }
     } catch (error) {
         console.log(error)
+        response.status(404).send(`tournament not found`);
+    }
+});
+// GET tournaments where user is participant
+tournamentRouter.get("/", async (request, response) => {
+    try {
+        let tournament = await TournamentModel.findById(request.params.id).exec();
+        if(tournament.size >= tournament.participants.length){
+            response.send("not full");
+        }else{
+            response.send("full")
+        }
+    } catch (error) {
+        response.status(404).send(`tournament not found`);
+    }
+});
+// GET tournaments where user is organizer
+tournamentRouter.get("/other/size/:id", async (request, response) => {
+    try {
+        let tournament = await TournamentModel.findById(request.params.id).exec();
+        if(tournament.size >= tournament.participants.length){
+            response.send("not full");
+        }else{
+            response.send("full")
+        }
+    } catch (error) {
         response.status(404).send(`tournament not found`);
     }
 });
