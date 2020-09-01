@@ -41,6 +41,12 @@ export class TournamentService {
     if(queryParams.page){
       params = params.set('page', queryParams.page);
     }
+    if(queryParams.organizer){
+      params = params.set('organizer', queryParams.organizer)
+    }
+    if(queryParams.participant){
+      params = params.set('participant', queryParams.participant)
+    }
     return this.http.get<TournamentPages>('http://localhost:3000/tournament', {params});
   }
 

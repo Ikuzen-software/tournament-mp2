@@ -29,6 +29,14 @@ tournamentRouter.get("/", async (request, response) => {
         if(request.query.organizer){ // 
             tournamentQuery["organizer.username"] =  request.query.organizer
         }
+        /// GET with status
+        if(request.query.status){ // 
+            tournamentQuery["status"] =  request.query.status
+        }
+        /// GET with game
+        if(request.query.game){ // 
+            tournamentQuery["game"] =  request.query.game
+        }
         if(_.isEmpty(tournamentQuery)){ // set to undefined for mongoose paginate
             tournamentQuery = undefined;
         }
