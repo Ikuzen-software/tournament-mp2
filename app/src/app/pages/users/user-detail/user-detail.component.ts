@@ -10,14 +10,16 @@ import { take } from 'rxjs/operators';
 import { userSelector } from '@tn/src/app/reducers/login-page.reducer';
 import * as fromAuth from '@reducers/login-page.reducer';
 import { UserService } from '../user.service';
+import { User } from '../user';
 @Component({
   selector: 'app-user-detail',
   templateUrl: './user-detail.component.html',
   styleUrls: ['./user-detail.component.scss']
 })
 export class UserDetailComponent implements OnInit {
-  tournaments: Tournament[];
-  tournamentPage: TournamentPages;
+  tournamentsAsParticipant: TournamentPages;
+  tournamentsAsOwner: TournamentPages;
+  user: User;
   isLoggedIn: boolean;
   isParticipating: boolean;
   isTournamentOwner: boolean = false;
@@ -28,15 +30,22 @@ export class UserDetailComponent implements OnInit {
         take(1)
       ).subscribe((user) => {
         console.log(user)
+        this.user = user;
         tournamentService.getAll({"participant": user.username}).pipe(
           take(1)
-        ).subscribe((tournamentPages)=>{
-          console.log(tournamentPages)
-          this.tournamentPage = tournamentPages;
+        ).subscribe((tournaments)=>{
+          console.log(tournaments)
+          this.tournamentsAsParticipant = tournaments;
         },
         (err)=>{
           console.log(err);
         });
+        tournamentService.getAll({"owner":user.username}).pipe(
+          take(1)
+        ).subscribe((tournaments)=>{
+          console.log(tournaments)
+          this.tournamentsAsOwner = tournaments;
+        })
         },
           (err) => {
             console.log(err);
