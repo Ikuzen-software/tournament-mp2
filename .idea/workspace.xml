@@ -2,7 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dece2676-fa22-4798-b10f-db21de6aaa5b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/project-resources/diagram/scratch_1.puml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/app/pages/login/login.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/app/pages/login/login.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/app/pages/tournaments/tournament.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/app/pages/tournaments/tournament.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/app/pages/users/user.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/app/pages/users/user.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/back/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/back/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,8 +29,13 @@
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="PUML" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../auth" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/project-resources/diagram" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Workspace\Tournament-masterpiece\project-resources\diagram" />
+    </key>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -43,14 +55,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824/1920.-212.1920.1040@0.0.1536.824" timestamp="1591090755207" />
-    <state x="277" y="55" key="SettingsEditor" timestamp="1588085304924">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="581" y="298" key="com.intellij.ide.util.TipDialog" timestamp="1599488105310">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="277" y="55" key="SettingsEditor/0.0.1536.824/1920.102.1920.1040@0.0.1536.824" timestamp="1588085304924" />
-    <state x="465" y="236" key="com.intellij.ide.util.TipDialog" timestamp="1591083936729">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="465" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824/1920.-212.1920.1040@0.0.1536.824" timestamp="1591083936729" />
-    <state x="465" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824/1920.102.1920.1040@0.0.1536.824" timestamp="1588085530518" />
+    <state x="465" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824/1920.-212.1920.1040@0.0.1536.824" timestamp="1599224326452" />
+    <state x="581" y="298" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1599488105310" />
   </component>
 </project>

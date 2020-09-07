@@ -8,6 +8,7 @@ import { tap, map, catchError } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import * as action from '../../actions/login-page.actions'
 import { ToastService } from 'src/app/shared/services/toast.service';
+import { env } from '@app/app.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class LoginService {
   }
 
   login(credentials: Credentials) {
-    return this.http.post<JWTResponse>('http://localhost:3000/login', credentials).pipe(
+    return this.http.post<JWTResponse>(`${env.SERVER_API_URL}/login`, credentials).pipe(
       tap((result) => {
         if (result.success) {
           this.clearToken();
@@ -84,7 +85,7 @@ export class LoginService {
   }
 
   getTokenVerification(): Observable<any> {
-    return this.http.get<{ header, body }>(`http://localhost:3000/token/verify`, {
+    return this.http.get<{ header, body }>(`${env.SERVER_API_URL}/token/verify`, {
       headers: {
         Authorization: `Bearer ${this.localStorageService.getToken()}`,
       }

@@ -4,6 +4,7 @@ import { User } from './user';
 import { Observable } from 'rxjs';
 import { LoginService } from '../login/login.service';
 import { LocalStorageService } from 'src/app/shared/services/local-storage.service';
+import {env} from "@app/app.constants";
 @Injectable({
   providedIn: 'root'
 })
@@ -19,30 +20,30 @@ export class UserService {
   }
 
   create(user: User) {
-    return this.http.post<User>('http://localhost:3000/user', user);
+    return this.http.post<User>(`${env.SERVER_API_URL}/user`, user);
   }
 
   getAll(): Observable<User[]> {
-    return this.http.get<User[]>('http://localhost:3000/user');
+    return this.http.get<User[]>(`${env.SERVER_API_URL}/user`);
 
   }
   getById(id: string) {
-    return this.http.get<User>(`http://localhost:3000/user/${id}`);
+    return this.http.get<User>(`${env.SERVER_API_URL}/user/${id}`);
   }
 
   getByName(username: string) {
-    return this.http.get<User>(`http://localhost:3000/user/username/${username}`);
+    return this.http.get<User>(`${env.SERVER_API_URL}/user/username/${username}`);
   }
 
   update(id: string, user: User) {
-    return this.http.put<User>(`http://localhost:3000/user/${id}`, user, this.httpOptions);
+    return this.http.put<User>(`${env.SERVER_API_URL}/user/${id}`, user, this.httpOptions);
 
   }
   deleteById(id: string) {
-    return this.http.delete<User>(`http://localhost:3000/user/${id}`, this.httpOptions);
+    return this.http.delete<User>(`${env.SERVER_API_URL}/user/${id}`, this.httpOptions);
 
   }
   deleteAll() {
-    return this.http.delete<User>('http://localhost:3000/user', this.httpOptions);
+    return this.http.delete<User>(`${env.SERVER_API_URL}/user`, this.httpOptions);
   }
 }

@@ -1,0 +1,50 @@
+@startuml
+interface User_List{
+  User[] users
+}
+
+User_Role <|-- User
+Status <|-- Tournament
+User_List <|-- Tournament
+User <|-- User_List
+
+
+enum User_Role{
+  ADMIN
+  USER
+  GUEST
+}
+
+enum Status{
+  STARTED
+  NOT STARTED
+  FINISHED
+}
+
+class User {
+  + String username
+  + String email
+  + Date birthdate
+  + Date register_date
+  + String role
+  -- encrypted --
+  + String password
+
+}
+
+class Tournament{
+  + String name
+  + Int size
+  + Date createdAt
+  + Date startDate
+  + String description
+  + String game
+  + String format
+  + Date startDate
+  + Status status
+  -- objects --
+  + User[] participants
+  + User organizer
+
+}
+@enduml

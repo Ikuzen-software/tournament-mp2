@@ -29,7 +29,7 @@
       "@pages/*": ["./src/app/pages/*"],
       "@services/*": ["./src/app/shared/services/*"],
       "@reducers/*":["./src/app/reducers/*"],
-      "@validators/*":["./src/app/shared/validation/*"]
+      "@validators/*":["./src/app/shared/validation/*"],
     }
   },
   "angularCompilerOptions": {
