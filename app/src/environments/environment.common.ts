@@ -5,3 +5,4 @@ export const commonEnv = {
     production: false,
     ENV : 'local',
     SERVER_API_URL: 'http://localhost:3000',
+};
