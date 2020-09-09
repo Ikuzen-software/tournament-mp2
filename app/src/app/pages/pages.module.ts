@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {CarouselModule} from 'primeng/carousel';
 import {CardModule} from 'primeng/card';
-
+import {TabViewModule} from 'primeng/tabview';
 import { UserDetailComponent } from './users/user-detail/user-detail.component';
 import { UserListComponent } from './users/user-list/user-list.component';
 import { TournamentListComponent } from './tournaments/tournament-list/tournament-list.component';
@@ -40,6 +40,7 @@ import { TournamentNotFoundComponent } from './tournaments/tournament-not-found/
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {FilterUtils} from 'primeng/utils';
 import { TournamentEditComponent } from './tournaments/tournament-edit/tournament-edit.component';
+import {ProgressBarModule} from 'primeng/progressbar';
 
 
 
@@ -68,6 +69,9 @@ import { TournamentEditComponent } from './tournaments/tournament-edit/tournamen
     DropdownModule,
     PanelModule,
     InputTextareaModule,
+    TabViewModule,
+    ProgressBarModule,
+    PanelModule
   ],
   providers:[LocalStorageService, UtilService, ToastService, ValidationErrorsService],
   exports:[UserDetailComponent, UserListComponent, TournamentListComponent, TournamentDetailComponent, MainComponent, TournamentsComponent, TournamentCreationComponent, TournamentEditComponent]

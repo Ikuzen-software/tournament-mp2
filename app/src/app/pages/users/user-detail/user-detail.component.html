@@ -1,7 +1,99 @@
 <h1>Competreetor : {{user?.username}}</h1>
-<h2>first place</h2>
-<h2>second place</h2>
-<h2>third place</h2>
-<h2>top 8</h2>
 
-<li></li>
+<p-tabView>
+    <!-- overview -->
+    <p-tabPanel header="Overview">
+        <h2>Statistics</h2>
+        <p-panel header="Overall" class="overall-infos">
+            <p-card header="tournaments organized">
+                {{tournaments?.totalDocs}}
+            </p-card>
+            <p-card header="total tournaments participated">
+                {{tournaments?.totalDocs}}
+            </p-card>
+            <p-card header="total matches played">
+                {{tournaments?.totalDocs}}
+            </p-card>
+            <p-card header="unfinished tournaments">
+                {{tournaments?.totalDocs}}
+            </p-card>
+        </p-panel>
+        <p-panel header="Placements">
+            <h2>first place</h2>
+            <h2>second place</h2>
+            <h2>third place</h2>
+            <h2>top 8</h2>
+        </p-panel>
+    </p-tabPanel>
+    <!-- tournaments -->
+    <p-tabPanel header="Tournaments">
+        <div class="card">
+            <p-table #dt [value]="tournaments?.docs" styleClass="p-datatable-tournaments" [rowHover]="true"
+                [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="false"
+                [paginator]="true" currentPageReportTemplate="Showing entries"
+                [filterDelay]="0" [virtualScroll]="true">
+                <ng-template pTemplate="caption">
+                    <div class="table-header">
+                        List of Tournaments
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Search" />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem"></th>
+                        <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+                        <th pSortableColumn="game.name">game <p-sortIcon field="game.name"></p-sortIcon></th>
+                        <th pSortableColumn="organizer.name">organizer <p-sortIcon field="organizer.name"></p-sortIcon></th>
+                        <th pSortableColumn="role">role <p-sortIcon field="role"></p-sortIcon></th>
+                        <th pSortableColumn="type">type <p-sortIcon field="type"></p-sortIcon></th>
+                        <th pSortableColumn="date">Created on <p-sortIcon field="date"></p-sortIcon></th>
+                        <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                        <th style="width: 8rem"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-tournament>
+                    <tr class="p-selectable-row">
+                        <td><img style="width: 40px; height: 50px; "src="../../../../favicon.ico" alt="tree-icon"></td>
+                        <td>
+                            <a class="p-column-title" style="cursor: pointer;" (click)="utilService.navigate('tournament/'+tournament._id)">{{tournament?.name}}</a>
+                        </td>
+                        <td>
+                            <a (click)="utilService.navigate('tournaments')">{{tournament.game}}</a>                        
+                        </td>
+                        <td>
+                            <span class="p-column-title">{{tournament?.organizer.username}}</span>
+                        </td>
+                        <td>
+                            <span class="p-column-title">{{isOrganizer(tournament)}}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="p-column-title">{{tournament?.format}}</span>
+                        </td>
+                        <td>
+                            <span class="p-column-title">{{tournament?.createdAt | date}}</span>
+                        </td>
+                        <td style="text-align: center">
+                            <span class="p-column-title">{{tournament?.status}}</span>
+                            <!-- <p-progressBar [value]="tournament?.activity" [showValue]="false"></p-progressBar> -->
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="8">You have no tournaments.</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <p-table>
+
+        </p-table>
+    </p-tabPanel>
+    <p-tabPanel header="Header 3">
+        Content 3
+    </p-tabPanel>
+</p-tabView>

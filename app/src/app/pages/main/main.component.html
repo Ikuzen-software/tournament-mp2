@@ -1,6 +1,6 @@
 
 <div *ngIf="(user$ | async)?.username">
-    <button pButton>Your tournaments</button>
+    <button pButton (click)="utilService.navigate('user/'+user$.value.id)">Your tournaments</button>
 </div>
 <h3>Welcome to NoiTO</h3>
 <app-bracket-tree></app-bracket-tree>

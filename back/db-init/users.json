@@ -1,0 +1,88 @@
+[
+    {
+        "_id":"5f43945aa70c26242c0cdf9a",
+        "role":"user",
+        "username":"maman",
+        "password":"password",
+        "email":"test@test.com",
+        "birthdate":"1223-12-11T23:50:39.000+00:00",
+        "tournaments":[{
+            "name": "BlackListed2",
+            "description":"Sequel to the world biggest tournament, blacklisted. The serie is back",
+            "game":"Project M",
+            "size": 16,
+            "format": "double-eliminiation",
+            "startDate":"2020-11-23T21:46:46.618Z",
+            "createdAt": "2020-05-23T21:46:46.618Z",
+            "organizer":{
+                "username":"maman",
+                "id":"5f43945aa70c26242c0cdf9a"
+            }
+        }],
+        "overview":{ "overview":{
+            "firstPlace": 1,
+            "secondPlace": 3,
+            "thirdPlace": 0,
+            "top8": 5,
+            "totalMatches": 76,
+            "totalParticipated": 14,
+            "totalOrganized": 0
+        }}
+    },
+    {
+        "_id":"5f4399cc9eea3a2eb0d576aa",
+        "role":"admin",
+        "username":"admin",
+        "password":"admin",
+        "email":"admin@admin.com",
+        "birthdate":"1223-12-11T23:50:39.000+00:00",
+        "tournaments":[],
+        "overview":{
+                "firstPlace": 1,
+                "secondPlace": 3,
+                "thirdPlace": 0,
+                "top8": 5,
+                "totalMatches": 76,
+                "totalParticipated": 14,
+                "totalOrganized": 0
+        }
+    },
+    {
+        "_id":"5f4399cc9eea3a2eb0d576ab",
+        "role":"user",
+        "username":"user2",
+        "password":"password",
+        "email":"test@test.com",
+        "birthdate":"1223-12-11T23:50:39.000+00:00",
+        "tournaments":[],
+        "overview":{
+            "firstPlace": 1,
+            "secondPlace": 3,
+            "thirdPlace": 0,
+            "top8": 5,
+            "totalMatches": 76,
+            "totalParticipated": 14,
+            "totalOrganized": 0
+        }
+    },
+    {
+        "_id":"5f4399cc9eea3a2eb0d576ac",
+        "role":"user",
+        "username":"ikuzen",
+        "password":"password",
+        "email":"ikuzen@noito.com",
+        "birthdate":"1223-12-11T23:50:39.000+00:00",
+        "tournaments":[],
+        "overview":{
+            "overview":{
+                "firstPlace": 1,
+                "secondPlace": 3,
+                "thirdPlace": 0,
+                "top8": 5,
+                "totalMatches": 76,
+                "totalParticipated": 14,
+                "totalOrganized": 0
+            }
+        }
+    }
+] 

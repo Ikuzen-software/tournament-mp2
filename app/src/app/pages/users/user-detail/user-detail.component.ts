@@ -17,8 +17,8 @@ import { User } from '../user';
   styleUrls: ['./user-detail.component.scss']
 })
 export class UserDetailComponent implements OnInit {
-  tournamentsAsParticipant: TournamentPages;
-  tournamentsAsOwner: TournamentPages;
+  tournaments: TournamentPages;
+
   user: User;
   isLoggedIn: boolean;
   isParticipating: boolean;
@@ -31,29 +31,25 @@ export class UserDetailComponent implements OnInit {
       ).subscribe((user) => {
         console.log(user)
         this.user = user;
-        tournamentService.getAll({"participant": user.username}).pipe(
+        tournamentService.getAll({"participant": user.username, "organizer":user.username, "limit":1000}).pipe(
           take(1)
         ).subscribe((tournaments)=>{
           console.log(tournaments)
-          this.tournamentsAsParticipant = tournaments;
+          this.tournaments = tournaments;
         },
         (err)=>{
           console.log(err);
         });
-        tournamentService.getAll({"owner":user.username}).pipe(
-          take(1)
-        ).subscribe((tournaments)=>{
-          console.log(tournaments)
-          this.tournamentsAsOwner = tournaments;
-        })
-        },
-          (err) => {
-            console.log(err);
-          });
-    });
+    })
+  })
   }
+  
+  
   ngOnInit(): void {
 
   }
 
+  isOrganizer(tournament:Tournament):string {
+    return tournament.organizer.username === this.user.username ? "organizer" : "participant";
+  }
 }

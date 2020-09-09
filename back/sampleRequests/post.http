@@ -1,7 +1,0 @@
-POST http://localhost:3000/tournaments 
-Content-Type: application/json
-
-{
-    "name": "BlackListed3",
-    "size": 256
-}

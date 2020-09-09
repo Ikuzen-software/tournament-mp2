@@ -16,16 +16,10 @@ function env(name: string): string {
 }
 
 export let uri: string;
-
-uri = process.env['TOURNAMENT_MONGO_URL']?.trim();
-
-if (!uri) {
     const username = env('TOURNAMENT_MONGO_USERNAME');
     const password = env('TOURNAMENT_MONGO_PASSWORD');
     const database = env('TOURNAMENT_MONGO_DATABASE');
     const protocol = env('TOURNAMENT_MONGO_PROTOCOL');
     const host = env('TOURNAMENT_MONGO_HOST');
-
-    uri = `${ protocol }://${ username }:${ password }@${ host }/${ database }`;
-}
+    uri = `${protocol }+srv://${ username }:${ password }@${ host }/${ database }`;
 export const allowedOrigins = [ 'http://localhost:3000', 'http://localhost:4200' ];

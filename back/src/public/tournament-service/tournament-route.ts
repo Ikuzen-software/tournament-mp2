@@ -19,28 +19,32 @@ tournamentRouter.get("/", async (request, response) => {
         if(!paginationQuery.page) {
             paginationQuery.page = 1
         }
-        let tournamentQuery = {}
-
+        let tournamentQueries = {}
         /// GET tournaments where participant is the query
         if(request.query.participant){
-            tournamentQuery["participants.username"] = request.query.participant
+            tournamentQueries["participants.username"] = request.query.participant
         }
         /// GET tournaments where organizer is the query
         if(request.query.organizer){ // 
-            tournamentQuery["organizer.username"] =  request.query.organizer
+            tournamentQueries["organizer.username"] =  request.query.organizer
+        }
+        //fusing both query for OR condition
+        if(request.query.organizer && request.query.participant){
+            tournamentQueries = {$or:[{"organizer.username":request.query.organizer}, {"participant.username":request.query.participant}]}
         }
         /// GET with status
         if(request.query.status){ // 
-            tournamentQuery["status"] =  request.query.status
+            tournamentQueries["status"] =  request.query.status
         }
         /// GET with game
         if(request.query.game){ // 
-            tournamentQuery["game"] =  request.query.game
+            tournamentQueries["game"] =  request.query.game
         }
-        if(_.isEmpty(tournamentQuery)){ // set to undefined for mongoose paginate
-            tournamentQuery = undefined;
+        if(_.isEmpty(tournamentQueries)){ // set to undefined for mongoose paginate
+            tournamentQueries = undefined;
         }
-        const tournaments = await TournamentModel.paginate(tournamentQuery, paginationQuery , 1, function (error, pageCount, paginatedResults) {
+
+        const tournaments = await TournamentModel.paginate(tournamentQueries, paginationQuery , 1, function (error, pageCount, paginatedResults) {
             if (error) {
                 response.status(404).send(error);
             }
@@ -92,13 +96,5 @@ tournamentRouter.get("/other/size/:id", async (request, response) => {
     }
 });
 
-// tournamentRouter.get("/name/:name", async (request, response) => {
-//     try {
-//         const tournament = await TournamentModel.find({name: new RegExp(`^${request.params.name}`)}).exec();
-//         response.send(tournament);
-//     } catch (error) {
-//         response.status(500).send(error);
-//     }
-// });
 
 module.exports = tournamentRouter;

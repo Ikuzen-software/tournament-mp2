@@ -3,6 +3,7 @@ import { Store, select } from '@ngrx/store';
 import { userSelector } from '../../reducers/login-page.reducer';
 import * as fromAuth from '@reducers/login-page.reducer';
 import { BehaviorSubject, Observable, from } from 'rxjs';
+import { UtilService } from '../../shared/services/util.service';
 
 @Component({
   selector: 'app-main',
@@ -10,7 +11,7 @@ import { BehaviorSubject, Observable, from } from 'rxjs';
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnInit {
-  constructor(private readonly store: Store<fromAuth.ApplicationState>) {
+  constructor(private readonly store: Store<fromAuth.ApplicationState>, public utilService: UtilService) {
   }
   user$: BehaviorSubject<{ username?: string, role?: string, id?: string }> = new BehaviorSubject({});
 
