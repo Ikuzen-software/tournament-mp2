@@ -23,10 +23,11 @@ export const UserSchema = new mongoose.Schema({
     birthdate: {type: Date , required : true },
     role:{type: String, default: 'user'},
     register_date: {type: Date, default: Date.now},
-    tournaments: {
-        name: {type: String, required: true},
-        id: {type: String, required: true}
-    },
+    tournaments: [{
+        name: {type: String},
+        id: {type: String}
+    }
+    ],
     overview: {type: UserOverviewSchema, default:defaultOverview}
 },
 {collection:"user", selectPopulatedPaths: false });

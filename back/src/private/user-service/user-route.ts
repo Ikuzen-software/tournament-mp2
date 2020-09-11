@@ -9,7 +9,7 @@ userRouter.use(cors({origin: 'http://localhost:4200'}))
 userRouter.use(jwtMW)
 //UPDATE by id
 
-userRouter.put("/:id",  async (request, response) => {
+userRouter.put("/:id", async (request, response) => {
     try {
         const user = await UserModel.findById(request.params._id).exec();
         user.set(request.body);

@@ -49,7 +49,7 @@ tournamentRouter.put("/join/:id", isLoggedIn, async (request, response) => {
                         response.status(401).send(`participant ${user.username} has already joined the tournament`);
                     }
                     else {
-                        tournament.participants.push(user);
+                        tournament.participants.push({_id: user.id, username: user.username});
                         const result = await tournament.save();
                         response.send(result);
                     }

@@ -13,7 +13,7 @@ export const TournamentSchema = new mongoose.Schema({
     
     participants: [{
         username: {type: String},
-        id: {type: String}
+        _id: {type: String}
     }],
     organizer: {
         username: {type: String, required: true},
