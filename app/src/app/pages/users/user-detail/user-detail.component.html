@@ -6,23 +6,20 @@
         <h2>Statistics</h2>
         <p-panel header="Overall" class="overall-infos">
             <p-card header="tournaments organized">
-                {{tournaments?.totalDocs}}
+                {{user?.overview?.totalOrganized}}
             </p-card>
             <p-card header="total tournaments participated">
-                {{tournaments?.totalDocs}}
+                {{user?.overview?.totalParticipated}}
             </p-card>
             <p-card header="total matches played">
-                {{tournaments?.totalDocs}}
-            </p-card>
-            <p-card header="unfinished tournaments">
-                {{tournaments?.totalDocs}}
+                {{user?.overview?.totalMatches}}
             </p-card>
         </p-panel>
         <p-panel header="Placements">
-            <h2>first place</h2>
-            <h2>second place</h2>
-            <h2>third place</h2>
-            <h2>top 8</h2>
+            <h2>first place :{{user?.overview?.firstPlace}}</h2>
+            <h2>second place : {{user?.overview?.secondPlace}}</h2>
+            <h2>third place : {{user?.overview?.thirdPlace}}</h2>
+            <h2>top 8 : {{user?.overview?.top8}}</h2>
         </p-panel>
     </p-tabPanel>
     <!-- tournaments -->

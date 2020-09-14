@@ -12,16 +12,28 @@
 .custom-toast .ui-toast-message.ui-toast-message-info .ui-toast-close-icon {
     color: #ffffff;
 }
-
-.page-container{
-    position: relative;
+.body{
+    background-color: rgb(99, 185, 210);
     display: flex;
-    padding: 1.5%;
-    margin: 80px 15px 17px 15px;
-    border: none;
     flex-direction: column;
-    min-width: 400px;
-    word-wrap: break-word;
-    background-clip: border-box;
-    border-radius: 0.25rem;
+    min-height: 100%;
+    .page-container{
+        flex: 100%;
+        position: relative;
+        display: flex;
+        padding: 80px 15px 17px 15px;
+        border: none;
+        flex-direction: column;
+        min-height: 500px;
+        word-wrap: break-word;
+        background-clip: border-box;
+        border-radius: 0.25rem;
+    }
+    app-navbar-bottom{
+        ::ng-deep{
+            flex-grow:3;
+            background-color: rgb(30, 62, 103);
+        }
+    }
+
 }
