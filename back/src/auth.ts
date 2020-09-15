@@ -41,12 +41,12 @@ export async function isTournamentOwner(req, res, next) {
 
     try {
         const user = getUserFromToken(token);
-        const tournamentOwner = await TournamentModel.findOne({ _id: req.params.id }).exec();
-        if (user.role === "admin" || user._id === tournamentOwner?.organizer?.id) {
+        const tournament = await TournamentModel.findOne({ _id: req.params.id }).exec();
+        if (user.role === "admin" || user._id === tournament?.organizer?.organizer_id) {
             next();
         } else {
             console.log(user)
-            console.log(tournamentOwner.organizer.id)
+            console.log(tournament.organizer.organizer_id)
             return res.status(401).send({
                 success: false,
                 message: `You don't have the rights on this tournament.`,

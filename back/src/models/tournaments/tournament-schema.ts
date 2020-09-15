@@ -13,11 +13,11 @@ export const TournamentSchema = new mongoose.Schema({
     
     participants: [{
         username: {type: String},
-        _id: {type: String}
+        participant_id: {type: String},
     }],
     organizer: {
         username: {type: String, required: true},
-        id: {type: String, required: true}
+        organizer_id: {type: String, required: true}
     },
     startDate:{type: Date},
     status:{type: String, default: 'not started'}},
@@ -26,4 +26,5 @@ export const TournamentSchema = new mongoose.Schema({
     {collection:"tournaments"});
     
     TournamentSchema.index({name: 1}, {unique: true}); //unique name restriction
+    TournamentSchema.index({participants: 1}, {unique: true}); //unique participant restriction
     TournamentSchema.plugin(mongoosePaginate);

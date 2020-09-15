@@ -53,7 +53,7 @@ export class TournamentCreationComponent implements OnInit {
   createTournament() {
     if (this.tournamentForm.valid) {
       this.store.select(userSelector).subscribe((appState) => {
-        const _organizer = appState.currentUser
+        const _organizer = {username: appState.currentUser.username, organizer_id: appState.currentUser.id}
         this.tournament = { name: this.name, description: this.description, game: this.game, format: this.format, size: this.size, startDate: this.startDate, organizer: _organizer };
         this.tournamentService.create(this.tournament).subscribe((result) => {
           this.router.navigate([`/tournament/${result._id}`]);

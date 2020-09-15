@@ -4,10 +4,10 @@ export interface Tournament {
     name?: string;
     size?: number;
     description?: string;
-    participants?: {username?: string; id?: string; role?: string}[];
+    participants?: {username?: string; participant_id?: string;}[];
     game?: string;
     format?: string;
-    organizer?: {username?: string; id?: string; role?: string};
+    organizer?: {username?: string; organizer_id?};
     startDate?: Date;
     status?: string;
 }
