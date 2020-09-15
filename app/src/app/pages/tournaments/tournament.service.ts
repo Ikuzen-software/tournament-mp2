@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 import { LoginService } from '../login/login.service';
 import { User } from '../users/user';
+import {env} from "@app/app.constants";
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class TournamentService {
     };
   }
   create(tournament: Tournament) {
-    return this.http.post<Tournament>('http://localhost:3000/tournament', tournament, this.getOptions());
+    return this.http.post<Tournament>(`${env.SERVER_API_URL}/tournament`, tournament, this.getOptions());
   }
 
   getAll(queryParams?: any): Observable<TournamentPages> {
@@ -41,42 +42,48 @@ export class TournamentService {
     if(queryParams.page){
       params = params.set('page', queryParams.page);
     }
-    return this.http.get<TournamentPages>('http://localhost:3000/tournament', {params});
+    if(queryParams.organizer){
+      params = params.set('organizer', queryParams.organizer)
+    }
+    if(queryParams.participant){
+      params = params.set('participant', queryParams.participant)
+    }
+    return this.http.get<TournamentPages>(`${env.SERVER_API_URL}/tournament`, {params});
   }
 
   getById(id: string) {
-    return this.http.get<Tournament>(`http://localhost:3000/tournament/${id}`);
+    return this.http.get<Tournament>(`${env.SERVER_API_URL}/tournament/${id}`);
   }
 
   getByName(name: string) {
-    return this.http.get<Tournament>(`http://localhost:3000/tournament/name/${name}`);
+    return this.http.get<Tournament>(`${env.SERVER_API_URL}/tournament/name/${name}`);
   }
 
   update(id: string, tournament: Tournament) {
-    return this.http.put<Tournament>(`http://localhost:3000/tournament/${id}`, tournament, this.getOptions());
+    return this.http.put<Tournament>(`${env.SERVER_API_URL}/tournament/${id}`, tournament, this.getOptions());
   }
 
   joinTournament(id: string, user: User) {
-    return this.http.put<Tournament>(`http://localhost:3000/tournament/join/${id}`, user, this.getOptions());
+    return this.http.put<Tournament>(`${env.SERVER_API_URL}/tournament/join/${id}`, user, this.getOptions());
   }
 
   leavetournament(id: string, user: User) {
-    return this.http.put<Tournament>(`http://localhost:3000/tournament/leave/${id}`, user, this.getOptions());
+    return this.http.put<Tournament>(`${env.SERVER_API_URL}/tournament/leave/${id}`, user, this.getOptions());
   }
 
   deleteById(id: string) {
-    return this.http.delete<Tournament>(`http://localhost:3000/tournament/${id}`, this.getOptions());
+    return this.http.delete<Tournament>(`${env.SERVER_API_URL}/tournament/${id}`, this.getOptions());
 
   }
   deleteAll() {
-    return this.http.delete<Tournament>('http://localhost:3000/tournament', this.getOptions());
+    return this.http.delete<Tournament>(`${env.SERVER_API_URL}/tournament`, this.getOptions());
   }
 
   getAllGames(){
-    return this.http.get<string[]>('http://localhost:3000/tournament/other/games');
+    return this.http.get<string[]>(`${env.SERVER_API_URL}/tournament/other/games`);
   }
 
   getTournamentAvailability(id: string){
-    return this.http.get<string>(`http://localhost:3000/tournament/other/size/${id}`);
+    return this.http.get<string>(`${env.SERVER_API_URL}/tournament/other/size/${id}`);
   }
 }

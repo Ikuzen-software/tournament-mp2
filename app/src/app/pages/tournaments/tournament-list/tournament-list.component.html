@@ -39,7 +39,7 @@
                         <div class="p-col-12">game: <b>{{tournament.game}}</b></div>
                         <div class="p-col-12">organizer: <b>{{tournament.organizer.username}}</b></div>
                         <div class="p-col-12"><b>{{tournament.participants.length}}/{{tournament.size}} Participants</b></div>
-                        <div class="p-col-12">created at : <b>{{tournament.createdAt}}</b></div>
+                        <div class="p-col-12">created at : <b>{{tournament.createdAt | date}}</b></div>
                         <div class="p-col-12">status :  <b>{{tournament.status}}</b></div>
                     </div>
                 </div>
@@ -56,7 +56,7 @@
                     <div class="p-col-12">game: <b>{{tournament.game}}</b></div>
                     <div class="p-col-12">organizer: <b>{{tournament.organizer.username}}</b></div>
                     <div class="p-col-12"><b>{{tournament.participants.length}}/{{tournament.size}} Participants</b></div>
-                    <div class="p-col-12">createdAt: <b>{{tournament.createdAt}}</b></div>
+                    <div class="p-col-12">createdAt: <b>{{tournament.createdAt | date}}</b></div>
                     <div class="p-col-12">status :  <b>{{tournament.status}}</b></div>
 
                 </div>

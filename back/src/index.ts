@@ -13,7 +13,7 @@ const tokenRoute = require('./public/token-route/token-route')
 const cors = require('cors')
 const mongoose = require('mongoose');
 const fs = require('fs')
-
+console.log(config.uri)
 mongoose.connect(config.uri, { useNewUrlParser: true }).then(() => {
     console.log("Connected to Database");
 }).catch((err) => {

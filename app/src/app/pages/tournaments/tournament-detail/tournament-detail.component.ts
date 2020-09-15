@@ -47,7 +47,6 @@ export class TournamentDetailComponent implements OnInit {
           (err) => {
             this.isLoggedIn = false;
           });
-          console.log(this.isParticipating)
       },
         (error) => {
 

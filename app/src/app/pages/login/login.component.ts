@@ -43,7 +43,8 @@ export class LoginComponent implements OnInit {
       },
         (err) => {
           this.errorMessage = err.error.err;
-          this.toastService.showError('login error', err.error.err);
+          console.log(err)
+          this.toastService.showError('login error', err.error?.message || err.error?.err);
         });
     }
     else {

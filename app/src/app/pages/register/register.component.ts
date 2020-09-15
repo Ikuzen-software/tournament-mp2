@@ -63,9 +63,5 @@ export class RegisterComponent implements OnInit {
 
   showErrors(errorName) {
     console.log(this.registerForm.get(errorName).errors);
-    console.log();
-  }
-  showFormValidity(){
-    console.log(this.registerForm)
   }
 }

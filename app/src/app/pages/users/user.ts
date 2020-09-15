@@ -6,5 +6,17 @@ export interface User {
     email: string;
     birthdate: Date;
     register_date?: Date;
-    tournaments?: {tournamentName: string, isOrganizer: boolean}[]
+    tournaments?: {id: string, name: string}[];
+    overview?: UserOverview;
+
+}
+
+export interface UserOverview{
+    firstPlace: number;
+    secondPlace: number;
+    thirdPlace: number;
+    top8: number;
+    totalMatches: number;
+    totalParticipated: number;
+    totalOrganized: number;
 }
