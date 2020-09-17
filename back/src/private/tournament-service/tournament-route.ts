@@ -17,8 +17,11 @@ tournamentRouter.post("/", isLoggedIn, async (request, response) => {
             response.status(500).send('organizer must be the same as the tournament creator')
         }
         const tournament = new TournamentModel(request.body);
-        const result = await tournament.save();
-        response.send(result);
+        const userModel = new UserModel(user)
+        user.tournaments.push({tournament_id:tournament._id, name:tournament.name})
+        const userResult = await userModel.save()
+        const tournamentResult = await tournament.save();
+        response.send(tournamentResult);
     } catch (error) {
         response.status(500).send(error);
     }
@@ -54,8 +57,12 @@ tournamentRouter.put("/join/:id", isLoggedIn, async (request, response) => {
                         tournament.participants.push({participant_id: user.id, username: user.username});
                         const tournamentResult = await tournament.save({upsert:true});
                         const participant = await UserModel.findById(user.id).exec();
-                        participant.tournaments.push({name:tournament.name, tournament_id: tournament._id});
-                        participant.overview.totalParticipated++;
+                        if(tournamentResult?.organizer?.username === participant.username){ // case participant is also owner
+                            participant.overview.totalOrganized++;
+                        }else{ // case not owner
+                            participant.tournaments.push({name:tournament.name, tournament_id: tournament._id});
+                            participant.overview.totalParticipated++;
+                        }
                         const participantResult = await participant.save({upsert:true});
                         response.send(tournamentResult);
                     }
@@ -80,8 +87,12 @@ tournamentRouter.put("/leave/:id", isLoggedIn, async (request, response) => {
                 let tournament = await TournamentModel.findById(request.params.id).exec();
                 tournament.participants = tournament.participants.filter(participant => participant.username !== user.username)
                 let participant = await UserModel.findById(user.id).exec();
-                participant.tournaments = participant.tournaments.filter(_tournament => tournament.name === _tournament.name && tournament._id === _tournament.tournament_id);
-                participant.overview.totalParticipated--;
+                if(participant.username === tournament?.organizer?.username){// if owner
+                    participant.overview.totalParticipated--;
+                } else{
+                    participant.tournaments = participant.tournaments.filter(_tournament => tournament.name === _tournament.name && tournament._id === _tournament.tournament_id);
+                    participant.overview.totalParticipated--;
+                }
                 const tournamentResult = await tournament.save()
                 const userResult = await participant.save()
                 response.send(tournamentResult)

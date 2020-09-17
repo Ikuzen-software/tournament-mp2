@@ -1,0 +1,120 @@
+[
+    {
+        "_id": "5f43945aa70c26242c0cdf9a",
+        "role": "user",
+        "username": "maman",
+        "password": "password",
+        "email": "test@test.com",
+        "birthdate": "1223-12-11T23:50:39.000+00:00",
+        "tournaments": [
+            {
+                "tournament_id": "5f58a74f22c47c0a10a3bf21",
+                "name": "BlackListed3"
+            }
+        ],
+        "overview": {
+            "firstPlace": 0,
+            "secondPlace": 0,
+            "thirdPlace": 0,
+            "top8": 0,
+            "totalMatches": 0,
+            "totalParticipated": 0,
+            "totalOrganized": 1
+        }
+    },
+    {
+        "_id": "5f4399cc9eea3a2eb0d576aa",
+        "role": "admin",
+        "username": "admin",
+        "password": "admin",
+        "email": "admin@admin.com",
+        "birthdate": "1223-12-11T23:50:39.000+00:00",
+        "tournaments": [],
+        "overview": {
+            "firstPlace": 0,
+            "secondPlace": 0,
+            "thirdPlace": 0,
+            "top8": 0,
+            "totalMatches": 0,
+            "totalParticipated": 0,
+            "totalOrganized": 0
+        }
+    },
+    {
+        "_id": "5f4399cc9eea3a2eb0d576ab",
+        "role": "user",
+        "username": "user2",
+        "password": "password",
+        "email": "test@test.com",
+        "birthdate": "1223-12-11T23:50:39.000+00:00",
+        "tournaments": [
+            {
+                "tournament_id": "5f58a74f22c47c0a10a3bf21",
+                "name": "BlackListed3"
+            },
+            {"tournament_id": "5f58d8b136283128dcf8d292", "name": "My test tournament"},
+            {"tournament_id": "5f58d9b99a355f6c248db8c9", "name": "Blame the game"},
+            {"tournament_id": "5f5a10185a3d3032a8d67d58", "name": "Can't stop this"},
+            {"tournament_id": "5f5a133e33adad4c48dd0bd2", "name": "Another tournament"}
+        ],
+        "overview": {
+            "firstPlace": 0,
+            "secondPlace": 0,
+            "thirdPlace": 0,
+            "top8": 0,
+            "totalMatches": 0,
+            "totalParticipated": 5,
+            "totalOrganized": 0
+        }
+    },
+    {
+        "tournament_id": "5f4399cc9eea3a2eb0d576ac",
+        "role": "user",
+        "username": "ikuzen",
+        "password": "password",
+        "email": "ikuzen@noito.com",
+        "birthdate": "1223-12-11T23:50:39.000+00:00",
+        "tournaments": [
+            {
+                "tournament_id": "5f58a74f22c47c0a10a3bf21",
+                "name": "BlackListed3"
+            },
+            {"tournament_id": "5f5a133e33adad4c48dd0bd2", "name": "Another tournament"},
+            {"tournament_id": "5f58d8b136283128dcf8d292", "name": "My test tournament"},
+            {"tournament_id": "5f58d9b99a355f6c248db8c9", "name": "Blame the game"},
+            {"tournament_id": "5f5a0eac1840ae5ccc45d34f", "name": "NamelessMelee#10"},
+            {"tournament_id": "5f5a10185a3d3032a8d67d58", "name": "Can't stop this"}
+        ],
+        "overview": {
+            "firstPlace": 0,
+            "secondPlace": 0,
+            "thirdPlace": 0,
+            "top8": 0,
+            "totalMatches": 0,
+            "totalParticipated": 6,
+            "totalOrganized": 4
+        }
+    },
+    {
+        "tournament_id": "5f60b2cc037e5c307ce6611d",
+        "role": "user",
+        "username": "Rikkel",
+        "password": "password",
+        "email": "Rikkel@noito.com",
+        "birthdate": "1223-12-11T23:50:39.000+00:00",
+        "tournaments": [
+            {"tournament_id": "5f58d9b99a355f6c248db8c9", "name": "Blame the game"},
+            {"tournament_id": "5f5a0eac1840ae5ccc45d34f", "name": "NamelessMelee#10"},
+            {"tournament_id": "5f5a133e33adad4c48dd0bd2", "name": "Another tournament"}
+        ],
+        "overview": {
+            "firstPlace": 0,
+            "secondPlace": 0,
+            "thirdPlace": 0,
+            "top8": 0,
+            "totalMatches": 0,
+            "totalParticipated": 2,
+            "totalOrganized": 1
+        }
+    }
+]
