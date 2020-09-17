@@ -46,10 +46,21 @@ export class UserDetailComponent implements OnInit {
   
   
   ngOnInit(): void {
-
+    // console.log(tournament.participants.includes({username:this.user.username, participant_id: this.user._id}))
+    
   }
-
+  
   isOrganizer(tournament:Tournament):string {
-    return tournament.organizer.username === this.user.username ? "organizer" : "participant";
+    console.log(tournament.participants.map(participant => participant.username).filter(name => name === this.user.username))
+    let result = ""
+    if(tournament.organizer.username === this.user.username && tournament.participants.map(participant => participant.username).filter(name => name === this.user.username).length > 0){
+      result = "organizer & participant"
+    }else if(tournament.organizer.username){
+      result = "organizer"
+    }else if(tournament.participants.map(participant => participant.username).filter(name => name === this.user.username).length > 0){
+      result = "participant"
+    }
+      
+    return result
   }
 }
