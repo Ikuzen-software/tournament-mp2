@@ -31,8 +31,13 @@ tournamentRouter.put("/:id", isTournamentOwner, async (request, response) => {
     try {
         const tournament = await TournamentModel.findById(request.params.id).exec();
         tournament.set(request.body);
-        const result = await tournament.save();
-        response.send(result);
+        const token = request.headers.authorization?.split(" ")[1];
+        const user = getUserFromToken(token);
+        const organizer = await UserModel.findById(user._id);
+        organizer.tournaments.push({_id: user.id, username: user.username})
+        const organizerResult = await organizer.save();
+        const tournamentResult = await tournament.save();
+        response.send(tournamentResult);
     } catch (error) {
         response.status(404).send(`tournament ${request.params.id} not found`);
     }
