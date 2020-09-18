@@ -17,12 +17,12 @@ tournamentRouter.post("/", isLoggedIn, async (request, response) => {
             response.status(500).send('organizer must be the same as the tournament creator')
         }
         const tournament = new TournamentModel(request.body);
-        const userModel = new UserModel(user)
-        user.tournaments.push({tournament_id:tournament._id, name:tournament.name})
-        const userResult = await userModel.save()
+        const userResult =  await UserModel.findById(user._id).exec()
+        userResult.tournaments.push({tournament_id:tournament._id, name:tournament.name})
         const tournamentResult = await tournament.save();
         response.send(tournamentResult);
     } catch (error) {
+        console.log(error)
         response.status(500).send(error);
     }
 });
