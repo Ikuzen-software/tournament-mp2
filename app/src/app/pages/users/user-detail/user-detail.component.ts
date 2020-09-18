@@ -29,7 +29,6 @@ export class UserDetailComponent implements OnInit {
       userService.getById(value.id).pipe(
         take(1)
       ).subscribe((user) => {
-        console.log(user)
         this.user = user;
         tournamentService.getAll({"participant": user.username, "organizer":user.username, "limit":1000}).pipe(
           take(1)
@@ -46,16 +45,14 @@ export class UserDetailComponent implements OnInit {
   
   
   ngOnInit(): void {
-    // console.log(tournament.participants.includes({username:this.user.username, participant_id: this.user._id}))
     
   }
   
   isOrganizer(tournament:Tournament):string {
-    console.log(tournament.participants.map(participant => participant.username).filter(name => name === this.user.username))
     let result = ""
     if(tournament.organizer.username === this.user.username && tournament.participants.map(participant => participant.username).filter(name => name === this.user.username).length > 0){
       result = "organizer & participant"
-    }else if(tournament.organizer.username){
+    }else if(tournament.organizer.username === this.user.username){
       result = "organizer"
     }else if(tournament.participants.map(participant => participant.username).filter(name => name === this.user.username).length > 0){
       result = "participant"

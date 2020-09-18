@@ -15,7 +15,7 @@
         "participants":[
             {
                 "username":"ikuzen",
-                "participant_id":"5f4399cc9eea3a2eb0d576ac"
+                "participant_id":"5f63982c7fe4a1024f7a10fc"
             },
             {
                 "username":"user2",
@@ -26,7 +26,7 @@
     {
         "_id":"5f58d8b136283128dcf8d292",
         "name": "My test tournament",
-        "description":"Ignore this tournament",
+        "description":"Be indulgent please",
         "game":"Mario 64",
         "size": 16,
         "format": "single-eliminiation",
@@ -34,12 +34,12 @@
         "createdAt": "2020-05-23T21:46:46.618Z",
         "organizer":{
             "username":"ikuzen",
-            "organizer_id":"5f4399cc9eea3a2eb0d576ac"
+            "organizer_id":"5f63982c7fe4a1024f7a10fc"
         },
         "participants":[
             {
                 "username":"ikuzen",
-                "participant_id":"5f4399cc9eea3a2eb0d576ac"
+                "participant_id":"5f63982c7fe4a1024f7a10fc"
             },
             {
                 "username":"user2",
@@ -58,12 +58,12 @@
         "createdAt": "2020-05-23T21:46:46.618Z",
         "organizer":{
             "username":"ikuzen",
-            "organizer_id":"5f4399cc9eea3a2eb0d576ac"
+            "organizer_id":"5f63982c7fe4a1024f7a10fc"
         },
         "participants":[
             {
                 "username":"ikuzen",
-                "participant_id":"5f4399cc9eea3a2eb0d576ac"
+                "participant_id":"5f63982c7fe4a1024f7a10fc"
             },
             {
                 "username":"user2",
@@ -90,14 +90,14 @@
         "participants":[
             {
                 "username":"ikuzen",
-                "participant_id":"5f4399cc9eea3a2eb0d576ac"
+                "participant_id":"5f63982c7fe4a1024f7a10fc"
             }
         ]
     },
     {
         "_id":"5f5a10185a3d3032a8d67d58",
         "name": "Can't stop this",
-        "description":"Ignore this tournament",
+        "description":"Can you ??",
         "game":"Mario 64",
         "size": 16,
         "format": "single-eliminiation",
@@ -105,12 +105,12 @@
         "createdAt": "2020-05-23T21:46:46.618Z",
         "organizer":{
             "username":"ikuzen",
-            "organizer_id":"5f4399cc9eea3a2eb0d576ac"
+            "organizer_id":"5f63982c7fe4a1024f7a10fc"
         },
         "participants":[
             {
                 "username":"ikuzen",
-                "participant_id":"5f4399cc9eea3a2eb0d576ac"
+                "participant_id":"5f63982c7fe4a1024f7a10fc"
             },
             {
                 "username":"user2",
@@ -121,7 +121,7 @@
     {
         "_id":"5f5a133e33adad4c48dd0bd2",
         "name": "Another tournament",
-        "description":"Ignore this tournament",
+        "description":"Wombo combo !",
         "game":"Mario 64",
         "size": 16,
         "format": "single-eliminiation",
@@ -129,12 +129,12 @@
         "createdAt": "2020-05-23T21:46:46.618Z",
         "organizer":{
             "username":"ikuzen",
-            "organizer_id":"5f4399cc9eea3a2eb0d576ac"
+            "organizer_id":"5f63982c7fe4a1024f7a10fc"
         },
         "participants":[
             {
                 "username":"ikuzen",
-                "participant_id":"5f4399cc9eea3a2eb0d576ac"
+                "participant_id":"5f63982c7fe4a1024f7a10fc"
             },
             {
                 "username":"Rikkel",

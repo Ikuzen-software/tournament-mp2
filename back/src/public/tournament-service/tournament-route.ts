@@ -30,7 +30,7 @@ tournamentRouter.get("/", async (request, response) => {
         }
         //fusing both query for OR condition
         if(request.query.organizer && request.query.participant){
-            tournamentQueries = {$or:[{"organizer.username":request.query.organizer}, {"participant.username":request.query.participant}]}
+            tournamentQueries = {$or:[{"organizer.username":request.query.organizer}, {"participants.username":request.query.participant}]}
         }
         /// GET with status
         if(request.query.status){ // 
@@ -43,7 +43,8 @@ tournamentRouter.get("/", async (request, response) => {
         if(_.isEmpty(tournamentQueries)){ // set to undefined for mongoose paginate
             tournamentQueries = undefined;
         }
-
+        
+        console.log(tournamentQueries)
         const tournaments = await TournamentModel.paginate(tournamentQueries, paginationQuery , 1, function (error, pageCount, paginatedResults) {
             if (error) {
                 response.status(404).send(error);
