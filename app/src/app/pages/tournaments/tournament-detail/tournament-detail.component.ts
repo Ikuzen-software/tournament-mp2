@@ -74,45 +74,33 @@ export class TournamentDetailComponent implements OnInit {
             console.log(error)
             this.toastService.showError("error", error.error);
           })
-    })
+      })
+    }
   }
-}
 
-leaveTournament() {
-  if (!this.isLoggedIn) {
-    this.utilService.navigate("login")
-  } else {
-    this.store.pipe(select(userSelector)).subscribe((appState) => {
-      this.tournament.participants = this.tournament.participants.filter(user => user.username !== appState.currentUser.username);
-      this.tournamentService.leavetournament(this.tournament._id, appState.currentUser as User).pipe(
-        take(1)
-      ).subscribe((result) => {
-        this.isParticipating = false;
-        this.toastService.success("participation", "successfully removed from the tournament")
-      },
-        (error) => {
-          this.toastService.showError("error", error.error);
-        });
-    });
+  leaveTournament() {
+    if (!this.isLoggedIn) {
+      this.utilService.navigate("login")
+    } else {
+      this.store.pipe(select(userSelector)).subscribe((appState) => {
+        this.tournament.participants = this.tournament.participants.filter(user => user.username !== appState.currentUser.username);
+        this.tournamentService.leavetournament(this.tournament._id, appState.currentUser as User).pipe(
+          take(1)
+        ).subscribe((result) => {
+          this.isParticipating = false;
+          this.toastService.success("participation", "successfully removed from the tournament")
+        },
+          (error) => {
+            this.toastService.showError("error", error.error);
+          });
+      });
+    }
   }
-}
 
-// checkAvailability(){
-//   this.tournamentService.getTournamentAvailability(this.tournament._id)
-//     .pipe(
-//       take(1))
-//     .subscribe((result)=>{
-//       if(result === "not full"){
-//         this.isAvailable$.next(true);
-//       }else{
-//         this.isAvailable$.next(false);
-//       }
-//     })
-// }
 
-checkAvailability(): boolean{
-  return this.tournament.size > this.tournament.participants.length ? true : false;
-}
+  checkAvailability(): boolean {
+    return this.tournament.size > this.tournament.participants.length ? true : false;
+  }
 }
 
 

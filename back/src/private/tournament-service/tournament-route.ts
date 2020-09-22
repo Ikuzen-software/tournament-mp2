@@ -1,6 +1,7 @@
 import { TournamentModel } from '../../models/tournaments/tournament-model'
 import { jwtMW, isTournamentOwner, isAdmin, isLoggedIn, getUserFromToken } from '../../auth';
 import { Tournament } from '../../models/tournaments/tournament-interface';
+import { UserModel } from '../../models/users/user-model';
 
 const express = require('express');
 const tournamentRouter = express.Router();
@@ -12,13 +13,16 @@ tournamentRouter.post("/", isLoggedIn, async (request, response) => {
     try {
         let token = request.headers.authorization?.split(' ')[1];
         const user = getUserFromToken(token);
-        if (request.body?.organizer?.username !== user.username && request.body?.organizer?._id !== user._id) {
+        if (request.body?.organizer?.username !== user.username && request.body?.organizer?.organizer_id !== user._id) {
             response.status(500).send('organizer must be the same as the tournament creator')
         }
         const tournament = new TournamentModel(request.body);
-        const result = await tournament.save();
-        response.send(result);
+        const userResult =  await UserModel.findById(user._id).exec()
+        userResult.tournaments.push({tournament_id:tournament._id, name:tournament.name})
+        const tournamentResult = await tournament.save();
+        response.send(tournamentResult);
     } catch (error) {
+        console.log(error)
         response.status(500).send(error);
     }
 });
@@ -27,8 +31,13 @@ tournamentRouter.put("/:id", isTournamentOwner, async (request, response) => {
     try {
         const tournament = await TournamentModel.findById(request.params.id).exec();
         tournament.set(request.body);
-        const result = await tournament.save();
-        response.send(result);
+        const token = request.headers.authorization?.split(" ")[1];
+        const user = getUserFromToken(token);
+        const organizer = await UserModel.findById(user._id);
+        organizer.tournaments.push({_id: user.id, username: user.username})
+        const organizerResult = await organizer.save();
+        const tournamentResult = await tournament.save();
+        response.send(tournamentResult);
     } catch (error) {
         response.status(404).send(`tournament ${request.params.id} not found`);
     }
@@ -38,6 +47,7 @@ tournamentRouter.put("/join/:id", isLoggedIn, async (request, response) => {
     try {
         const user = request.body;
         if (user.username) {
+            console.log(user)
             if (getUserFromToken(request.headers.authorization?.split(' ')[1]).username !== user.username) {
                 response.status(401).send(`participant ${user.username} is not the authentified user`);
             }else{
@@ -48,10 +58,18 @@ tournamentRouter.put("/join/:id", isLoggedIn, async (request, response) => {
                     if (tournament.participants.filter(participant => participant.username === user.username).length > 0) {
                         response.status(401).send(`participant ${user.username} has already joined the tournament`);
                     }
-                    else {
-                        tournament.participants.push({_id: user.id, username: user.username});
-                        const result = await tournament.save();
-                        response.send(result);
+                    else { //When success
+                        tournament.participants.push({participant_id: user.id, username: user.username});
+                        const tournamentResult = await tournament.save({upsert:true});
+                        const participant = await UserModel.findById(user.id).exec();
+                        if(tournamentResult?.organizer?.username === participant.username){ // case participant is also owner
+                            participant.overview.totalOrganized++;
+                        }else{ // case not owner
+                            participant.tournaments.push({name:tournament.name, tournament_id: tournament._id});
+                            participant.overview.totalParticipated++;
+                        }
+                        const participantResult = await participant.save({upsert:true});
+                        response.send(tournamentResult);
                     }
                 }
             }
@@ -59,7 +77,8 @@ tournamentRouter.put("/join/:id", isLoggedIn, async (request, response) => {
             response.status(400).send(`request body is not a user`)
         }
     } catch (error) {
-        response.status(404).send(`tournament ${request.params.id}not found`);
+        console.log(error)
+        response.status(404).send(`tournament ${request.params.id} not found`);
     }
 });
 //leaving a tournament 
@@ -72,8 +91,16 @@ tournamentRouter.put("/leave/:id", isLoggedIn, async (request, response) => {
             }else{
                 let tournament = await TournamentModel.findById(request.params.id).exec();
                 tournament.participants = tournament.participants.filter(participant => participant.username !== user.username)
-                const result = await tournament.save()
-                response.send(result)
+                let participant = await UserModel.findById(user.id).exec();
+                if(participant.username === tournament?.organizer?.username){// if owner
+                    participant.overview.totalParticipated--;
+                } else{
+                    participant.tournaments = participant.tournaments.filter(_tournament => tournament.name === _tournament.name && tournament._id === _tournament.tournament_id);
+                    participant.overview.totalParticipated--;
+                }
+                const tournamentResult = await tournament.save()
+                const userResult = await participant.save()
+                response.send(tournamentResult)
             }
         } else {
             response.status(400).send(`request body is not a user`)
@@ -90,7 +117,6 @@ tournamentRouter.delete("/clean/:id", isTournamentOwner, async (request, respons
         tournament.participants.push(request.body);
         const result = await tournament.save();
         response.send(result);
-
     } catch (error) {
         response.status(404).send(`tournament ${request.params.id}not found`);
     }

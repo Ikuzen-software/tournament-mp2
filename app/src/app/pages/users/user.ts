@@ -6,7 +6,7 @@ export interface User {
     email: string;
     birthdate: Date;
     register_date?: Date;
-    tournaments?: {id: string, name: string}[];
+    tournaments?: {tournament_id: string, name: string}[];
     overview?: UserOverview;
 
 }

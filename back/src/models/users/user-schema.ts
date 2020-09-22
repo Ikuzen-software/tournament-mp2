@@ -24,15 +24,18 @@ export const UserSchema = new mongoose.Schema({
     role:{type: String, default: 'user'},
     register_date: {type: Date, default: Date.now},
     tournaments: [{
-        name: {type: String},
-        id: {type: String}
-    }
+        name: {type: String
+        },
+        tournament_id: {type: String
+        },
+        _id:false,
+    },
     ],
     overview: {type: UserOverviewSchema, default:defaultOverview}
 },
 {collection:"user", selectPopulatedPaths: false });
 
-UserSchema.index({username: 1}, {unique: true}); //unique name restriction
+UserSchema.index({username: 1}, {unique:true}); //unique name restriction
 UserSchema.pre("save", function(next) {
     if(!this.isModified("password")) { // password hash
         return next();

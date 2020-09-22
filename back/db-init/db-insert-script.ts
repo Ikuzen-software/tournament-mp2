@@ -1,7 +1,6 @@
 import { TournamentModel } from '../src/models/tournaments/tournament-model'
 import { UserModel } from '../src/models/users/user-model'
 import * as config from '../src/config';
-import * as express from 'express';
 
 let usersJson = require('./mockUsers.json')
 let tournamentsJson = require('./mockTournaments.json')
@@ -9,8 +8,10 @@ const mongoose = require("mongoose")
 mongoose.connect(config.uri, {useNewUrlParser:true});
 
 const db = mongoose.connection
-const app = express();
+
 async function main(){
+    db.dropCollection("users");
+    db.dropCollection("tournaments");
     await UserModel.deleteMany().exec();
     console.log("deleted users")
     await TournamentModel.deleteMany().exec();

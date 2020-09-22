@@ -12,12 +12,15 @@ export const TournamentSchema = new mongoose.Schema({
     format: {type: String},
     
     participants: [{
-        username: {type: String},
-        _id: {type: String}
+        username: {type: String
+        },
+        participant_id: {type: String
+        },
+        _id : false 
     }],
     organizer: {
         username: {type: String, required: true},
-        id: {type: String, required: true}
+        organizer_id: {type: String, required: true}
     },
     startDate:{type: Date},
     status:{type: String, default: 'not started'}},

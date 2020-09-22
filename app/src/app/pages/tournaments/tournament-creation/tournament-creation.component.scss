@@ -1,3 +1,9 @@
 #tournament-form{
     margin: 10px;
 }
+.tournament-form-group{
+    div.input-label, div.input-tournament-label, div.input-tournament-name, div.input-tournament-description, div.input-tournament-game, div.input-tournament-format, div.input-tournament-size, div.input-tournament-start{
+        display: flex;
+        align-items: center;
+    }
+}

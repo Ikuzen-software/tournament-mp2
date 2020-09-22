@@ -1,0 +1,33 @@
+@startuml
+
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity "tournament" as tournament {
+  *_id : string <<generated>>
+  --
+  *name : text
+  description : text
+  participants : users
+}
+
+entity "user" as user {
+  *_id : string <<generated>>
+  --
+  *e1_id : number <<FK>>
+  other_details : text
+}
+
+entity "match" as match {
+  *_id : string <<generated>>
+  --
+  e1_id : number <<FK>>
+  other_details : text
+}
+
+tournament |o..o{ match
+user 	}o--o{ tournament
+@enduml
