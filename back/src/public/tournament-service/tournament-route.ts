@@ -44,7 +44,6 @@ tournamentRouter.get("/", async (request, response) => {
             tournamentQueries = undefined;
         }
         
-        console.log(tournamentQueries)
         const tournaments = await TournamentModel.paginate(tournamentQueries, paginationQuery , 1, function (error, pageCount, paginatedResults) {
             if (error) {
                 response.status(404).send(error);

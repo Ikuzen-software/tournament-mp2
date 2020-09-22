@@ -8,8 +8,6 @@ interface Organizer{
 }
 
 interface Bracket{
-  array of rounds representing the matches
-  --
   Match[]
 }
 

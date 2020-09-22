@@ -45,8 +45,6 @@ export async function isTournamentOwner(req, res, next) {
         if (user.role === "admin" || user._id === tournament?.organizer?.organizer_id) {
             next();
         } else {
-            console.log(user)
-            console.log(tournament.organizer.organizer_id)
             return res.status(401).send({
                 success: false,
                 message: `You don't have the rights on this tournament.`,
