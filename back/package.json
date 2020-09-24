@@ -13,15 +13,15 @@
     "start": "node build/src/index.js",
     "setvars": "envsubst < ./app.yaml > app.processed.yaml",
     "deploy": "npm run setvars && gcloud app deploy app.processed.yaml",
-    "test": "jest",
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc",
     "dev": "ts-node-dev src/index.ts",
     "fix": "gts fix",
-    "pretest": "npm run compile",
+    "test": "cross-env NODE_ENV=test jest --testTimeout=10000",
+    "pretest": "cross-env NODE_ENV=test npm run migrate:reset",
     "posttest": "npm run check",
-    "init-db":"ts-node-dev db-init/db-insert-script.ts",
+    "init-db": "ts-node-dev db-init/db-insert-script.ts",
     "debug": "ts-node-dev src/index.ts"
   },
   "devDependencies": {
@@ -30,12 +30,16 @@
     "@types/express": "^4.17.6",
     "@types/mongodb": "^3.5.18",
     "@types/node": "^13.11.1",
+    "cross-env": "^7.0.2",
     "gts": "^2.0.1",
+    "jest": "^26.4.2",
+    "supertest": "^4.0.2",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.8.3"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "@shelf/jest-mongodb": "^1.2.3",
     "@types/uuid": "^7.0.3",
     "atob": "^2.1.2",
     "bcryptjs": "^2.4.3",
@@ -45,7 +49,6 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-jwt": "^5.3.3",
-    "jest": "^26.4.2",
     "mongodb": "^3.5.7",
     "mongoose": "^5.9.26",
     "mongoose-paginate-v2": "^1.3.9",
@@ -53,5 +56,13 @@
     "rand-token": "^1.0.1",
     "ts-node": "^8.10.1",
     "uuid": "^8.0.0"
+  },
+  
+  "jest": {
+    "preset": "@shelf/jest-mongodb",
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   }
 }

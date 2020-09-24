@@ -1,5 +1,3 @@
-import { User } from "../users/user-interface";
-
 export interface Tournament {
     _id: string;
     createdAt: Date;
