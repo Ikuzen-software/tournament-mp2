@@ -18,7 +18,13 @@ mongoose.connect(config.uri, { useNewUrlParser: true }).then(() => {
 }).catch((err) => {
     console.log("Not Connected to Database ERROR! ", err);
 });
+const { Sequelize } = require('sequelize');
+const sequelize = new Sequelize('postgres', 'postgres', 'postgres', {
+    host: 'localhost',
+    dialect: 'postgres'
+});
 
+sequelize.authenticate();
 const db = mongoose.connection
 const log = debug('tn:express');
 const app = express();

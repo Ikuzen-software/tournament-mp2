@@ -21,7 +21,7 @@
     "fix": "gts fix",
     "pretest": "npm run compile",
     "posttest": "npm run check",
-    "init-db":"ts-node-dev db-init/db-insert-script.ts",
+    "init-db": "ts-node-dev db-init/db-insert-script.ts",
     "debug": "ts-node-dev src/index.ts"
   },
   "devDependencies": {
@@ -50,7 +50,10 @@
     "mongoose": "^5.9.26",
     "mongoose-paginate-v2": "^1.3.9",
     "njwt": "^1.0.0",
+    "pg": "^8.3.3",
+    "pg-hstore": "^2.3.3",
     "rand-token": "^1.0.1",
+    "sequelize": "^6.3.5",
     "ts-node": "^8.10.1",
     "uuid": "^8.0.0"
   }
