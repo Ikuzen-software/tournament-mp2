@@ -1,31 +1,35 @@
-import { config } from 'dotenv';
-import * as path from 'path';
 
-const {MongoClient} = require('mongodb');
+import mongoose from 'mongoose';
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import { uri } from '../src/config';
+import { UserModel } from '../src/models/users/user-model';
+const mongod = new MongoMemoryServer();
+const mockUser = { username: 'Ikuzen', password: 'password', email: "blabla@bla.bla", birthdate: new Date(1) };
+let mongoServer;
+
 
 describe('insert', () => {
-  let connection;
-  let db;
 
   beforeAll(async () => {
-    connection = await MongoClient.connect(process.env['TOURNAMENT_MONGO_'], {
-      useNewUrlParser: true,
-    });
-    db = await connection.db(process.env['TOURNAMENT_MONGO_DATABASE']);
+    mongoServer = new MongoMemoryServer();
+    const mongoUri = await mongoServer.getUri();
+   await mongoose.connect(mongoUri, (err) => {
+    if (err) console.error(err);
+  });
+
   });
 
   afterAll(async () => {
-    await connection.close();
-    await db.close();
+    await mongoose.disconnect();
+    await mongod.stop();
   });
 
   it('should insert a doc into collection', async () => {
-    const users = db.collection('users');
-
-    const mockUser = {_id: 'some-user-id', name: 'John'};
-    await users.insertOne(mockUser);
-
-    const insertedUser = await users.findOne({_id: 'some-user-id'});
-    expect(insertedUser).toEqual(mockUser);
+        const user = new UserModel(mockUser);
+        const savedUser = await user.save();
+        expect(savedUser._id).toBeDefined();
+        expect(savedUser.username).toBe(mockUser.username);
+        expect(savedUser.email).toBe(mockUser.email);
+        expect(savedUser.birthdate).toBe(mockUser.birthdate);
   });
 });

@@ -1,5 +1,5 @@
-import * as express from 'express';
-import * as debug from 'debug';
+import express from 'express';
+import debug from 'debug';
 import * as config from './config';
 
 console.log("Starting Application \s")
