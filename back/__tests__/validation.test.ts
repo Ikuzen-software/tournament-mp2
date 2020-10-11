@@ -3,8 +3,7 @@ import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { uri } from '../src/config';
 import { UserModel } from '../src/models/users/user-model';
-const mongod = new MongoMemoryServer();
-const mockUser = { username: 'Ikuzen', password: 'password', email: "blabla@bla.bla", birthdate: new Date(1) };
+import { mockUser } from './mockData'
 let mongoServer;
 
 
@@ -20,8 +19,8 @@ describe('insert', () => {
   });
 
   afterAll(async () => {
+    await mongoose.stop();
     await mongoose.disconnect();
-    await mongod.stop();
   });
 
   it('should insert a doc into collection', async () => {

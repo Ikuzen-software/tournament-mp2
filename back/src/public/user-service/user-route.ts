@@ -6,7 +6,7 @@ const cors = require('cors')
 const userRouter = express.Router();
 userRouter.use(cors({origin: 'http://localhost:4200'}))
 
-//POST
+//POST /users
 userRouter.post("/",  async (request, response) => {
     try {
         const user = new UserModel(request.body);

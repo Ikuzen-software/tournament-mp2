@@ -49,3 +49,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => log('Listening on port', PORT));
+
+module.exports = app
