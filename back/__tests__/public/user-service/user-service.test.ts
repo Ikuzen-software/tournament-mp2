@@ -1,5 +1,6 @@
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from 'mongoose';
+import { UserModel } from "../../../src/models/users/user-model";
 import { mockUser } from '../../mockData'
 
 const app = require('../../../src/index') // Link to your server file
@@ -15,7 +16,7 @@ describe('user-service public', () => {
     await mongoose.connect(mongoUri, (err) => {
       if (err) console.error(err);
     });
-    await request.post('/user',mockUser).send(mockUser);
+    await UserModel(mockUser).save()
     mockUserData = await request.get('/user',mockUser);
     mockUserData = mockUserData.body[0]
   });
