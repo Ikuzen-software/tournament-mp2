@@ -2,7 +2,7 @@ import { TournamentModel } from '../../models/tournaments/tournament-model'
 import { jwtMW, isTournamentOwner, isAdmin, isLoggedIn, getUserFromToken } from '../../auth';
 import { Tournament } from '../../models/tournaments/tournament-interface';
 import { UserModel } from '../../models/users/user-model';
-
+import {STATUS as TnStatus}  from  '../../models/tournaments/tournament-status.enum';
 const express = require('express');
 const tournamentRouter = express.Router();
 const cors = require('cors')
@@ -118,7 +118,26 @@ tournamentRouter.delete("/clean/:id", isTournamentOwner, async (request, respons
         const result = await tournament.save();
         response.send(result);
     } catch (error) {
-        response.status(404).send(`tournament ${request.params.id}not found`);
+        response.status(404).send(`tournament ${request.params.id} not found`);
+    }
+});
+
+// Start a tournament, as a owner
+tournamentRouter.patch("/:id/start", isTournamentOwner, async (request, response) => {
+    try {
+        const tournament = await TournamentModel.findById(request.params.id).exec();
+        switch(tournament.status){
+            case 'ongoing':
+                response.status(403).send(`tournament ${request.params.id} is already started`);
+            case 'finished':
+                response.status(403).send(`tournament ${request.params.id} is already finished`);
+            default:
+                tournament.status = TnStatus.ongoing;
+                const result = await tournament.save();
+                response.send(result);
+        }
+    } catch (error) {
+        response.status(404).send(`tournament ${request.params.id} not found`);
     }
 });
 
