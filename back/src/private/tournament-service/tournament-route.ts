@@ -129,12 +129,15 @@ tournamentRouter.patch("/:id/start", isTournamentOwner, async (request, response
         switch(tournament.status){
             case 'ongoing':
                 response.status(403).send(`tournament ${request.params.id} is already started`);
+                break
             case 'finished':
                 response.status(403).send(`tournament ${request.params.id} is already finished`);
+                break
             default:
                 tournament.status = TnStatus.ongoing;
                 const result = await tournament.save();
                 response.send(result);
+                break
         }
     } catch (error) {
         response.status(404).send(`tournament ${request.params.id} not found`);
