@@ -1,99 +1,40 @@
 @startuml
-interface Participants{
-  User[] participants
+
+' MCD
+
+Interface Learns{
+
 }
 
-interface Organizer{
-  User organizer
+Interface Leads{
+
+}
+Interface Masters{
+
 }
 
-interface Bracket{
-  Match[]
+class DEVELOPER{
+ ipn
+ firstname
+ lastname
+ birthdate
+ join_date
 }
 
-class Match{
-  +String match_id
-  --
-  +String player1_id
-  +String player2_id
-  --
-  +String identifier
-  +Match_State match_state
-  +String score
-  +String winner_id
-  +String loser_id
-}
-
-enum Match_State{
-  READY
-  NOT_READY
-  ONGOING
-  COMPLETE
-}
-
-enum User_Role{
-  ADMIN
-  USER
-  GUEST
-}
-
-class Login{
-  String username
-  String password
-}
-
-enum Tournament_Status{
-  NOT_STARTED
-  ONGOING
-  COMPLETE
-  ABORTED
-}
-
-class User {
-  + String user_id
-  --
-  + String username
-  + String email
-  + Date birthdate
-  + Date register_date
-  + String role
-  -- encrypted --
-  + String password
-}
-
-class Player{
-  string player_id
+class technology{
+  code
+  fr
+  en
 }
 
 
-class Tournament{
-  + String tournament_id
-  --
-  + String name
-  + Int size
-  + Date createdAt
-  + Date startDate
-  + String description
-  + String game
-  + String format
-  + Date startDate
-  + Tournament_Status status
-  --
-  + User[] participants
-  + User organizer
-  + Bracket bracket
-}
 
-User_Role <|-- User
-Tournament_Status <|-- Tournament
-Participants <|-- Tournament
-User <|-- Participants
-User <|-- Organizer
-User <|-- Login
-User <|-- Player
-Player <|-- Match
-Organizer <|-- Tournament
-Bracket <|-- Tournament
-Match <|-- Bracket
-Match <|-- Match_State
+
+DEVELOPER 	}o-- Learns : 0,n
+Learns --o{ technology : 0,n
+DEVELOPER }o-- Leads : 0,n
+Leads |o-- DEVELOPER : 0,1
+Masters --|| DEVELOPER : 0,1
+Masters ||--o{ technology : 1,n
+
 @enduml

@@ -1,33 +1,34 @@
 @startuml
 
-' hide the spot
-hide circle
+' MPD
 
-' avoid problems with angled crows feet
-skinparam linetype ortho
-
-entity "tournament" as tournament {
-  *_id : string <<generated>>
+class developer{
+  id_dev Integer <PK>
   --
-  *name : text
-  description : text
-  participants : users
+  firstname varcar(20)
+  lastname varcar(20)
+  ipn varcar(8)
+  birthdate Date
+  --
+  mainTechCode <FK>
 }
 
-entity "user" as user {
-  *_id : string <<generated>>
-  --
-  *e1_id : number <<FK>>
-  other_details : text
+
+class technology{
+  id_tech <PK>
+  code varChar(7)
+  fr varChar(30)
+  en varChar(30)
 }
 
-entity "match" as match {
-  *_id : string <<generated>>
-  --
-  e1_id : number <<FK>>
-  other_details : text
+class learning_technology{
+  id_learning <PK>
+  tech_code varChar(7)
+  ipn varChar(8)
 }
 
-tournament |o..o{ match
-user 	}o--o{ tournament
+ 
+developer <---- learning_technology
+technology <--- learning_technology
+
 @enduml
