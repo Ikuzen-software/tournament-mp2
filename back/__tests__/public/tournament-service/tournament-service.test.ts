@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { TournamentModel } from "../../../src/models/tournaments/tournament-model";
 import { mockTournaments } from '../../mockData'
 
-const app = require('../../../src/index')
+const app = require('../../index-test') // Link to your server file
 const supertest = require('supertest')
 const request = supertest(app)
 let mongoServer;
@@ -21,16 +21,16 @@ describe('tournament-service public', () => {
     await TournamentModel(mockTournaments[2]).save()
     mockTournamentData = await request.get('/tournament');
     mockTournamentData = mockTournamentData.body
-    console.log(mockTournamentData)
   });
 
 
   afterAll(async () => {
     await mongoose.stop();
     await mongoose.disconnect();
+    await new Promise(resolve => setTimeout(() => resolve(), 500)); // avoid jest open handle error
   });
 
-  fit('should get list of tournaments with pagination', async done => {
+  it('should get list of tournaments with pagination', async done => {
     const res = await request.get('/tournament')
     const result = res.body
     expect(result.totalDocs).toEqual(3)
@@ -42,7 +42,7 @@ describe('tournament-service public', () => {
     done()
   })
   // getAll by organizer
-  fit('should get list of tournaments with pagination', async done => {
+  it('should get list of tournaments with pagination', async done => {
     const res = await request.get('/tournament?organizer=Rikkel')
     const result = res.body
     expect(result.totalDocs).toEqual(2)
@@ -50,7 +50,7 @@ describe('tournament-service public', () => {
     done()
   })
 
-  fit('should get tournament by id', async done => {
+  it('should get tournament by id', async done => {
     const res = await request.get(`/tournament/${mockTournamentData.docs[0]._id}`)
     const result = res.body
     expect(result.name).toEqual("tournoi");
@@ -63,7 +63,7 @@ describe('tournament-service public', () => {
 
   it('should get tournament by tournamentname', async done => {
     const res = await request.get(`/tournament/name/tournoi2`)
-    const result = res.body[0]
+    const result = res.body
     expect(result.name).toEqual("tournoi2");
     expect(result.game).toEqual("game1");
     expect(result.size).toEqual(32);
@@ -71,11 +71,28 @@ describe('tournament-service public', () => {
     done()
   })
 
-  // it('should create tournament', async done =>{
-  //   await request.post('/tournament').send({tournamentname:"test",password:"12345",email:"test@test.test",birthdate:Date.now()});
-  //   const res = await request.get('/tournament')
+  it('should get list of different games', async done =>{
+    const res = await request.get('/tournament/other/games').send();
+    const result = res.body
+    expect(result).toEqual(['game','game1','game2'])
+    // ...
+    done()
+  })
+
+  // it('should return not full', async done =>{
+  //   const res = await request.get(`/tournament/other/size/${mockTournamentData.docs[0]._id}`).send();
+  //   console.log(res)
   //   const result = res.body
-  //   expect(result.length).toEqual(2)
+  //   expect(result).toEqual('not full')
+  //   // ...
+  //   done()
+  // })
+
+  // it('should return full', async done =>{
+  //   const res = await request.get(`/tournament/other/size/${mockTournamentData.docs[2]._id}`).send();
+  //   console.log(res)
+  //   const result = res.body
+  //   expect(result).toEqual('full')
   //   // ...
   //   done()
   // })

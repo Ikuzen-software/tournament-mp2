@@ -1,14 +1,14 @@
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from 'mongoose';
 import { UserModel } from "../../../src/models/users/user-model";
-import { mockUser } from '../../mockData'
+import { mockUsers } from '../../mockData'
 
-const app = require('../../../src/index') // Link to your server file
+const app = require('../../index-test') // Link to your server file
 const supertest = require('supertest')
 const request = supertest(app)
 let mongoServer;
-let mockUserData;
-describe('user-service public', () => {
+let mockUsersData;
+fdescribe('user-service public', () => {
 
   beforeAll(async () => {
     mongoServer = new MongoMemoryServer();
@@ -16,21 +16,29 @@ describe('user-service public', () => {
     await mongoose.connect(mongoUri, (err) => {
       if (err) console.error(err);
     });
-    await UserModel(mockUser).save()
-    mockUserData = await request.get('/user',mockUser);
-    mockUserData = mockUserData.body[0]
   });
+
+  beforeEach(async()=>{
+    await UserModel.deleteMany().exec();
+    for(let user of mockUsers){
+      await UserModel(user).save()
+    }
+    mockUsersData = await request.get('/user');
+    mockUsersData = mockUsersData.body
+  })
 
 
   afterAll(async () => {
     await mongoose.stop();
     await mongoose.disconnect();
+    await new Promise(resolve => setTimeout(() => resolve(), 500)); // avoid jest open handle error
+    
   });
 
   it('should get list of users excluding password', async done => {
     const res = await request.get('/user')
     const result = res.body
-    expect(result.length).toEqual(1)
+    expect(result.length).toEqual(2)
     expect(result[0].username).toEqual("Ikuzen");
     expect(result[0].email).toEqual("blabla@bla.bla");
     expect(result[0].birthdate).toEqual("1970-01-01T00:00:00.001Z");
@@ -41,7 +49,7 @@ describe('user-service public', () => {
   })
 
   it('should get user by id excluding password', async done => {
-    const res = await request.get(`/user/${mockUserData._id}`)
+    const res = await request.get(`/user/${mockUsersData[0]._id}`)
     const result = res.body
     expect(result.username).toEqual("Ikuzen");
     expect(result.email).toEqual("blabla@bla.bla");
@@ -65,10 +73,10 @@ describe('user-service public', () => {
   })
 
   it('should create user', async done =>{
-    await request.post('/user',mockUser).send({username:"test",password:"12345",email:"test@test.test",birthdate:Date.now()});
+    await request.post('/user').send({username:"test",password:"12345",email:"test@test.test",birthdate:Date.now()});
     const res = await request.get('/user')
     const result = res.body
-    expect(result.length).toEqual(2)
+    expect(result.length).toEqual(3)
     // ...
     done()
   })

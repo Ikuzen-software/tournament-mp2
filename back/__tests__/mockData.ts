@@ -1,4 +1,17 @@
-export const mockUser = { username: 'Ikuzen', password: 'password', email: "blabla@bla.bla", birthdate: new Date(1) };
+export const mockUsers = [
+    {
+        username: 'Ikuzen',
+        password: 'password',
+        email: "blabla@bla.bla",
+        birthdate: new Date(1)
+    },
+    {
+        username: 'Rikkel',
+        password: 'password',
+        email: "blabla@bla.bla",
+        birthdate: new Date(1)
+    }
+];
 export const mockTournaments = [
     {
         name: 'tournoi', size: 16,
@@ -21,14 +34,19 @@ export const mockTournaments = [
         }
     },
     {
-        name: 'tournoi3', size: 64,
+        name: 'tournoi3', size: 1,
         game: "game2",
         startDate: Date.now(),
         organizer:
         {
             username: "Rikkel",
             organizer_id: "hdhsdysergyshtshsrthtsrhs"
+        },
+        participants: [{
+            username: "Rikkel",
+            participant_id: "hdhsdysergyshtshsrthtsrhs"
         }
+        ]
     },
 
 ];

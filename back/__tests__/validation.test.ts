@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { uri } from '../src/config';
 import { UserModel } from '../src/models/users/user-model';
-import { mockUser } from './mockData'
+import { mockUsers } from './mockData'
 let mongoServer;
 
 
@@ -24,11 +24,11 @@ describe('insert', () => {
   });
 
   it('should insert a doc into collection', async () => {
-        const user = new UserModel(mockUser);
+        const user = new UserModel(mockUsers[0]);
         const savedUser = await user.save();
         expect(savedUser._id).toBeDefined();
-        expect(savedUser.username).toBe(mockUser.username);
-        expect(savedUser.email).toBe(mockUser.email);
-        expect(savedUser.birthdate).toBe(mockUser.birthdate);
+        expect(savedUser.username).toBe(mockUsers[0].username);
+        expect(savedUser.email).toBe(mockUsers[0].email);
+        expect(savedUser.birthdate).toBe(mockUsers[0].birthdate);
   });
 });
