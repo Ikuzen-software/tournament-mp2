@@ -35,7 +35,7 @@ matchRouter.get("/seeding/:tnId", async (request, response) => {
         const playersList = tournament.participants.map(user => user.username);
         console.log(playersList)
         const tree = tournamentTree.createTree(playersList);
-        const result = tournamentTree.predictAllRounds(tree, playersList);
+        const result = tournamentTree.predictAllRounds(tree);
         response.send(result)
     } catch (error) {
         console.log(error)

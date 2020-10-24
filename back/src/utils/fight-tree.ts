@@ -1,4 +1,4 @@
-type Player = number;
+type Player = string;
 
 // const players = new Array(10)
 //     .fill(null)
@@ -10,8 +10,10 @@ class TournamentNode {
 
 export class Tournament {
     rounds: number = 0;
-
-    constructor(public root: TournamentNode) { }
+    players: string[];
+    constructor(public root: TournamentNode, players: string[]) { 
+        this.players = players
+    }
 
     findMatchUpForRound(round: number) {
         const self = this;
@@ -51,7 +53,7 @@ function highestPowerOfTwo(value: number) {
 }
 
 
-export function createTree(players: Player[]) {
+export function createTree(players: Player[]):Tournament {
     const pow = highestPowerOfTwo(players.length);
     const nb = 1 << pow;
 
@@ -67,7 +69,7 @@ export function createTree(players: Player[]) {
         return new TournamentNode(a, b);
     }
 
-    const tournament = new Tournament(createNode(1, 2));
+    const tournament = new Tournament(createNode(1, 2), players);
     tournament.rounds = pow;
 
     return tournament;
@@ -91,24 +93,12 @@ function calculateRounds(numPlayers: number): number {
     return Math.ceil(Math.sqrt(numPlayers))
 }
 
-export function predictAllRounds(tree: Tournament, players) { // return array of rounds in order, and matches to play
-    const numRounds = calculateRounds(players.length);
-    console.log(numRounds)
+export function predictAllRounds(tree: Tournament, withBye = true): (TournamentNode | Player )[]  { // return array of rounds in order, and matches to play
+    const numRounds = calculateRounds(tree.players.length);
     let result = [];
     for (let currentRound = 1; currentRound <= numRounds; currentRound++) {
-        // if(numRounds - currentRound === 0){
-        //     result +="===Final Round===\n"
-        // }else if(numRounds - currentRound === 1){
-        //     result +="===Semi Final===\n"
-        // }else if(numRounds - currentRound === 2){
-        //     result +="===Quarter Final===\n"
-        // }else{
-        //     result +="===Round "+currentRound+"===\n"
-        // }
         result.push(tree.findMatchUpForRound(currentRound))
-        removeBye(tree.root);
+        if(!withBye) removeBye(tree.root);
     }
     return result
 }
-// const tree = createTree(players);
-// predictAllRounds(tree)
