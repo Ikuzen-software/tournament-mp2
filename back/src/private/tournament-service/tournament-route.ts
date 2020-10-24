@@ -2,7 +2,7 @@ import { TournamentModel } from '../../models/tournaments/tournament-model'
 import { jwtMW, isTournamentOwner, isAdmin, isLoggedIn, getUserFromToken } from '../../auth';
 import { Tournament } from '../../models/tournaments/tournament-interface';
 import { UserModel } from '../../models/users/user-model';
-import {STATUS as TnStatus}  from  '../../models/tournaments/tournament-status.enum';
+import { STATUS as TnStatus } from '../../models/tournaments/tournament-status.enum';
 const express = require('express');
 const tournamentRouter = express.Router();
 const cors = require('cors')
@@ -17,8 +17,8 @@ tournamentRouter.post("/", isLoggedIn, async (request, response) => {
             response.status(500).send('organizer must be the same as the tournament creator')
         }
         const tournament = new TournamentModel(request.body);
-        const userResult =  await UserModel.findById(user._id).exec()
-        userResult.tournaments.push({tournament_id:tournament._id, name:tournament.name})
+        const userResult = await UserModel.findById(user._id).exec()
+        userResult.tournaments.push({ tournament_id: tournament._id, name: tournament.name })
         const tournamentResult = await tournament.save();
         response.send(tournamentResult);
     } catch (error) {
@@ -34,7 +34,7 @@ tournamentRouter.put("/:id", isTournamentOwner, async (request, response) => {
         const token = request.headers.authorization?.split(" ")[1];
         const user = getUserFromToken(token);
         const organizer = await UserModel.findById(user._id);
-        organizer.tournaments.push({_id: user.id, username: user.username})
+        organizer.tournaments.push({ _id: user.id, username: user.username })
         const organizerResult = await organizer.save();
         const tournamentResult = await tournament.save();
         response.send(tournamentResult);
@@ -50,25 +50,25 @@ tournamentRouter.put("/join/:id", isLoggedIn, async (request, response) => {
             console.log(user)
             if (getUserFromToken(request.headers.authorization?.split(' ')[1]).username !== user.username) {
                 response.status(401).send(`participant ${user.username} is not the authentified user`);
-            }else{
+            } else {
                 const tournament = await TournamentModel.findById(request.params.id).exec();
-                if(tournament.participants.length >= tournament.size){
+                if (tournament.participants.length >= tournament.size) {
                     response.status(401).send('tournament is full')
-                }else{
+                } else {
                     if (tournament.participants.filter(participant => participant.username === user.username).length > 0) {
                         response.status(401).send(`participant ${user.username} has already joined the tournament`);
                     }
                     else { //When success
-                        tournament.participants.push({participant_id: user.id, username: user.username});
-                        const tournamentResult = await tournament.save({upsert:true});
+                        tournament.participants.push({ participant_id: user.id, username: user.username });
+                        const tournamentResult = await tournament.save({ upsert: true });
                         const participant = await UserModel.findById(user.id).exec();
-                        if(tournamentResult?.organizer?.username === participant.username){ // case participant is also owner
+                        if (tournamentResult?.organizer?.username === participant.username) { // case participant is also owner
                             participant.overview.totalOrganized++;
-                        }else{ // case not owner
-                            participant.tournaments.push({name:tournament.name, tournament_id: tournament._id});
+                        } else { // case not owner
+                            participant.tournaments.push({ name: tournament.name, tournament_id: tournament._id });
                             participant.overview.totalParticipated++;
                         }
-                        const participantResult = await participant.save({upsert:true});
+                        const participantResult = await participant.save({ upsert: true });
                         response.send(tournamentResult);
                     }
                 }
@@ -88,13 +88,13 @@ tournamentRouter.put("/leave/:id", isLoggedIn, async (request, response) => {
         if (user.username) {
             if (getUserFromToken(request.headers.authorization?.split(' ')[1]).username !== user.username) {
                 response.status(401).send(`participant ${user.username} is not the authentified user`);
-            }else{
+            } else {
                 let tournament = await TournamentModel.findById(request.params.id).exec();
                 tournament.participants = tournament.participants.filter(participant => participant.username !== user.username)
                 let participant = await UserModel.findById(user.id).exec();
-                if(participant.username === tournament?.organizer?.username){// if owner
+                if (participant.username === tournament?.organizer?.username) {// if owner
                     participant.overview.totalParticipated--;
-                } else{
+                } else {
                     participant.tournaments = participant.tournaments.filter(_tournament => tournament.name === _tournament.name && tournament._id === _tournament.tournament_id);
                     participant.overview.totalParticipated--;
                 }
@@ -126,18 +126,24 @@ tournamentRouter.delete("/clean/:id", isTournamentOwner, async (request, respons
 tournamentRouter.patch("/:id/start", isTournamentOwner, async (request, response) => {
     try {
         const tournament = await TournamentModel.findById(request.params.id).exec();
-        switch(tournament.status){
-            case 'ongoing':
-                response.status(403).send(`tournament ${request.params.id} is already started`);
-                break
-            case 'finished':
-                response.status(403).send(`tournament ${request.params.id} is already finished`);
-                break
-            default:
-                tournament.status = TnStatus.ongoing;
-                const result = await tournament.save();
-                response.send(result);
-                break
+        if (tournament.participants.length % 2 !== 0 || tournament.participants.length < 2) { // constraint for number of participants
+            response.status(403).send(`tournament ${request.params.id} must have at least 2 participants and an even number of participants to start`);
+        }
+        else {
+
+            switch (tournament.status) {
+                case 'ongoing':
+                    response.status(403).send(`tournament ${request.params.id} is already started`);
+                    break
+                case 'finished':
+                    response.status(403).send(`tournament ${request.params.id} is already finished`);
+                    break
+                default:
+                    tournament.status = TnStatus.ongoing;
+                    const result = await tournament.save();
+                    response.send(result);
+                    break
+            }
         }
     } catch (error) {
         response.status(404).send(`tournament ${request.params.id} not found`);
