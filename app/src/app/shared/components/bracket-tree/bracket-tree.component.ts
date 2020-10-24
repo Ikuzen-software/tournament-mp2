@@ -10,29 +10,7 @@ import { cpuUsage } from 'process';
   styleUrls: ['./bracket-tree.component.scss']
 })
 export class BracketTreeComponent implements OnInit {
-  @ViewChild('expandingTree')
-  tree: Round[] = [
-    [
-      {
-        "a": "ikuzen"
-      },
-      {
-        "a": "user2",
-        "b": "Rikkel"
-      }
-    ],
-    [
-      {
-        "a": {
-          "a": "ikuzen"
-        },
-        "b": {
-          "a": "user2",
-          "b": "Rikkel"
-        }
-      }
-    ]
-  ]
+  @Input() tree: Round[];
   expandingTree: Tree;
   filesTree: TreeNode[] = [];
   selectedFile: TreeNode;
@@ -47,7 +25,7 @@ export class BracketTreeComponent implements OnInit {
   fillNodes() {
     for (let i = 0; i <= this.tree.length - 1; i++) {
       for (let j = this.tree[i].length - 1; j >= 0; j--) {
-        this.fillNode(this.tree[i][j], i * j);
+        this.fillNode(this.tree[i][j], i, j);
       }
     }
     this.filesTree.push({label: 'waiting opponent', children: [this.filesTree[this.filesTree.length-1], this.filesTree[this.filesTree.length-2]], expanded: true });
@@ -55,22 +33,22 @@ export class BracketTreeComponent implements OnInit {
     this.filesTree = this.filesTree.reverse();
   }
 
-  fillNode(node: TournamentNode, index: number) {
+  fillNode(node: TournamentNode, i: number, j: number) {
     if (node.a && node.b && (typeof node.a !== 'string' && !node.a.b)) { // case bye
       this.filesTree.push(
-        { label: this.getNodeLabel(node.b), children: this.getNodeChildren(node.b, index), expanded: true });
+        { label: this.getNodeLabel(node.b), children: this.getNodeChildren(node.b, i*j, i), expanded: true });
       this.filesTree.push(
-        { label: this.getNodeLabel(node.a.a), children: this.getNodeChildren(node.a, index + 2), expanded: true });
+        { label: this.getNodeLabel(node.a.a), children: this.getNodeChildren(node.a, i*j + 2, i), expanded: true });
     } else if (node.a && !node.b) { // case nested bye
       this.filesTree.push(
         { label: this.getNodeLabel(null), expanded: true });
       this.filesTree.push(
-        { label: this.getNodeLabel(node.a), children: this.getNodeChildren(node.a, index), expanded: true });
+        { label: this.getNodeLabel(node.a), children: this.getNodeChildren(node.a, i*j, i), expanded: true });
     } else { // normal case
       this.filesTree.push(
-        { label: this.getNodeLabel(node.b), children: this.getNodeChildren(node.b, index), expanded: true });
+        { label: this.getNodeLabel(node.b), children: this.getNodeChildren(node.b, i*j, i), expanded: true });
       this.filesTree.push(
-        { label: this.getNodeLabel(node.a), children: this.getNodeChildren(node.a, index + 2), expanded: true });
+        { label: this.getNodeLabel(node.a), children: this.getNodeChildren(node.a, i*j + 2, i), expanded: true });
     }
   }
   getNodeLabel(node: TournamentNode | string): string {
@@ -85,8 +63,8 @@ export class BracketTreeComponent implements OnInit {
     }
   }
 
-  getNodeChildren(node: TournamentNode | string, index: number) {
-    if (typeof node !== 'string' && node !== 'undefined') {
+  getNodeChildren(node: TournamentNode | string, index: number, round:number) {
+    if (round !== 0) {
       return [this.filesTree[index + 1], this.filesTree[index]]
     }
     else { return null }
