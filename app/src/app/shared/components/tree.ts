@@ -5,3 +5,4 @@ export class TournamentNode {
 }
 
 export type Round = TournamentNode[]
+

@@ -11,7 +11,7 @@ class TournamentNode {
 export class Tournament {
     rounds: number = 0;
     players: string[];
-    constructor(public root: TournamentNode, players: string[]) { 
+    constructor(public root: TournamentNode, players: string[]) {
         this.players = players
     }
 
@@ -53,7 +53,7 @@ function highestPowerOfTwo(value: number) {
 }
 
 
-export function createTree(players: Player[]):Tournament {
+export function createTree(players: Player[]): Tournament {
     const pow = highestPowerOfTwo(players.length);
     const nb = 1 << pow;
 
@@ -93,12 +93,61 @@ function calculateRounds(numPlayers: number): number {
     return Math.ceil(Math.sqrt(numPlayers))
 }
 
-export function predictAllRounds(tree: Tournament, withBye = true): (TournamentNode | Player )[]  { // return array of rounds in order, and matches to play
+export function predictAllRounds(tree: Tournament, withBye = true): (TournamentNode | Player)[] { // return array of rounds in order, and matches to play
     const numRounds = calculateRounds(tree.players.length);
     let result = [];
     for (let currentRound = 1; currentRound <= numRounds; currentRound++) {
         result.push(tree.findMatchUpForRound(currentRound))
-        if(!withBye) removeBye(tree.root);
+        if (!withBye) removeBye(tree.root);
     }
     return result
 }
+interface NGNode {
+    label: string
+    children: NGNode[] | null
+    expanded: true
+    depth: number
+  }
+    
+  export function convertTreeToArray(tree: Tournament, withBye = true) {
+    if (!withBye) removeBye(tree.root);
+
+    const byNode = new Map<TournamentNode | Player, NGNode>();
+  
+    function toNGNode(node: TournamentNode | Player, depth: number): NGNode {
+      let ngnode = byNode.get(node);
+  
+      if (ngnode) {
+        return ngnode;
+      }
+  
+      if (!(node instanceof TournamentNode)) {
+        ngnode = {
+          label: node.toString(),
+          children: null,
+          expanded: true,
+          depth,
+        };
+      } else {
+        ngnode = {
+          label: "Waiting for opponent",
+          children: [ node.a, node.b ]
+              .filter((child): child is TournamentNode | Player => !!child)
+              .map(child => toNGNode(child, depth + 1)),
+          expanded: true,
+          depth,
+        };
+      }
+  
+      byNode.set(node, ngnode);
+  
+      return ngnode;
+    }
+  
+  
+    toNGNode(tree.root, 0);
+  
+    return [ ...byNode.values() ].sort((a, b) => a.depth - b.depth);
+  }
+  
+  

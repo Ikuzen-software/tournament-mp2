@@ -96,16 +96,119 @@
         }
     },
     {
-        "tournament_id": "5f60b2cc037e5c307ce6611d",
+        "_id": "5f63982c7fe4a1024f7a10fd",
         "role": "user",
-        "username": "Rikkel",
+        "username": "Widah",
         "password": "password",
-        "email": "Rikkel@noito.com",
+        "email": "Widah@Widah.com",
         "birthdate": "1223-12-11T23:50:39.000+00:00",
         "tournaments": [
-            {"tournament_id": "5f58d9b99a355f6c248db8c9", "name": "Blame the game"},
-            {"tournament_id": "5f5a0eac1840ae5ccc45d34f", "name": "NamelessMelee#10"},
-            {"tournament_id": "5f5a133e33adad4c48dd0bd2", "name": "Another tournament"}
+            {"tournament_id": "5f58d8b136283128dcf8d292", "name": "My test tournament"}
+        ],
+        "overview": {
+            "firstPlace": 0,
+            "secondPlace": 0,
+            "thirdPlace": 0,
+            "top8": 0,
+            "totalMatches": 0,
+            "totalParticipated": 2,
+            "totalOrganized": 1
+        }
+    },
+    {
+        "_id": "5f63982c7fe4a1024f7a10fe",
+        "role": "user",
+        "username": "Norback",
+        "password": "password",
+        "email": "Norback@Norback.com",
+        "birthdate": "1223-12-11T23:50:39.000+00:00",
+        "tournaments": [
+            {"tournament_id": "5f58d8b136283128dcf8d292", "name": "My test tournament"}
+
+        ],
+        "overview": {
+            "firstPlace": 0,
+            "secondPlace": 0,
+            "thirdPlace": 0,
+            "top8": 0,
+            "totalMatches": 0,
+            "totalParticipated": 2,
+            "totalOrganized": 1
+        }
+    },
+    {
+        "_id": "5f63982c7fe4a1024f7a10ff",
+        "role": "user",
+        "username": "Eu00",
+        "password": "password",
+        "email": "Eu0@Eu0.com",
+        "birthdate": "1223-12-11T23:50:39.000+00:00",
+        "tournaments": [
+            {"tournament_id": "5f58d8b136283128dcf8d292", "name": "My test tournament"}
+
+        ],
+        "overview": {
+            "firstPlace": 0,
+            "secondPlace": 0,
+            "thirdPlace": 0,
+            "top8": 0,
+            "totalMatches": 0,
+            "totalParticipated": 2,
+            "totalOrganized": 1
+        }
+    },
+    {
+        "_id": "5f63982c7fe4a1024f7a10f3",
+        "role": "user",
+        "username": "Kenmak",
+        "password": "password",
+        "email": "Kenmak@Maka.com",
+        "birthdate": "1223-12-11T23:50:39.000+00:00",
+        "tournaments": [
+            {"tournament_id": "5f58d8b136283128dcf8d292", "name": "My test tournament"}
+
+        ],
+        "overview": {
+            "firstPlace": 0,
+            "secondPlace": 0,
+            "thirdPlace": 0,
+            "top8": 0,
+            "totalMatches": 0,
+            "totalParticipated": 2,
+            "totalOrganized": 1
+        }
+    },
+    {
+        "_id": "5f63982c7fe4a1024f7a11fa",
+        "role": "user",
+        "username": "MiniBoulet",
+        "password": "password",
+        "email": "MiniBoulet@MiniBoulet.com",
+        "birthdate": "1223-12-11T23:50:39.000+00:00",
+        "tournaments": [
+            {"tournament_id": "5f58d8b136283128dcf8d292", "name": "My test tournament"}
+
+        ],
+        "overview": {
+            "firstPlace": 0,
+            "secondPlace": 0,
+            "thirdPlace": 0,
+            "top8": 0,
+            "totalMatches": 0,
+            "totalParticipated": 2,
+            "totalOrganized": 1
+        }
+    },
+    {
+        "_id": "5f63982c7fe4a1024f7a11f1",
+        "role": "user",
+        "username": "otek",
+        "password": "password",
+        "email": "otek@otek.com",
+        "birthdate": "1223-12-11T23:50:39.000+00:00",
+        "tournaments": [
+            {"tournament_id": "5f58d8b136283128dcf8d292", "name": "My test tournament"}
+
         ],
         "overview": {
             "firstPlace": 0,

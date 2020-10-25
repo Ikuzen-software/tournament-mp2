@@ -3,4 +3,5 @@
     <button pButton (click)="utilService.navigate('user/'+user$.value.id)">Your tournaments</button>
 </div>
 <h3>Welcome to Treenament</h3>
-<app-bracket-tree [tree]=mockTree></app-bracket-tree>
+<app-bracket-tree *ngIf="mockTree && mockTreeArray"[tree]=mockTree [treeArray]=mockTreeArray ></app-bracket-tree>
+<!-- <app-bracket-tree [tree]=mockTree2></app-bracket-tree> -->

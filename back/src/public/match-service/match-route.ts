@@ -43,5 +43,19 @@ matchRouter.get("/seeding/:tnId", async (request, response) => {
     }
 });
 
+matchRouter.get("/treeArray/:tnId", async (request, response) => { 
+    try {
+        const tournament = await TournamentModel.findById(request.params.tnId).exec();
+        const playersList = tournament.participants.map(user => user.username);
+        console.log(playersList)
+        const tree = tournamentTree.createTree(playersList);
+        const result = tournamentTree.convertTreeToArray(tree);
+        response.send(result)
+    } catch (error) {
+        console.log(error)
+        response.status(500).send(error);
+    }
+});
+
 
 module.exports = matchRouter;
