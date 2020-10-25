@@ -34,7 +34,7 @@ export class Tournament {
         }
 
         return recurse([this.root], 0)
-        // .filter(node => !(node instanceof TournamentNode) || node.a && node.b); // filters out the player vs bye
+        .filter(node => !(node instanceof TournamentNode) || node.a && node.b); // filters out the player vs bye
     }
 }
 
@@ -93,7 +93,7 @@ function calculateRounds(numPlayers: number): number {
     return Math.ceil(Math.sqrt(numPlayers))
 }
 
-export function predictAllRounds(tree: Tournament, withBye = true): (TournamentNode | Player)[] { // return array of rounds in order, and matches to play
+export function predictAllRounds(tree: Tournament, withBye = false): (TournamentNode | Player)[] { // return array of rounds in order, and matches to play
     const numRounds = calculateRounds(tree.players.length);
     let result = [];
     for (let currentRound = 1; currentRound <= numRounds; currentRound++) {
@@ -109,7 +109,7 @@ interface NGNode {
     depth: number
   }
     
-  export function convertTreeToArray(tree: Tournament, withBye = true) {
+  export function convertTreeToArray(tree: Tournament, withBye = false) {
     if (!withBye) removeBye(tree.root);
 
     const byNode = new Map<TournamentNode | Player, NGNode>();
@@ -130,7 +130,7 @@ interface NGNode {
         };
       } else {
         ngnode = {
-          label: "Waiting for opponent",
+          label: "",
           children: [ node.a, node.b ]
               .filter((child): child is TournamentNode | Player => !!child)
               .map(child => toNGNode(child, depth + 1)),

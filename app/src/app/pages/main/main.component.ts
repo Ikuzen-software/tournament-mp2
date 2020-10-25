@@ -22,11 +22,11 @@ export class MainComponent implements OnInit {
         this.store.pipe(select(userSelector)).subscribe((appState) => {
             this.user$.next(appState.currentUser);
         });
-        this.matchService.getSeedingById('5f58d9b99a355f6c248db8c9').subscribe((tree) => {
+        this.matchService.getSeedingById('5f58d8b136283128dcf8d292').subscribe((tree) => {
             this.mockTree = tree;
             console.log(this.mockTree);
         })
-        this.matchService.getTreeArraybyId('5f58d9b99a355f6c248db8c9').subscribe((tree) => {
+        this.matchService.getTreeArraybyId('5f58d8b136283128dcf8d292').subscribe((tree) => {
             this.mockTreeArray = tree;
             console.log(this.mockTreeArray);
         })
