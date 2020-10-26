@@ -29,13 +29,13 @@ matchRouter.get("/:id", async (request, response) => {
     }
 });
 
-matchRouter.get("/seeding/:tnId", async (request, response) => { 
+matchRouter.get("/getTree/:tnId", async (request, response) => { 
     try {
         const tournament = await TournamentModel.findById(request.params.tnId).exec();
         const playersList = tournament.participants.map(user => user.username);
         console.log(playersList)
         const tree = tournamentTree.createTree(playersList);
-        const result = tournamentTree.predictAllRounds(tree);
+        const result = tournamentTree.getTree(tree);
         response.send(result)
     } catch (error) {
         console.log(error)
@@ -43,13 +43,27 @@ matchRouter.get("/seeding/:tnId", async (request, response) => {
     }
 });
 
-matchRouter.get("/treeArray/:tnId", async (request, response) => { 
+matchRouter.get("/getTreeArrayForComponent/:tnId", async (request, response) => { 
     try {
         const tournament = await TournamentModel.findById(request.params.tnId).exec();
-        const playersList = tournament.participants.map(user => user.username);
+        const playersList = tournament.participants.map((user, index) => (index+1)+" "+user.username);
         console.log(playersList)
         const tree = tournamentTree.createTree(playersList);
         const result = tournamentTree.convertTreeToArray(tree);
+        response.send(result)
+    } catch (error) {
+        console.log(error)
+        response.status(500).send(error);
+    }
+});
+
+matchRouter.get("/getTreeArray/:tnId", async (request, response) => { 
+    try {
+        const tournament = await TournamentModel.findById(request.params.tnId).exec();
+        const playersList = tournament.participants.map((user, index) => (index+1)+" "+user.username);
+        console.log(playersList)
+        const tree = tournamentTree.createTree(playersList);
+        const result = tournamentTree.getArrayOfMatchesInOrderAndSetIdentifier(tree.root);
         response.send(result)
     } catch (error) {
         console.log(error)

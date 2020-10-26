@@ -27,10 +27,10 @@ export class MatchService {
     return this.http.get<(Match)[]>(`${env.SERVER_API_URL}/match/${id}`);
   }
   getSeedingById(id: string){
-    return this.http.get<(string | TournamentNode)[]>(`${env.SERVER_API_URL}/match/seeding/${id}`);
+    return this.http.get<(string | TournamentNode)[]>(`${env.SERVER_API_URL}/match/getTree/${id}`);
   }
   getTreeArraybyId(id: string){
-    return this.http.get<any[]>(`${env.SERVER_API_URL}/match/treeArray/${id}`);
+    return this.http.get<any[]>(`${env.SERVER_API_URL}/match/getTreeArrayForComponent/${id}`);
 
   }
 }

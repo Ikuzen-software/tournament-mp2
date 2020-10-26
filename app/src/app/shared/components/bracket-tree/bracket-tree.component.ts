@@ -3,6 +3,7 @@ import { Tree } from 'primeng/tree/tree';
 import { TreeNode } from 'primeng/api/treenode';
 import { Round, TournamentNode } from '../tree';
 import { cpuUsage } from 'process';
+import { MatchService } from '@tn/src/app/pages/matches/match.service';
 
 @Component({
   selector: 'app-bracket-tree',
@@ -10,17 +11,18 @@ import { cpuUsage } from 'process';
   styleUrls: ['./bracket-tree.component.scss']
 })
 export class BracketTreeComponent implements OnInit {
-  @Input() tree: Round[];
-  @Input() treeArray: any;
+  @Input() tournament_id: string;
   expandingTree: Tree;
   filesTree: TreeNode[] = [];
   selectedFile: TreeNode;
   indexIncremator = 0;
-  constructor() {
+  constructor(private matchService:MatchService) {
   }
 
   ngOnInit(): void {
-    this.filesTree = this.treeArray
+    this.matchService.getTreeArraybyId(this.tournament_id).subscribe((tree) => {
+      this.filesTree = tree;
+  })
   }
 
 }

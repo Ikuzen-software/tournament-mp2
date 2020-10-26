@@ -31,6 +31,8 @@
         <ul>
             <li *ngFor="let user of tournament?.participants">{{user.username}}</li>
         </ul>
+
+        <app-bracket-tree [tournament_id]=tournament._id ></app-bracket-tree>
     </div>
 
 

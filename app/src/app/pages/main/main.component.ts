@@ -16,20 +16,10 @@ export class MainComponent implements OnInit {
     constructor(private readonly store: Store<fromAuth.ApplicationState>, public utilService: UtilService, private matchService: MatchService) {
     }
     user$: BehaviorSubject<{ username?: string, role?: string, id?: string }> = new BehaviorSubject({});
-    mockTree: (string | TournamentNode)[];
-    mockTreeArray: any[];
+    tournament_id = "5f58d8b136283128dcf8d292";
     ngOnInit(): void {
         this.store.pipe(select(userSelector)).subscribe((appState) => {
             this.user$.next(appState.currentUser);
         });
-        this.matchService.getSeedingById('5f58d8b136283128dcf8d292').subscribe((tree) => {
-            this.mockTree = tree;
-            console.log(this.mockTree);
-        })
-        this.matchService.getTreeArraybyId('5f58d8b136283128dcf8d292').subscribe((tree) => {
-            this.mockTreeArray = tree;
-            console.log(this.mockTreeArray);
-        })
     }
-
 }

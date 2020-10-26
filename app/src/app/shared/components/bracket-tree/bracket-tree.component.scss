@@ -1,6 +1,9 @@
+
 p-tree ::ng-deep > div {
     transform: scaleX(-1);
     float:left;
+
+  
 
   table p-treenode table tbody td.ui-treenode {
     max-width: 250px;
@@ -12,6 +15,7 @@ p-tree ::ng-deep > div {
     span {
         transform: scaleX(-1);
     }
-  }
 
+  }
 }
+

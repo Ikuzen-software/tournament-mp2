@@ -1,16 +1,14 @@
 type Player = string;
-
-// const players = new Array(10)
-//     .fill(null)
-//     .map((value, index) => index + 1);
+type Identifier = number;
 
 class TournamentNode {
-    constructor(public a?: TournamentNode | Player, public b?: TournamentNode | Player) { }
+    constructor(public a?: TournamentNode | Player, public b?: TournamentNode | Player, public identifier?: Identifier) { }
 }
 
 export class Tournament {
     rounds: number = 0;
     players: string[];
+
     constructor(public root: TournamentNode, players: string[]) {
         this.players = players
     }
@@ -68,50 +66,104 @@ export function createTree(players: Player[]): Tournament {
 
         return new TournamentNode(a, b);
     }
-
     const tournament = new Tournament(createNode(1, 2), players);
     tournament.rounds = pow;
 
     return tournament;
 }
 
-export function removeBye(node: TournamentNode) {
+// Removes byes from TournamentNode, AND return matches count
+export function removeBye(node: TournamentNode, matchesCount = 1):number {
+    
     for (const key of ["a", "b"] as (keyof TournamentNode)[]) {
         const child = node[key];
-
         if (child instanceof TournamentNode) {
             if (!child.a || !child.b) {
-                node[key] = child.a || child.b;
+                node[key] = (child.a || child.b);
             } else {
-                removeBye(child);
+                matchesCount = (removeBye(child, ++matchesCount));
             }
         }
     }
+    return matchesCount
 }
 
+//return node with identifiers
+export function setIdentifiers(root: TournamentNode, withBye = false){
+    let id = 0;
+    if(!withBye) id = removeBye(root) - 1;
+    let nodes: TournamentNode[] = [ root ];
+    nodes = nodes.reverse();
+    nodes[0].identifier = id+1
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i];
+
+      if ((!(node instanceof TournamentNode))) {
+        continue;
+      }
+  
+      [ node.b, node.a ]
+          .filter((node): node is TournamentNode => node instanceof TournamentNode)
+          .forEach((node) => {
+              nodes.push(node)
+              node.identifier = id--
+            });
+    }
+    console.log(root)
+    return root;
+}
+
+// returns array of matches in order
+export function getArrayOfMatchesInOrderAndSetIdentifier(root: TournamentNode, withBye = false) {
+    let id = 0;
+    if(!withBye) id = removeBye(root) - 1;
+    let nodes: TournamentNode[] = [ root ];
+    nodes = nodes.reverse();
+    nodes[0].identifier = id+1
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i];
+
+      if ((!(node instanceof TournamentNode))) {
+        continue;
+      }
+  
+      [ node.b, node.a ]
+          .filter((node): node is TournamentNode => node instanceof TournamentNode)
+          .forEach((node) => {
+              nodes.push(node)
+              node.identifier = id--
+            });
+    }
+    return nodes.reverse();
+  }
+
+
+  
 function calculateRounds(numPlayers: number): number {
-    return Math.ceil(Math.sqrt(numPlayers))
+    return Math.ceil(Math.log2(numPlayers))
 }
 
-export function predictAllRounds(tree: Tournament, withBye = false): (TournamentNode | Player)[] { // return array of rounds in order, and matches to play
+export function getTree(tree: Tournament, withBye = false): (TournamentNode | Player)[] { // return array of rounds in order, and matches to play
     const numRounds = calculateRounds(tree.players.length);
+    console.log(numRounds)
+    let numMatches = 1;
     let result = [];
     for (let currentRound = 1; currentRound <= numRounds; currentRound++) {
-        result.push(tree.findMatchUpForRound(currentRound))
-        if (!withBye) removeBye(tree.root);
+        result.push(tree.findMatchUpForRound(currentRound));
     }
+    if (!withBye) numMatches = removeBye(tree.root)
     return result
 }
 interface NGNode {
     label: string
     children: NGNode[] | null
-    expanded: true
-    depth: number
+    expanded: boolean
+    depth: number,
+    identifier?: Identifier
   }
     
   export function convertTreeToArray(tree: Tournament, withBye = false) {
-    if (!withBye) removeBye(tree.root);
-
+    if (!withBye) tree.root = setIdentifiers(tree.root);
     const byNode = new Map<TournamentNode | Player, NGNode>();
   
     function toNGNode(node: TournamentNode | Player, depth: number): NGNode {
@@ -130,12 +182,13 @@ interface NGNode {
         };
       } else {
         ngnode = {
-          label: "",
+          label: "Match "+ node.identifier,
           children: [ node.a, node.b ]
               .filter((child): child is TournamentNode | Player => !!child)
               .map(child => toNGNode(child, depth + 1)),
           expanded: true,
           depth,
+          identifier:node.identifier
         };
       }
   
