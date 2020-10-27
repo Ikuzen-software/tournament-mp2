@@ -123,30 +123,31 @@ tournamentRouter.delete("/clean/:id", isTournamentOwner, async (request, respons
 });
 
 // Start a tournament, as a owner
-tournamentRouter.patch("/:id/start", isTournamentOwner, async (request, response) => {
+tournamentRouter.patch("/start/:id", isTournamentOwner, async (request, response) => {
     try {
         const tournament = await TournamentModel.findById(request.params.id).exec();
-        if (tournament.participants.length % 2 !== 0 || tournament.participants.length < 2) { // constraint for number of participants
+        if (tournament.participants.length < 2) { // constraint for number of participants
             response.status(403).send(`tournament ${request.params.id} must have at least 2 participants and an even number of participants to start`);
         }
         else {
 
             switch (tournament.status) {
                 case 'ongoing':
-                    response.status(403).send(`tournament ${request.params.id} is already started`);
+                    tournament.status = TnStatus.notStarted;
+                    response.send(tournament.save());
+                    // response.status(403).send(`tournament ${request.params.id} is already started`);
                     break
                 case 'finished':
                     response.status(403).send(`tournament ${request.params.id} is already finished`);
                     break
                 default:
                     tournament.status = TnStatus.ongoing;
-                    const result = await tournament.save();
-                    response.send(result);
+                    response.send(tournament.save());
                     break
             }
         }
     } catch (error) {
-        response.status(404).send(`tournament ${request.params.id} not found`);
+        response.status(404).send(`${error}`);
     }
 });
 

@@ -11,6 +11,7 @@ import { error } from 'console';
 import { UtilService } from '@tn/src/app/shared/services/util.service';
 import { ToastService } from '@tn/src/app/shared/services/toast.service';
 import { User } from '../../users/user';
+import { MatchService } from '../../matches/match.service';
 
 @Component({
   selector: 'app-tournament-detail',
@@ -23,7 +24,7 @@ export class TournamentDetailComponent implements OnInit {
   isParticipating: boolean;
   isTournamentOwner: boolean = false;
   isAvailable$: BehaviorSubject<boolean> = new BehaviorSubject(false)
-  constructor(private route: ActivatedRoute, private toastService: ToastService, private tournamentService: TournamentService, private router: Router, private readonly store: Store<fromAuth.ApplicationState>, public utilService: UtilService) {
+  constructor(private route: ActivatedRoute, private toastService: ToastService, private tournamentService: TournamentService, private router: Router, private readonly store: Store<fromAuth.ApplicationState>, public utilService: UtilService, private matchService: MatchService) {
     route.params.subscribe((value) => {
       tournamentService.getById(value.tournamentId).pipe(
         take(1)
@@ -100,6 +101,26 @@ export class TournamentDetailComponent implements OnInit {
 
   checkAvailability(): boolean {
     return this.tournament.size > this.tournament.participants.length ? true : false;
+  }
+
+  startStopTournament(): void {
+    if (!this.isLoggedIn) {
+      this.utilService.navigate("login")
+    } else {
+      this.tournamentService.startTournament(this.tournament).pipe(
+        take(1)
+      ).subscribe((result)=>{
+        let message;
+        console.log(this.tournament.status)
+        if(result.status === "ongoing") message = "started"  
+        if(result.status === "not started") message = "stopped"  
+        this.toastService.success("Tournament Start", "successfully "+message+" the tournament")
+      },
+      (error) => {
+        console.log(error)
+        this.toastService.showError("error", error.error);
+      });
+    }
   }
 }
 

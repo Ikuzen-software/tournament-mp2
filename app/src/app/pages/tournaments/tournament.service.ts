@@ -86,4 +86,8 @@ export class TournamentService {
   getTournamentAvailability(id: string){
     return this.http.get<string>(`${env.SERVER_API_URL}/tournament/other/size/${id}`);
   }
+  
+  startTournament(tournament: Tournament){
+    return this.http.patch<Tournament>(`${env.SERVER_API_URL}/tournament/start/${tournament._id}`, tournament ,this.getOptions());
+  }
 }

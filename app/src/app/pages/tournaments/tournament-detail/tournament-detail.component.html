@@ -31,7 +31,8 @@
         <ul>
             <li *ngFor="let user of tournament?.participants">{{user.username}}</li>
         </ul>
-
+        <button *ngIf="isTournamentOwner && tournament.status === 'not started'" pButton class="p-col-2 " (click)='startStopTournament()'> Start tournament</button>
+        <button *ngIf="isTournamentOwner && tournament.status === 'ongoing'" pButton class="p-col-2 " (click)='startStopTournament()'> Stop tournament</button>
         <app-bracket-tree [tournament_id]=tournament._id ></app-bracket-tree>
     </div>
 

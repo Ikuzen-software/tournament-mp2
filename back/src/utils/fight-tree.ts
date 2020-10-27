@@ -75,7 +75,7 @@ export function createTree(players: Player[]): Tournament {
 // Removes byes from TournamentNode, AND return matches count
 export function removeBye(node: TournamentNode, matchesCount = 1):number {
     
-    for (const key of ["a", "b"] as (keyof TournamentNode)[]) {
+    for (const key of ["a", "b"]) {
         const child = node[key];
         if (child instanceof TournamentNode) {
             if (!child.a || !child.b) {
@@ -109,7 +109,6 @@ export function setIdentifiers(root: TournamentNode, withBye = false){
               node.identifier = id--
             });
     }
-    console.log(root)
     return root;
 }
 

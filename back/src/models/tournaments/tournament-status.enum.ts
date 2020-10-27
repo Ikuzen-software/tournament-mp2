@@ -1,6 +1,6 @@
 export const STATUS = {
     ongoing: 'ongoing',
     finished: 'finished',
-    notStarted: 'not_started',
+    notStarted: 'not started',
     canceled:'canceled'
 }
