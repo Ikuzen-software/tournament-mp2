@@ -9,7 +9,7 @@
                     <li>Game : <a (click)="utilService.navigate('tournaments')">{{tournament.game}}</a></li>
                     <li>Entrants : {{tournament.participants.length}}/{{tournament.size}}</li>
                     <li>Type : single elimination</li>
-                    <li>Tournament start : {{tournament.startDate || 'NA'}}</li>
+                    <li>Tournament start : {{tournament.startDate ||'NA' | date }}</li>
                     <li>Status : {{tournament.status}}</li>
                 </ul>
                 <button *ngIf="isTournamentOwner" pButton class="p-col-2 " (click)='utilService.navigate("tournament-edit/"+tournament._id)'> Edit</button>
@@ -31,8 +31,8 @@
         <ul>
             <li *ngFor="let user of tournament?.participants">{{user.username}}</li>
         </ul>
-        <button *ngIf="isTournamentOwner && tournament.status === 'not started'" pButton class="p-col-2 " (click)='startStopTournament()'> Start tournament</button>
-        <button *ngIf="isTournamentOwner && tournament.status === 'ongoing'" pButton class="p-col-2 " (click)='startStopTournament()'> Stop tournament</button>
+        <button *ngIf="isTournamentOwner && tournament.status === 'not started'" pButton class="p-col-2 " (click)='startTournament()'> Start tournament</button>
+        <button *ngIf="isTournamentOwner && tournament.status === 'ongoing'" pButton class="p-col-2 " (click)='stopTournament()'> Stop tournament</button>
         <app-bracket-tree [tournament_id]=tournament._id ></app-bracket-tree>
     </div>
 

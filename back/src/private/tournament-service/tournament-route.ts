@@ -47,7 +47,6 @@ tournamentRouter.put("/join/:id", isLoggedIn, async (request, response) => {
     try {
         const user = request.body;
         if (user.username) {
-            console.log(user)
             if (getUserFromToken(request.headers.authorization?.split(' ')[1]).username !== user.username) {
                 response.status(401).send(`participant ${user.username} is not the authentified user`);
             } else {
@@ -130,21 +129,40 @@ tournamentRouter.patch("/start/:id", isTournamentOwner, async (request, response
             response.status(403).send(`tournament ${request.params.id} must have at least 2 participants and an even number of participants to start`);
         }
         else {
-
             switch (tournament.status) {
-                case 'ongoing':
-                    tournament.status = TnStatus.notStarted;
-                    response.send(tournament.save());
-                    // response.status(403).send(`tournament ${request.params.id} is already started`);
+                case TnStatus.notStarted:
+                    tournament.status = TnStatus.ongoing;
+                    tournament.save()
+                    response.send({result:tournament.status});
                     break
-                case 'finished':
+                case TnStatus.finished:
                     response.status(403).send(`tournament ${request.params.id} is already finished`);
                     break
+                case TnStatus.ongoing:
+                    response.status(403).send(`tournament ${request.params.id} is already started`);
+                    break
                 default:
-                    tournament.status = TnStatus.ongoing;
-                    response.send(tournament.save());
+                    response.send(403).send(`can't start the tournament`);
                     break
             }
+        }
+    } catch (error) {
+        console.log(error)
+        response.status(404).send(`${error}`);
+    }
+});
+
+tournamentRouter.patch("/stop/:id", isTournamentOwner, async (request, response) => {
+    try {
+        const tournament = await TournamentModel.findById(request.params.id).exec();
+        if (tournament.status === TnStatus.ongoing) { 
+            tournament.status = TnStatus.notStarted;
+            tournament.save()
+            response.send({result:tournament.status});
+        }
+        else {
+            response.status(403).send(`tournament ${request.params.id} isn't ongoing`);
+
         }
     } catch (error) {
         response.status(404).send(`${error}`);

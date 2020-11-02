@@ -1,15 +1,18 @@
-type Player = string;
-type Identifier = number;
+export class Player {
+    username: string; 
+    participant_id: string;
+};
+export type Identifier = number;
 
-class TournamentNode {
+export class TournamentNode {
     constructor(public a?: TournamentNode | Player, public b?: TournamentNode | Player, public identifier?: Identifier) { }
 }
 
 export class Tournament {
     rounds: number = 0;
-    players: string[];
+    players: Player[];
 
-    constructor(public root: TournamentNode, players: string[]) {
+    constructor(public root: TournamentNode, players: Player[]) {
         this.players = players
     }
 
@@ -142,7 +145,14 @@ function calculateRounds(numPlayers: number): number {
     return Math.ceil(Math.log2(numPlayers))
 }
 
-export function getTree(tree: Tournament, withBye = false): (TournamentNode | Player)[] { // return array of rounds in order, and matches to play
+// gets array of rounds of a tournament
+export function getTreeWithIdentifiers(tree: Tournament): TournamentNode { // return array of rounds in order, and matches to play
+      // method call solely for setting the identifier
+    getArrayOfMatchesInOrderAndSetIdentifier(tree.root)
+    return tree.root
+}
+// gets array of rounds of a tournament
+export function getTreeRounds(tree: Tournament, withBye = false): (TournamentNode | Player)[] { // return array of rounds in order, and matches to play
     const numRounds = calculateRounds(tree.players.length);
     console.log(numRounds)
     let numMatches = 1;

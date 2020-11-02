@@ -29,7 +29,7 @@ export function getUserFromToken(token?: string): any {
         }
     }
 }
-// check if owner with getById methods
+// check if owner with getById methods <!> params id must be params.id
 export async function isTournamentOwner(req, res, next) {
     var token = req.headers.authorization?.split(" ")[1];
     if (!token) {
@@ -38,7 +38,6 @@ export async function isTournamentOwner(req, res, next) {
             message: `Sign in to continue.`,
         });
     }
-
     try {
         const user = getUserFromToken(token);
         const tournament = await TournamentModel.findOne({ _id: req.params.id }).exec();
@@ -48,6 +47,7 @@ export async function isTournamentOwner(req, res, next) {
             return res.status(401).send({
                 success: false,
                 message: `You don't have the rights on this tournament.`,
+                error: user+"  -  "+ tournament.organizer
             });
         }
     } catch (err) {

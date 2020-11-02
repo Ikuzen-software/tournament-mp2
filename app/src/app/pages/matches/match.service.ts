@@ -6,6 +6,7 @@ import { LocalStorageService } from '../../shared/services/local-storage.service
 import { LoginService } from '../login/login.service';
 import { Match } from './match';
 import {env} from "@app/app.constants";
+import { Tournament } from '../tournaments/tournament';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,11 @@ export class MatchService {
   }
   getTreeArraybyId(id: string){
     return this.http.get<any[]>(`${env.SERVER_API_URL}/match/getTreeArrayForComponent/${id}`);
-
+  }
+  createAllMatchesById(id: string){
+    return this.http.post<Match[]>(`${env.SERVER_API_URL}/match/many/${id}`, {},  this.getOptions() );
+  }
+  deleteAllMatchesById(id: string){
+    return this.http.delete<Match[]>(`${env.SERVER_API_URL}/match/many/${id}`, this.getOptions() );
   }
 }
