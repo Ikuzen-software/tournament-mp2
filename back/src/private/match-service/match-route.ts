@@ -1,5 +1,5 @@
 import { TournamentModel } from '../../models/tournaments/tournament-model'
-import { jwtMW, isTournamentOwner, isAdmin, isLoggedIn, getUserFromToken } from '../../auth';
+import { jwtMW, isTournamentOwner, isAdmin, isLoggedIn, getUserFromToken, isReportable } from '../../auth';
 import { MatchModel } from '../../models/matches/matches-model';
 import * as tournamentTree from '../../utils/fight-tree'
 import { TournamentNode } from '../../utils/fight-tree';
@@ -51,23 +51,22 @@ matchRouter.delete("/many/:id", isTournamentOwner, async (request, response) => 
     }
 });
 
-
-// CREATE single match
-matchRouter.post("/", isTournamentOwner, async (request, response) => { 
+//Report a match result if match can be reported only
+matchRouter.put("/report", isReportable, async (request, response) => {
     try {
-        let token = request.headers.authorization?.split(' ')[1];
-        const user = getUserFromToken(token);
-        if (request.body?.organizer?.username !== user.username && request.body?.organizer?.organizer_id !== user._id) {
-            response.status(500).send('organizer must be the same as the tournament creator')
-        }else{
-            let match = new MatchModel(request.body);
-            const matchResult = await match.save();
-            response.send(matchResult);
-        }
+
+        // check if participant can report or not
+        const match = await MatchModel.findOne({ tournament_id: request.body.tournament_id, identifier: request.body.identifier }).exec();
+        match.winner_id = request.body.winner_id
+        match.loser_id = request.body.loser_id
+        match.score = request.body.score
+        match.save();
+        response.send(match);
     } catch (error) {
-        console.log(error)
-        response.status(500).send(error);
-    }
+    console.log(error)
+    response.status(500).send(error);
+}
 });
+
 
 module.exports = matchRouter;

@@ -191,7 +191,7 @@ interface NGNode {
         };
       } else {
         ngnode = {
-          label: "Match "+ node.identifier,
+          label: "",
           children: [ node.a, node.b ]
               .filter((child): child is TournamentNode | Player => !!child)
               .map(child => toNGNode(child, depth + 1)),

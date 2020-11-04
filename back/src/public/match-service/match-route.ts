@@ -1,3 +1,4 @@
+import { nodeModuleNameResolver } from 'typescript';
 import { isTournamentOwner, getUserFromToken } from '../../auth';
 import {MatchModel} from '../../models/matches/matches-model'
 import { TournamentModel } from '../../models/tournaments/tournament-model';
@@ -8,9 +9,9 @@ const matchRouter = express.Router();
 matchRouter.use(cors({origin: 'http://localhost:4200'}))
 
 //GET all matches from a tournament
-matchRouter.get("/", async (request, response) => {
+matchRouter.get("/all/:id", async (request, response) => {
     try {
-        const matches = await MatchModel.find();
+        const matches = await MatchModel.find({tournament_id:request.params.id});
         response.send(matches);
     } catch (error) {
         console.log(error)
@@ -43,13 +44,28 @@ matchRouter.get("/getTree/:tnId", async (request, response) => {
     }
 });
 // get an array of the tournament that is readable for the bracket component
-matchRouter.get("/getTreeArrayForComponent/:tnId", async (request, response) => { 
+matchRouter.get("/getTreeArrayForComponent/:id", async (request, response) => { 
     try {
-        const tournament = await TournamentModel.findById(request.params.tnId).exec();
+        const tournament = await TournamentModel.findById(request.params.id).exec();
         const playersList = tournament.participants.map((user, index) => (index+1)+" "+user.username);
         console.log(playersList)
         const tree = tournamentTree.createTree(playersList);
         const result = tournamentTree.convertTreeToArray(tree);
+        const matches = await MatchModel.find({tournament_id: request.params.id});
+        console.log(tournament.participants.find((participant)=> participant.participant_id == matches[0].winner_id).username)
+        for(let node of result){
+            if(node.identifier){
+                matches.filter((match)=> match.identifier.toString() === node.identifier.toString()).map((match)=> 
+                {
+                    if(match.winner_id){
+                        let winnerSeed = tournament.participants.findIndex((participant)=> participant.participant_id == match.winner_id);
+                        const winnerName = tournament.participants[winnerSeed].username
+                        node.label = (winnerSeed+1) +" "+ winnerName
+                    }
+                }
+                )
+            }
+        }
         response.send(result)
     } catch (error) {
         console.log(error)
