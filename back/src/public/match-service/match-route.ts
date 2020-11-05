@@ -52,7 +52,6 @@ matchRouter.get("/getTreeArrayForComponent/:id", async (request, response) => {
         const tree = tournamentTree.createTree(playersList);
         const result = tournamentTree.convertTreeToArray(tree);
         const matches = await MatchModel.find({tournament_id: request.params.id});
-        console.log(tournament.participants.find((participant)=> participant.participant_id == matches[0].winner_id).username)
         for(let node of result){
             if(node.identifier){
                 matches.filter((match)=> match.identifier.toString() === node.identifier.toString()).map((match)=> 

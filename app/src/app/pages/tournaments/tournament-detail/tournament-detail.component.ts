@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { map, debounceTime, take } from 'rxjs/operators';
+import { map, debounceTime, take, filter, tap } from 'rxjs/operators';
 import { TournamentService } from '../tournament.service';
 import { Tournament } from '../tournament';
 import { Store, select } from '@ngrx/store';
@@ -25,15 +25,39 @@ export class TournamentDetailComponent implements OnInit {
   isParticipating: boolean;
   isTournamentOwner: boolean = false;
   isAvailable$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  isStarted$: Subject<string> = new Subject();
+  isStarted$: BehaviorSubject<string> 
+
+  
   constructor(private route: ActivatedRoute, private toastService: ToastService, private tournamentService: TournamentService, private router: Router, private readonly store: Store<fromAuth.ApplicationState>, public utilService: UtilService, private matchService: MatchService) {
     route.params.subscribe((value) => {
       tournamentService.getById(value.tournamentId).pipe(
         take(1)
       ).subscribe((tournament) => {
         this.tournament = tournament;
-        console.log(tournament.status)
-        this.isStarted$.next(tournament.status);
+        this.isStarted$  = new BehaviorSubject(tournament.status);
+        this.isStarted$
+          .pipe(
+            debounceTime(100),
+            tap(()=>{
+                if(this.isStarted$.getValue() === TnStatus.notStarted){
+                  this.matchService.deleteAllMatchesById(this.tournament._id).subscribe();
+                  this.toastService.success("Tournament start", "successfully started the tournament");
+                  this.refresh()
+                }else if(this.isStarted$.getValue() === TnStatus.ongoing){
+                  this.matchService.deleteAllMatchesById(this.tournament._id).subscribe();
+                  this.toastService.success("Tournament stop", "successfully stopped the tournament");
+                  this.refresh();
+                }else if (this.isStarted$.getValue() === ""){
+                  // do nothing
+                }else{
+                  this.toastService.showError("Can't start", "This tournament can't be started or stopped");
+                }
+              },
+              (error) => {
+                console.log(error)
+                this.toastService.showError("error", error.error);
+              }))
+
         this.store.pipe(select(userSelector)).subscribe((appState) => {
           if (appState.currentUser.username) {
             this.isLoggedIn = true;
@@ -115,64 +139,54 @@ export class TournamentDetailComponent implements OnInit {
     return this.tournament.size > this.tournament.participants.length ? true : false;
   }
 
+  startStopTournament(): void {
+    if (!this.isLoggedIn) {
+          this.utilService.navigate("login")
+        } else {
+          console.log("test")
+      this.isStarted$.subscribe();
+      this.isStarted$.next(this.tournament.status)
+    }
+  }
+
+
   // startTournament(): void {
   //   if (!this.isLoggedIn) {
   //     this.utilService.navigate("login")
   //   } else {
-  //     this.isStarted$.pipe(
-  //     debounceTime(500)
-  //     ).subscribe({
-  //       next: (res)=>{
-  //         this.tournamentService.startTournament(this.tournament).subscribe((result)=>{
-  //           res = result
-  //           this.toastService.success("Tournament Start", "successfully started the tournament");
-  //           this.refresh()
-  //         },
-  //         (error) => {
-  //           this.toastService.showError("error", error.error);
-  //         })
-  //       }
-  //       })
+  //     this.tournamentService.startTournament(this.tournament).pipe(
+  //       take(1),
+  //       debounceTime(500)
+  //     ).subscribe((result)=>{
+  //       this.toastService.success("Tournament started", "successfully started the tournament");
+  //       this.matchService.createAllMatchesById(this.tournament._id).subscribe();
+  //       this.refresh()
+  //     },
+  //     (error) => {
+  //       console.log(error)
+  //       this.toastService.showError("error", error.error);
+  //     });
   //   }
   // }
 
-  startTournament(): void {
-    if (!this.isLoggedIn) {
-      this.utilService.navigate("login")
-    } else {
-      this.tournamentService.startTournament(this.tournament).pipe(
-        take(1),
-        debounceTime(500)
-      ).subscribe((result)=>{
-        this.toastService.success("Tournament started", "successfully started the tournament");
-        this.matchService.createAllMatchesById(this.tournament._id).subscribe();
-        this.refresh()
-      },
-      (error) => {
-        console.log(error)
-        this.toastService.showError("error", error.error);
-      });
-    }
-  }
-
-  stopTournament(): void {
-    if (!this.isLoggedIn) {
-      this.utilService.navigate("login")
-    } else {
-      this.tournamentService.stopTournament(this.tournament).pipe(
-        take(1),
-        debounceTime(500)
-      ).subscribe((result)=>{
-        this.matchService.deleteAllMatchesById(this.tournament._id).subscribe();
-        this.toastService.success("Tournament stop", "successfully stopped the tournament");
-        this.refresh()
-      },
-      (error) => {
-        console.log(error)
-        this.toastService.showError("error", error.error);
-      });
-    }
-  }
+  // stopTournament(): void {
+  //   if (!this.isLoggedIn) {
+  //     this.utilService.navigate("login")
+  //   } else {
+  //     this.tournamentService.stopTournament(this.tournament).pipe(
+  //       take(1),
+  //       debounceTime(500)
+  //     ).subscribe((result)=>{
+  //       this.matchService.deleteAllMatchesById(this.tournament._id).subscribe();
+  //       this.toastService.success("Tournament stop", "successfully stopped the tournament");
+  //       this.refresh()
+  //     },
+  //     (error) => {
+  //       console.log(error)
+  //       this.toastService.showError("error", error.error);
+  //     });
+  //   }
+  // }
 }
 
 
