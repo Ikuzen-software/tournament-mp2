@@ -12,30 +12,39 @@
                     <li>Tournament start : {{tournament.startDate ||'NA' | date }}</li>
                     <li>Status : {{tournament.status}}</li>
                 </ul>
-                <button *ngIf="isTournamentOwner" pButton class="p-col-2 " (click)='utilService.navigate("tournament-edit/"+tournament._id)'> Edit</button>
+                <button *ngIf="isTournamentOwner" pButton class="p-col-2 "
+                    (click)='utilService.navigate("tournament-edit/"+tournament._id)'> Edit</button>
             </div>
 
             <div>
                 Organized by: <a
                     (click)="utilService.navigate('user/'+tournament.organizer.organizer_id)">{{tournament.organizer.username}}</a>
-                </div>
             </div>
         </div>
-        <div class="tournament-description">
-            Description : {{tournament.description}}
-        </div>
-        <div class="tournament-list">
-            <button *ngIf="!isParticipating && checkAvailability()" pButton (click)="joinTournament()"> Participate</button>
-            <button *ngIf="isParticipating" pButton (click)="leaveTournament()"> Cancel participation</button>
-            <p> list of participants:</p>
-        <ul>
+    </div>
+    <div class="tournament-description">
+        Description : {{tournament.description}}
+    </div>
+    <div class="tournament-list">
+        <button *ngIf="!isParticipating && checkAvailability()" pButton (click)="joinTournament()"> Participate</button>
+        <button *ngIf="isParticipating" pButton (click)="leaveTournament()"> Cancel participation</button>
+        <p> list of participants:</p>
+        <ol>
             <li *ngFor="let user of tournament?.participants">{{user.username}}</li>
-        </ul>
-        <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'ongoing'" pButton class="p-col-2 " (click)='startStopTournament()'> Stop Tournament</button>
-        <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'not started'" pButton class="p-col-2 " (click)='startStopTournament()'> Start Tournament</button>
-        <app-bracket-tree [tournament_id]=tournament._id ></app-bracket-tree>
+        </ol>
+
+        <div *ngIf="isTournamentOwner && tournament?.participants" class="seeding-list">
+            <app-drag-order-list [list]="tournament.participants"></app-drag-order-list>
+            <button pButton (click)="updateSeeding()">update seeding</button>
+        </div>
+        <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'ongoing'" pButton class="p-col-2 "
+            (click)='startStopTournament()'> Stop Tournament</button>
+        <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'not started'" pButton class="p-col-2 "
+            (click)='startStopTournament()'> Start Tournament</button>
+        <app-bracket-tree [tournament_id]=tournament._id></app-bracket-tree>
     </div>
 
+    <button (click)="showParticipantList()">show participants</button>
 
 
 

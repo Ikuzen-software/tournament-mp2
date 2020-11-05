@@ -37,11 +37,12 @@ export async function isTournamentOwner(req, res, next) {
         return res.status(401).send({
             success: false,
             message: `Sign in to continue.`,
+
         });
     }
     try {
         const user = getUserFromToken(token);
-        const tournament = await TournamentModel.findOne({ _id: req.params.id }).exec();
+        const tournament = await TournamentModel.findOne({ _id: req.params.id || req.body._id }).exec();
         if (user.role === "admin" || user._id === tournament?.organizer?.organizer_id) {
             next();
         } else {
@@ -55,6 +56,7 @@ export async function isTournamentOwner(req, res, next) {
         return res.status(401).send({
             success: false,
             message: "Sign in to continue.",
+            error: err
         });
     }
 }

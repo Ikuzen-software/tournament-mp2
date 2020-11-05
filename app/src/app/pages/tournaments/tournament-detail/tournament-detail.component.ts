@@ -89,11 +89,12 @@ export class TournamentDetailComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  // refresh(): void {
-  //   this.tournamentService.getById(this.tournament._id).subscribe((tournament) => {
-  //     this.tournament = tournament;
-  //   })
-  // }
+  refresh(): void {
+    this.tournamentService.getById(this.tournament._id).subscribe((tournament) => {
+      this.tournament = tournament;
+      console.log(this.tournament)
+    })
+  }
 
   joinTournament() {
     if (!this.isLoggedIn) {
@@ -146,6 +147,19 @@ export class TournamentDetailComponent implements OnInit {
     } else {
       this.isStarted$.next({propagate:true, value:this.tournament.status})
     }
+  }
+
+  updateSeeding():void{
+    this.tournamentService.updateSeeding(this.tournament).subscribe(()=>{
+      this.toastService.success("Update seeding", "successfully updated the tournament seeding list");
+      this.refresh();
+    }, (err)=>{
+      this.toastService.showError("Error", "couldn't update the seeding");
+    }
+    );
+  }
+  showParticipantList(){
+    console.log(this.tournament.participants)
   }
 }
 

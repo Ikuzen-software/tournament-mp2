@@ -3,6 +3,8 @@ import { jwtMW, isTournamentOwner, isAdmin, isLoggedIn, getUserFromToken } from 
 import { Tournament } from '../../models/tournaments/tournament-interface';
 import { UserModel } from '../../models/users/user-model';
 import { STATUS as TnStatus } from '../../models/tournaments/tournament-status.enum';
+import * as _ from "lodash"
+
 const express = require('express');
 const tournamentRouter = express.Router();
 const cors = require('cors')
@@ -168,7 +170,24 @@ tournamentRouter.patch("/stop/:id", isTournamentOwner, async (request, response)
         response.status(404).send(`${error}`);
     }
 });
+// save new tournament seeding
+tournamentRouter.patch("/seeding", isTournamentOwner, async (request, response) => {
+    try {
+        const tournament = await TournamentModel.findById(request.body._id).exec();
+        if(_.isEqual(tournament.participants.map(participant => participant.username).sort(), request.body.participants.map(participant => participant.username).sort())){
+            tournament.participants = request.body.participants;
+            tournament.save();
+            response.send({success:true})
+        }
+        else{
+            console.log(_.isEqual(tournament.participants.map(participant => participant.username).sort, request.body.participants.map(participant => participant.username).sort))
+            response.status(400).send(`something went wrong when trying to save the participant list`);
 
+        }
+    } catch (error) {
+        response.status(404).send(`${error}`);
+    }
+});
 
 tournamentRouter.delete("/:id", isTournamentOwner, async (request, response) => {
     try {

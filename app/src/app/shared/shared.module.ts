@@ -6,6 +6,10 @@ import { TreeModule } from 'primeng/tree';
 import { ButtonModule } from 'primeng/button';
 import { ValidationErrorComponent } from './validation/validation-error/validation-error.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TreeDragDropService } from 'primeng/api';
+import { DragOrderListComponent } from './components/drag-order-list/drag-order-list.component';
+import {ListboxModule} from 'primeng/listbox';
+import { OrderListModule } from 'primeng/orderlist';
 
 
 
@@ -13,18 +17,27 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   declarations: [
     BracketTreeComponent,
     ValidationErrorComponent,
+    DragOrderListComponent,
   ],
+  providers:[
+    TreeDragDropService
+  ]
+  ,
   imports: [
     CommonModule,
     ToastModule,
     TreeModule,
     ButtonModule,
     MatTooltipModule,
+    ListboxModule,
+    OrderListModule
+
   ],
   exports:[
     BracketTreeComponent,
     ToastModule,
-    ValidationErrorComponent
+    ValidationErrorComponent,
+    DragOrderListComponent
   ]
 })
 export class SharedModule { }

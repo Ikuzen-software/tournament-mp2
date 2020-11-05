@@ -1,0 +1,7 @@
+<p-orderList [value]="list" dragdrop="true" >
+    <ng-template let-item let-i="index" pTemplate="item">
+        <div class="product-item">
+            <h5 class="p-mb-2">{{i+1}} {{item.username}}</h5>
+        </div>
+    </ng-template>
+</p-orderList>

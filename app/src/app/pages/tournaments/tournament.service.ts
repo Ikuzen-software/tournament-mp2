@@ -94,4 +94,8 @@ export class TournamentService {
   stopTournament(tournament: Tournament){
     return this.http.patch<Tournament>(`${env.SERVER_API_URL}/tournament/stop/${tournament._id}`, tournament ,this.getOptions());
   }
+  
+  updateSeeding(tournament: Tournament){
+    return this.http.patch<Tournament>(`${env.SERVER_API_URL}/tournament/seeding`, tournament ,this.getOptions());
+  }
 }

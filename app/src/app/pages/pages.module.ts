@@ -8,7 +8,6 @@ import { UserListComponent } from './users/user-list/user-list.component';
 import { TournamentListComponent } from './tournaments/tournament-list/tournament-list.component';
 import { TournamentDetailComponent } from './tournaments/tournament-detail/tournament-detail.component';
 import { MainComponent } from './main/main.component';
-import { TreeModule } from 'primeng/tree';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
@@ -51,7 +50,6 @@ import { MatchesComponent } from './matches/matches.component';
     CommonModule,
     CarouselModule,
     CardModule,
-    TreeModule,
     HttpClientModule,
     FormsModule,
     MenuModule,

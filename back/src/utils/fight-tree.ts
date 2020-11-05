@@ -1,5 +1,5 @@
 export class Player {
-    username: string; 
+    username: string;
     participant_id: string;
 };
 export type Identifier = number;
@@ -35,7 +35,7 @@ export class Tournament {
         }
 
         return recurse([this.root], 0)
-        .filter(node => !(node instanceof TournamentNode) || node.a && node.b); // filters out the player vs bye
+            .filter(node => !(node instanceof TournamentNode) || node.a && node.b); // filters out the player vs bye
     }
 }
 
@@ -76,8 +76,8 @@ export function createTree(players: Player[]): Tournament {
 }
 
 // Removes byes from TournamentNode, AND return matches count
-export function removeBye(node: TournamentNode, matchesCount = 1):number {
-    
+export function removeBye(node: TournamentNode, matchesCount = 1): number {
+
     for (const key of ["a", "b"]) {
         const child = node[key];
         if (child instanceof TournamentNode) {
@@ -92,24 +92,24 @@ export function removeBye(node: TournamentNode, matchesCount = 1):number {
 }
 
 //return node with identifiers
-export function setIdentifiers(root: TournamentNode, withBye = false){
+export function setIdentifiers(root: TournamentNode, withBye = false) {
     let id = 0;
-    if(!withBye) id = removeBye(root) - 1;
-    let nodes: TournamentNode[] = [ root ];
+    if (!withBye) id = removeBye(root) - 1;
+    let nodes: TournamentNode[] = [root];
     nodes = nodes.reverse();
-    nodes[0].identifier = id+1
+    nodes[0].identifier = id + 1
     for (let i = 0; i < nodes.length; i++) {
-      const node = nodes[i];
+        const node = nodes[i];
 
-      if ((!(node instanceof TournamentNode))) {
-        continue;
-      }
-  
-      [ node.b, node.a ]
-          .filter((node): node is TournamentNode => node instanceof TournamentNode)
-          .forEach((node) => {
-              nodes.push(node)
-              node.identifier = id--
+        if ((!(node instanceof TournamentNode))) {
+            continue;
+        }
+
+        [node.b, node.a]
+            .filter((node): node is TournamentNode => node instanceof TournamentNode)
+            .forEach((node) => {
+                nodes.push(node)
+                node.identifier = id--
             });
     }
     return root;
@@ -118,36 +118,36 @@ export function setIdentifiers(root: TournamentNode, withBye = false){
 // returns array of matches in order
 export function getArrayOfMatchesInOrderAndSetIdentifier(root: TournamentNode, withBye = false) {
     let id = 0;
-    if(!withBye) id = removeBye(root) - 1;
-    let nodes: TournamentNode[] = [ root ];
+    if (!withBye) id = removeBye(root) - 1;
+    let nodes: TournamentNode[] = [root];
     nodes = nodes.reverse();
-    nodes[0].identifier = id+1
+    nodes[0].identifier = id + 1
     for (let i = 0; i < nodes.length; i++) {
-      const node = nodes[i];
+        const node = nodes[i];
 
-      if ((!(node instanceof TournamentNode))) {
-        continue;
-      }
-  
-      [ node.b, node.a ]
-          .filter((node): node is TournamentNode => node instanceof TournamentNode)
-          .forEach((node) => {
-              nodes.push(node)
-              node.identifier = id--
+        if ((!(node instanceof TournamentNode))) {
+            continue;
+        }
+
+        [node.b, node.a]
+            .filter((node): node is TournamentNode => node instanceof TournamentNode)
+            .forEach((node) => {
+                nodes.push(node)
+                node.identifier = id--
             });
     }
     return nodes.reverse();
-  }
+}
 
 
-  
+
 function calculateRounds(numPlayers: number): number {
     return Math.ceil(Math.log2(numPlayers))
 }
 
 // gets array of rounds of a tournament
 export function getTreeWithIdentifiers(tree: Tournament): TournamentNode { // return array of rounds in order, and matches to play
-      // method call solely for setting the identifier
+    // method call solely for setting the identifier
     getArrayOfMatchesInOrderAndSetIdentifier(tree.root)
     return tree.root
 }
@@ -169,47 +169,47 @@ interface NGNode {
     expanded: boolean
     depth: number,
     identifier?: Identifier
-  }
-    
-  export function convertTreeToArray(tree: Tournament, withBye = false) {
+}
+
+export function convertTreeToArray(tree: Tournament, withBye = false) {
     if (!withBye) tree.root = setIdentifiers(tree.root);
     const byNode = new Map<TournamentNode | Player, NGNode>();
-  
+
     function toNGNode(node: TournamentNode | Player, depth: number): NGNode {
-      let ngnode = byNode.get(node);
-  
-      if (ngnode) {
+        let ngnode = byNode.get(node);
+
+        if (ngnode) {
+            return ngnode;
+        }
+
+        if (!(node instanceof TournamentNode)) {
+            ngnode = {
+                label: node.toString(),
+                children: null,
+                expanded: true,
+                depth,
+            };
+        } else {
+            ngnode = {
+                label: "",
+                children: [node.a, node.b]
+                    .filter((child): child is TournamentNode | Player => !!child)
+                    .map(child => toNGNode(child, depth + 1)),
+                expanded: true,
+                depth,
+                identifier: node.identifier
+            };
+        }
+
+        byNode.set(node, ngnode);
+
         return ngnode;
-      }
-  
-      if (!(node instanceof TournamentNode)) {
-        ngnode = {
-          label: node.toString(),
-          children: null,
-          expanded: true,
-          depth,
-        };
-      } else {
-        ngnode = {
-          label: "",
-          children: [ node.a, node.b ]
-              .filter((child): child is TournamentNode | Player => !!child)
-              .map(child => toNGNode(child, depth + 1)),
-          expanded: true,
-          depth,
-          identifier:node.identifier
-        };
-      }
-  
-      byNode.set(node, ngnode);
-  
-      return ngnode;
     }
-  
-  
+
+
     toNGNode(tree.root, 0);
-  
-    return [ ...byNode.values() ].sort((a, b) => a.depth - b.depth);
-  }
-  
-  
+
+    return [...byNode.values()].sort((a, b) => a.depth - b.depth);
+}
+
+
