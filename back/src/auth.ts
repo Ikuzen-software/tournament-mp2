@@ -1,3 +1,4 @@
+import { MatchModel } from "./models/matches/matches-model";
 import { TournamentModel } from "./models/tournaments/tournament-model";
 
 var atob = require('atob');
@@ -29,7 +30,7 @@ export function getUserFromToken(token?: string): any {
         }
     }
 }
-// check if owner with getById methods
+// check if owner with getById methods <!> params id must be params.id
 export async function isTournamentOwner(req, res, next) {
     var token = req.headers.authorization?.split(" ")[1];
     if (!token) {
@@ -38,7 +39,6 @@ export async function isTournamentOwner(req, res, next) {
             message: `Sign in to continue.`,
         });
     }
-
     try {
         const user = getUserFromToken(token);
         const tournament = await TournamentModel.findOne({ _id: req.params.id }).exec();
@@ -48,6 +48,7 @@ export async function isTournamentOwner(req, res, next) {
             return res.status(401).send({
                 success: false,
                 message: `You don't have the rights on this tournament.`,
+                error: user+"  -  "+ tournament.organizer
             });
         }
     } catch (err) {
@@ -123,6 +124,49 @@ export function isAdmin(req, res, next) {
         return res.status(401).send({
             success: false,
             message: 'Sign in to continue.'
+        });
+    }
+}
+
+//is the match reportable by the current user
+export async function isReportable(req, res, next) {
+    var token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+        return res.status(401).send({
+            success: false,
+            message: `Sign in to continue.`,
+        });
+    }
+    try {
+        // check is Match is in a reportable state
+        const match = await MatchModel.findOne({tournament_id: req.body.tournament_id, identifier:req.body.identifier})
+        if(!match.player1_id || !match.player2_id){
+            return res.status(401).send({
+                success: false,
+                message: "match is not reportable yet",
+            });
+        }//
+
+        const user = getUserFromToken(token);
+        const tournament = await TournamentModel.findOne({ _id: req.params.id }).exec();
+        //check if admin or organizer
+        if (user.role === "admin" || user._id === tournament?.organizer?.organizer_id) {
+            next();
+        } else {
+            //checks if user is one of the match participant
+            if(user._id === match.player1_id || user._id === match.player2_id) next();
+            else{
+                return res.status(401).send({
+                    success: false,
+                    message: `You don't have the rights on this tournament.`,
+                    error: user+"  -  "+ tournament.organizer
+                });
+            }
+        }
+    } catch (err) {
+        return res.status(401).send({
+            success: false,
+            message: "Sign in to continue.",
         });
     }
 }

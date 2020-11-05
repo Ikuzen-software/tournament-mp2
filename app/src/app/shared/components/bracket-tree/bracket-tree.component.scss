@@ -1,14 +1,21 @@
+
 p-tree ::ng-deep > div {
     transform: scaleX(-1);
     float:left;
+
+  
 
   table p-treenode table tbody td.ui-treenode {
     max-width: 250px;
     min-width: 250px;
 
+    span.ui-tree-toggler{
+      display: none;
+    }
     span {
         transform: scaleX(-1);
     }
-  }
 
+  }
 }
+

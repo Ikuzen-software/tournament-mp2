@@ -41,11 +41,12 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
 import {FilterUtils} from 'primeng/utils';
 import { TournamentEditComponent } from './tournaments/tournament-edit/tournament-edit.component';
 import {ProgressBarModule} from 'primeng/progressbar';
+import { MatchesComponent } from './matches/matches.component';
 
 
 
 @NgModule({
-  declarations: [UserDetailComponent, UserListComponent, TournamentListComponent, TournamentDetailComponent, TournamentsComponent, TournamentCreationComponent, MainComponent, LoginComponent, RegisterComponent, PasswordRecoveryComponent, ForbiddenComponent, TournamentCreationComponent, TournamentNotFoundComponent, TournamentEditComponent],
+  declarations: [UserDetailComponent, UserListComponent, TournamentListComponent, TournamentDetailComponent, TournamentsComponent, TournamentCreationComponent, MainComponent, LoginComponent, RegisterComponent, PasswordRecoveryComponent, ForbiddenComponent, TournamentCreationComponent, TournamentNotFoundComponent, TournamentEditComponent, MatchesComponent],
   imports: [
     CommonModule,
     CarouselModule,
