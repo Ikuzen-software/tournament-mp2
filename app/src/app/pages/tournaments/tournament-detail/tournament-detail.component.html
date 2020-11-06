@@ -1,4 +1,95 @@
-<div *ngIf="tournament">
+<p-tabView *ngIf="tournament">
+    <!-- Description -->
+    <p-tabPanel header="Overall" class="overall-infos">
+        <div class="table-header">
+            <h2>{{tournament.name}}</h2>
+        </div>
+        <p-card header="Game : ">
+            <a (click)="utilService.navigate('tournaments')">{{tournament?.game}}</a>
+        </p-card>
+        <p-card header="Entrants : ">
+            {{tournament?.participants?.length}}/{{tournament?.size}}
+        </p-card>
+        <p-card header="Type :  ">
+            {{tournament?.format}}
+        </p-card>
+        <p-card header="Tournament start : ">
+            {{tournament.startDate ||'NA' | date }}
+        </p-card>
+        <p-card header="Status : ">
+            {{tournament?.status}}
+        </p-card>
+        <p-card header="organized by : ">
+            <a
+                (click)="utilService.navigate('user/'+tournament.organizer?.organizer_id)">{{tournament?.organizer?.username}}</a>
+        </p-card>
+    </p-tabPanel>
+    <!-- Standing -->
+    <p-tabPanel header="Standing">
+        <div class="card">
+            <p-table #dt [value]="tournament.participants" styleClass="p-datatable-tournaments" [rowHover]="true"
+                [showCurrentPageReport]="true" [loading]="false" currentPageReportTemplate="Showing entries"
+                [filterDelay]="0" [virtualScroll]="true">
+                <ng-template pTemplate="caption">
+                    <div class="table-header">
+                        <h1>Standing</h1>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem"></th>
+                        <th>Rank</th>
+                        <th>Participant username</th>
+                        <th>matches played</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-participant>
+                    <tr class="p-selectable-row">
+                        <td><img style="width: 40px; height: 50px; " src="../../../../favicon.ico" alt="tree-icon"></td>
+                        <td>
+                            <p>1</p>
+                        </td>
+                        <td>
+                            <a class="p-column-title" style="cursor: pointer;"
+                                (click)="utilService.navigate('user/'+participant?.participant_id)">{{participant?.username}}</a>
+                        </td>
+
+                        <td>
+                            <span class="p-column-title">match x</span>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <p-table>
+
+        </p-table>
+    </p-tabPanel>
+    <!-- Bracket -->
+    <p-tabPanel header="Bracket">
+        <app-bracket-tree [tournament_id]=tournament._id></app-bracket-tree>
+        <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'ongoing'" pButton class="p-col-2 "
+            (click)='startStopTournament()'> Stop Tournament</button>
+        <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'not started'" pButton class="p-col-2 "
+            (click)='startStopTournament()'> Start Tournament</button>
+    </p-tabPanel>
+    <!-- Options -->
+    <p-tabPanel *ngIf="isTournamentOwner" header="Edit tournament">
+        <app-tournament-edit [tournament]="tournament"></app-tournament-edit>
+    </p-tabPanel>
+    <!-- seeding list -->
+    <p-tabPanel *ngIf="isTournamentOwner" header="seeding list">
+        <div *ngIf="isTournamentOwner && tournament?.participants" class="seeding-list">
+            <app-drag-order-list [list]="tournament.participants"></app-drag-order-list>
+            <button pButton (click)="updateSeeding()">update seeding</button>
+        </div>
+    </p-tabPanel>
+</p-tabView>
+
+
+
+
+<!-- <div *ngIf="tournament">
     <div class=" tournament-banner-body">
         <div class="p-shadow-24 main">
             <h1 class="p-col-6 tournament-name">
@@ -48,7 +139,7 @@
 
 
 
-</div>
+</div> -->
 
 <div *ngIf="!tournament">
     <app-tournament-not-found></app-tournament-not-found>

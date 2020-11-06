@@ -19,3 +19,16 @@ a{
         }
     }
 }
+
+p-panel.overall-infos {
+    ::ng-deep{
+        div{
+            .ui-panel-content-wrapper{
+                .ui-panel-content{
+                    display: flex;
+                    justify-content: space-between;
+                }
+            }
+        }
+    }
+}

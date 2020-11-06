@@ -1,14 +1,18 @@
 :host{
 
     p-orderlist{
-        color: blue;
         ::ng-deep{
             div.ui-orderlist{
-                max-width: 40%;
-                color: red;
                 div.ui-orderlist-list-container{
                     ul{
                         height: fit-content;
+                    }
+                }
+                div.ui-orderlist-controls{
+                    display: flex;
+                    flex-direction: column;
+                    button:nth-child(2){
+                        order:-1
                     }
                 }
             }
