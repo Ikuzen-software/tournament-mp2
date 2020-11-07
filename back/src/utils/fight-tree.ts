@@ -1,3 +1,4 @@
+
 export class Player {
     username: string;
     participant_id: string;
@@ -163,13 +164,30 @@ export function getTreeRounds(tree: Tournament, withBye = false): (TournamentNod
     if (!withBye) numMatches = removeBye(tree.root)
     return result
 }
-interface NGNode {
-    label: string
-    children: NGNode[] | null
-    expanded: boolean
-    depth: number,
-    identifier?: Identifier
+
+// copy of interface TreeNode from PrimeNG
+interface NGNode{
+    label: string;
+    children: NGNode[] | null;
+    expanded: boolean;
+    depth: number;
+    identifier?: Identifier;
+    data?: any;
+    icon?: any;
+    expandedIcon?: any;
+    collapsedIcon?: any;
+    leaf?: boolean;
+    type?: string;
+    parent?: NGNode;
+    partialSelected?: boolean;
+    styleClass?: string;
+    draggable?: boolean;
+    droppable?: boolean;
+    selectable?: boolean;
+    key?: string;
 }
+
+// convert a tree to an array usable for the primeNG tree component
 
 export function convertTreeToArray(tree: Tournament, withBye = false) {
     if (!withBye) tree.root = setIdentifiers(tree.root);
@@ -185,9 +203,11 @@ export function convertTreeToArray(tree: Tournament, withBye = false) {
         if (!(node instanceof TournamentNode)) {
             ngnode = {
                 label: node.toString(),
+                data: node.toString(),
                 children: null,
                 expanded: true,
                 depth,
+                leaf: true,
             };
         } else {
             ngnode = {
@@ -197,7 +217,8 @@ export function convertTreeToArray(tree: Tournament, withBye = false) {
                     .map(child => toNGNode(child, depth + 1)),
                 expanded: true,
                 depth,
-                identifier: node.identifier
+                identifier: node.identifier,
+                styleClass: `match${node.identifier}`
             };
         }
 

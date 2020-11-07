@@ -24,8 +24,12 @@ export class MatchService {
     };
   }
 
+  getAllMatchesByTournamentId(id: string){
+    return this.http.get<(Match)[]>(`${env.SERVER_API_URL}/match/all/${id}`);
+  }
+
   getById(id: string){
-    return this.http.get<(Match)[]>(`${env.SERVER_API_URL}/match/${id}`);
+    return this.http.get<(Match)>(`${env.SERVER_API_URL}/match/${id}`);
   }
   getSeedingById(id: string){
     return this.http.get<(string | TournamentNode)[]>(`${env.SERVER_API_URL}/match/getTree/${id}`);

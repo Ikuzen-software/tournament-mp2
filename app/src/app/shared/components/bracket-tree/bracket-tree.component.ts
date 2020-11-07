@@ -4,6 +4,7 @@ import { TreeNode } from 'primeng/api/treenode';
 import { Round, TournamentNode } from '../tree';
 import { cpuUsage } from 'process';
 import { MatchService } from '@tn/src/app/pages/matches/match.service';
+import { Match } from '@tn/src/app/pages/matches/match';
 
 @Component({
   selector: 'app-bracket-tree',
@@ -12,23 +13,50 @@ import { MatchService } from '@tn/src/app/pages/matches/match.service';
 })
 export class BracketTreeComponent implements OnInit, AfterViewInit {
   @Input() tournament_id: string;
-  expandingTree: Tree;
   filesTree: TreeNode[] = [];
-  selectedFile: TreeNode;
-  indexIncremator = 0;
+  allMatches: Match[];
   constructor(private matchService: MatchService) {
   }
 
   ngOnInit(): void {
-    this.matchService.getTreeArraybyId(this.tournament_id).subscribe((tree) => {
-      this.filesTree = tree;
-    })
+    this.updateBracket();
   }
 
   ngAfterViewInit() {
+    this.enableDragScroll();
+    // this.addMatchClickEvents();
+  };
+
+  updateBracket(){
+    this.matchService.getTreeArraybyId(this.tournament_id).subscribe((tree) => {
+      this.filesTree = tree;
+    });
+    this.matchService.getAllMatchesByTournamentId(this.tournament_id).subscribe((matches)=> {
+      this.allMatches = matches;
+      console.log(matches)
+      this.addMatchClickEvents();
+
+    });
+  }
+
+  onMatchClick(i){
+    console.log(i)
+  }
+
+  addMatchClickEvents(){
+    for(let i=1; i<this.allMatches.length; i++){
+      // Selecting the specific matches elements
+      const ele =  Array.from(document.getElementsByClassName(`match${i}`))[0].children[0].children[0].children[1].children[0];
+      ele.addEventListener('click', ()=>{this.onMatchClick(i)})
+    }
+    // last match is the mother node
+    const lastEle = Array.from(document.getElementsByClassName(`match${this.allMatches.length}`))[0].children[0].children[0].children[0].children[0];
+    lastEle.addEventListener('click', ()=>{this.onMatchClick(this.allMatches.length)})
+  }
+  enableDragScroll(){
     let pos = { top: 0, left: 0, x: 0, y: 0 };
     let ele = Array.from(document.getElementsByClassName('ui-tree-horizontal'))[0] as HTMLElement;
-    const mouseMoveHandler = function (e) {
+    const mouseMoveHandler = (e) =>{
       // How far the mouse has been moved
       const dx = pos.x - e.clientX;
       const dy =  pos.y - e.clientY;
@@ -37,11 +65,11 @@ export class BracketTreeComponent implements OnInit, AfterViewInit {
       ele.scrollTop = pos.top - dy;
       ele.scrollLeft = pos.left - dx;
     };
-    const mouseUpHandler = function () {
-      ele.onmousemove = null
+    const mouseUpHandler = ()=> {
+      ele.onmousemove = null;
       ele.style.cursor = 'grab';
     };
-    const mouseDownHandler = function (e) {
+    const mouseDownHandler = (e) =>{
       ele.onmousemove = mouseMoveHandler
       ele.style.cursor = 'grabbing';
       ele.style.userSelect = 'none';
@@ -54,9 +82,8 @@ export class BracketTreeComponent implements OnInit, AfterViewInit {
         y: e.clientY,
       };
     }
-    ele.onmousedown = mouseDownHandler
-    window.onmouseup = mouseUpHandler
-
+    ele.onmousedown = mouseDownHandler;
+    window.onmouseup = mouseUpHandler;
   }
 
 }
