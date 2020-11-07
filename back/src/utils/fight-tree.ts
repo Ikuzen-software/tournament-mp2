@@ -56,24 +56,29 @@ function highestPowerOfTwo(value: number) {
 
 
 export function createTree(players: Player[]): Tournament {
-    const pow = highestPowerOfTwo(players.length);
-    const nb = 1 << pow;
+    if(players.length >1){
 
-    function createNode(node: number, roundNB: number): TournamentNode {
-        if (roundNB === nb) {
-            return new TournamentNode(players[node - 1], players[roundNB - node]);
+        const pow = highestPowerOfTwo(players.length);
+        const nb = 1 << pow;
+        
+        function createNode(node: number, roundNB: number): TournamentNode {
+            if (roundNB === nb) {
+                return new TournamentNode(players[node - 1], players[roundNB - node]);
+            }
+            
+            const nextNB = roundNB << 1;
+            const a = createNode(node, nextNB);
+            const b = createNode(roundNB - node + 1, nextNB);
+            
+            return new TournamentNode(a, b);
         }
-
-        const nextNB = roundNB << 1;
-        const a = createNode(node, nextNB);
-        const b = createNode(roundNB - node + 1, nextNB);
-
-        return new TournamentNode(a, b);
+        const tournament = new Tournament(createNode(1, 2), players);
+        tournament.rounds = pow;
+        
+        return tournament;
+    }else{
+        return new Tournament(new TournamentNode(players[0]), players)
     }
-    const tournament = new Tournament(createNode(1, 2), players);
-    tournament.rounds = pow;
-
-    return tournament;
 }
 
 // Removes byes from TournamentNode, AND return matches count
