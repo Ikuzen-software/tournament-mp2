@@ -10,6 +10,9 @@ import { TreeDragDropService } from 'primeng/api';
 import { DragOrderListComponent } from './components/drag-order-list/drag-order-list.component';
 import {ListboxModule} from 'primeng/listbox';
 import { OrderListModule } from 'primeng/orderlist';
+import { DialogModule } from 'primeng/dialog';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ScoreDialogComponent } from './components/score-dialog/score-dialog.component';
 
 
 
@@ -18,6 +21,8 @@ import { OrderListModule } from 'primeng/orderlist';
     BracketTreeComponent,
     ValidationErrorComponent,
     DragOrderListComponent,
+    ScoreDialogComponent,
+    ScoreDialogComponent
   ],
   providers:[
     TreeDragDropService
@@ -30,14 +35,17 @@ import { OrderListModule } from 'primeng/orderlist';
     ButtonModule,
     MatTooltipModule,
     ListboxModule,
-    OrderListModule
+    OrderListModule,
+    DialogModule,
+    ReactiveFormsModule
 
   ],
   exports:[
     BracketTreeComponent,
     ToastModule,
     ValidationErrorComponent,
-    DragOrderListComponent
+    DragOrderListComponent,
+    ScoreDialogComponent
   ]
 })
 export class SharedModule { }

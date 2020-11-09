@@ -57,6 +57,7 @@ matchRouter.get("/getTreeArrayForComponent/:id", async (request, response) => {
                 matches.filter((match)=> match.identifier.toString() === node.identifier.toString()).map((match)=> 
                 {
                     if(match.winner_id){
+                        console.log(match)
                         let winnerSeed = tournament.participants.findIndex((participant)=> participant.participant_id == match.winner_id);
                         const winnerName = tournament.participants[winnerSeed].username
                         node.label = (winnerSeed+1) +" "+ winnerName

@@ -2,9 +2,12 @@ import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/cor
 import { Tree } from 'primeng/tree/tree';
 import { TreeNode } from 'primeng/api/treenode';
 import { Round, TournamentNode } from '../tree';
-import { cpuUsage } from 'process';
 import { MatchService } from '@tn/src/app/pages/matches/match.service';
 import { Match } from '@tn/src/app/pages/matches/match';
+import { Tournament } from '@tn/src/app/pages/tournaments/tournament';
+import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
+import { debounceTime, filter } from 'rxjs/operators';
+import { STATUS } from '@tn/../back/src/models/tournaments/tournament-status.enum';
 
 @Component({
   selector: 'app-bracket-tree',
@@ -12,7 +15,7 @@ import { Match } from '@tn/src/app/pages/matches/match';
   styleUrls: ['./bracket-tree.component.scss']
 })
 export class BracketTreeComponent implements OnInit, AfterViewInit {
-  @Input() tournament_id: string;
+  @Input() tournament: Tournament;
   filesTree: TreeNode[] = [];
   allMatches: Match[];
   constructor(private matchService: MatchService) {
@@ -24,52 +27,47 @@ export class BracketTreeComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.enableDragScroll();
-    // this.addMatchClickEvents();
   };
 
-  updateBracket(){
-    this.matchService.getTreeArraybyId(this.tournament_id).subscribe((tree) => {
+  updateBracket() {
+    this.matchService.getTreeArraybyId(this.tournament._id).subscribe((tree) => {
       this.filesTree = tree;
-    });
-    this.matchService.getAllMatchesByTournamentId(this.tournament_id).subscribe((matches)=> {
-      this.allMatches = matches;
-      console.log(matches)
-      this.addMatchClickEvents();
-
     });
   }
 
-  onMatchClick(i){
+  onMatchClick(i) {
     console.log(i)
   }
 
-  addMatchClickEvents(){
-    for(let i=1; i<this.allMatches.length; i++){
-      // Selecting the specific matches elements
-      const ele =  Array.from(document.getElementsByClassName(`match${i}`))[0].children[0].children[0].children[1].children[0];
-      ele.addEventListener('click', ()=>{this.onMatchClick(i)})
+  addMatchClickEvents() {
+    if (this.allMatches.length > 0) {
+      for (let i = 1; i < this.allMatches.length; i++) {
+        // Selecting the specific matches elements
+        const ele = Array.from(document.getElementsByClassName(`match${i}`))[0].children[0].children[0].children[1].children[0];
+        ele?.addEventListener('click', () => { this.onMatchClick(i) })
+      }
+      // last match is the mother node
+      const lastEle = Array.from(document.getElementsByClassName(`match${this.allMatches.length}`))[0].children[0].children[0].children[0].children[0];
+      lastEle?.addEventListener('click', () => { this.onMatchClick(this.allMatches.length) })
     }
-    // last match is the mother node
-    const lastEle = Array.from(document.getElementsByClassName(`match${this.allMatches.length}`))[0].children[0].children[0].children[0].children[0];
-    lastEle.addEventListener('click', ()=>{this.onMatchClick(this.allMatches.length)})
   }
-  enableDragScroll(){
+  enableDragScroll() {
     let pos = { top: 0, left: 0, x: 0, y: 0 };
     let ele = Array.from(document.getElementsByClassName('ui-tree-horizontal'))[0] as HTMLElement;
-    const mouseMoveHandler = (e) =>{
+    const mouseMoveHandler = (e) => {
       // How far the mouse has been moved
       const dx = pos.x - e.clientX;
-      const dy =  pos.y - e.clientY;
+      const dy = pos.y - e.clientY;
 
       // Scroll the element
       ele.scrollTop = pos.top - dy;
       ele.scrollLeft = pos.left - dx;
     };
-    const mouseUpHandler = ()=> {
+    const mouseUpHandler = () => {
       ele.onmousemove = null;
       ele.style.cursor = 'grab';
     };
-    const mouseDownHandler = (e) =>{
+    const mouseDownHandler = (e) => {
       ele.onmousemove = mouseMoveHandler
       ele.style.cursor = 'grabbing';
       ele.style.userSelect = 'none';

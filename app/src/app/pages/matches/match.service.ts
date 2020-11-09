@@ -43,4 +43,8 @@ export class MatchService {
   deleteAllMatchesById(id: string){
     return this.http.delete<Match[]>(`${env.SERVER_API_URL}/match/many/${id}`, this.getOptions() );
   }
+  reportMatch(match: Match){
+    return this.http.put<Match>(`${env.SERVER_API_URL}/match/report`, match, this.getOptions() );
+
+  }
 }

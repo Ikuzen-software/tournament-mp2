@@ -28,7 +28,7 @@
             <p-table #dt [value]="tournaments?.docs" styleClass="p-datatable-tournaments" [rowHover]="true"
                 [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="false"
                 [paginator]="true" currentPageReportTemplate="Showing entries"
-                [filterDelay]="0" [virtualScroll]="true">
+                [filterDelay]="0">
                 <ng-template pTemplate="caption">
                     <div class="table-header">
                         List of Tournaments
@@ -74,7 +74,6 @@
                         </td>
                         <td style="text-align: center">
                             <span class="p-column-title">{{tournament?.status}}</span>
-                            <!-- <p-progressBar [value]="tournament?.activity" [showValue]="false"></p-progressBar> -->
                         </td>
                     </tr>
                 </ng-template>

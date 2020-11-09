@@ -29,7 +29,7 @@
         <div class="card">
             <p-table #dt [value]="tournament.participants" styleClass="p-datatable-tournaments" [rowHover]="true"
                 [showCurrentPageReport]="true" [loading]="false" currentPageReportTemplate="Showing entries"
-                [filterDelay]="0" [virtualScroll]="true">
+                [filterDelay]="0">
                 <ng-template pTemplate="caption">
                     <div class="table-header">
                         <h1>Standing</h1>
@@ -67,7 +67,7 @@
     </p-tabPanel>
     <!-- Bracket -->
     <p-tabPanel header="Bracket">
-        <app-bracket-tree [tournament_id]=tournament._id></app-bracket-tree>
+        <app-bracket-tree [tournament]=tournament></app-bracket-tree>
         <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'ongoing'" pButton class="p-col-2 "
             (click)='startStopTournament()'> Stop Tournament</button>
         <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'not started'" pButton class="p-col-2 "
@@ -86,61 +86,10 @@
     </p-tabPanel>
 </p-tabView>
 
-
-
-
-<!-- <div *ngIf="tournament">
-    <div class=" tournament-banner-body">
-        <div class="p-shadow-24 main">
-            <h1 class="p-col-6 tournament-name">
-                {{tournament.name}}
-            </h1>
-            <div class="p-grid p-justify-center">
-                <ul class="p-col-11 tournament-infos">
-                    <li>Game : <a (click)="utilService.navigate('tournaments')">{{tournament.game}}</a></li>
-                    <li>Entrants : {{tournament.participants.length}}/{{tournament.size}}</li>
-                    <li>Type : single elimination</li>
-                    <li>Tournament start : {{tournament.startDate ||'NA' | date }}</li>
-                    <li>Status : {{tournament.status}}</li>
-                </ul>
-                <button *ngIf="isTournamentOwner" pButton class="p-col-2 "
-                    (click)='utilService.navigate("tournament-edit/"+tournament._id)'> Edit</button>
-            </div>
-
-            <div>
-                Organized by: <a
-                    (click)="utilService.navigate('user/'+tournament.organizer.organizer_id)">{{tournament.organizer.username}}</a>
-            </div>
-        </div>
-    </div>
-    <div class="tournament-description">
-        Description : {{tournament.description}}
-    </div>
-    <div class="tournament-list">
-        <button *ngIf="!isParticipating && checkAvailability()" pButton (click)="joinTournament()"> Participate</button>
-        <button *ngIf="isParticipating" pButton (click)="leaveTournament()"> Cancel participation</button>
-        <p> list of participants:</p>
-        <ol>
-            <li *ngFor="let user of tournament?.participants">{{user.username}}</li>
-        </ol>
-
-        <div *ngIf="isTournamentOwner && tournament?.participants" class="seeding-list">
-            <app-drag-order-list [list]="tournament.participants"></app-drag-order-list>
-            <button pButton (click)="updateSeeding()">update seeding</button>
-        </div>
-        <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'ongoing'" pButton class="p-col-2 "
-            (click)='startStopTournament()'> Stop Tournament</button>
-        <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'not started'" pButton class="p-col-2 "
-            (click)='startStopTournament()'> Start Tournament</button>
-        <app-bracket-tree [tournament_id]=tournament._id></app-bracket-tree>
-    </div>
-
-    <button (click)="showParticipantList()">show participants</button>
-
-
-
-</div> -->
-
 <div *ngIf="!tournament">
     <app-tournament-not-found></app-tournament-not-found>
 </div>
+
+<app-score-dialog *ngIf="showScoreDialog$ | async" [visible]="showScoreDialog$ | async"[match]="currentMatchDisplayed" (onCloseDialog)="onScoreDialogClose($event)" (submitEvent)="onScoreDialogSubmit($event)"></app-score-dialog>
+
+
