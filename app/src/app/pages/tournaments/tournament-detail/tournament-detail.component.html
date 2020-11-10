@@ -69,9 +69,9 @@
     <p-tabPanel header="Bracket">
         <app-bracket-tree [tournament]=tournament></app-bracket-tree>
         <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'ongoing'" pButton class="p-col-2 "
-            (click)='startStopTournament()'> Stop Tournament</button>
+            (click)='stopTournament()'> Stop Tournament</button>
         <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'not started'" pButton class="p-col-2 "
-            (click)='startStopTournament()'> Start Tournament</button>
+            (click)='startTournament()'> Start Tournament</button>
     </p-tabPanel>
     <!-- Options -->
     <p-tabPanel *ngIf="isTournamentOwner" header="Edit tournament">

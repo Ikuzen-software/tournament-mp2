@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { Tree } from 'primeng/tree/tree';
 import { TreeNode } from 'primeng/api/treenode';
 import { Round, TournamentNode } from '../tree';
@@ -14,7 +14,7 @@ import { STATUS } from '@tn/../back/src/models/tournaments/tournament-status.enu
   templateUrl: './bracket-tree.component.html',
   styleUrls: ['./bracket-tree.component.scss']
 })
-export class BracketTreeComponent implements OnInit, AfterViewInit {
+export class BracketTreeComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() tournament: Tournament;
   filesTree: TreeNode[] = [];
   allMatches: Match[];
@@ -22,6 +22,10 @@ export class BracketTreeComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.updateBracket();
+  }
+
+  ngOnChanges():void{
     this.updateBracket();
   }
 
@@ -39,18 +43,6 @@ export class BracketTreeComponent implements OnInit, AfterViewInit {
     console.log(i)
   }
 
-  addMatchClickEvents() {
-    if (this.allMatches.length > 0) {
-      for (let i = 1; i < this.allMatches.length; i++) {
-        // Selecting the specific matches elements
-        const ele = Array.from(document.getElementsByClassName(`match${i}`))[0].children[0].children[0].children[1].children[0];
-        ele?.addEventListener('click', () => { this.onMatchClick(i) })
-      }
-      // last match is the mother node
-      const lastEle = Array.from(document.getElementsByClassName(`match${this.allMatches.length}`))[0].children[0].children[0].children[0].children[0];
-      lastEle?.addEventListener('click', () => { this.onMatchClick(this.allMatches.length) })
-    }
-  }
   enableDragScroll() {
     let pos = { top: 0, left: 0, x: 0, y: 0 };
     let ele = Array.from(document.getElementsByClassName('ui-tree-horizontal'))[0] as HTMLElement;

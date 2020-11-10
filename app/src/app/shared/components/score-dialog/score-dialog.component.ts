@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Match } from '@tn/src/app/pages/matches/match';
+import { Match, MatchState } from '@tn/src/app/pages/matches/match';
 import { UserService } from '@tn/src/app/pages/users/user.service';
 import { combineLatest } from 'rxjs';
 
@@ -16,9 +16,10 @@ export class ScoreDialogComponent implements OnInit {
   @Output() submitEvent = new EventEmitter();
   player1: string;
   player2: string;
+  isReportable: boolean;
   scoreForm = new FormGroup({
-    player1: new FormControl(0),
-    player2: new FormControl(0)
+    player1: new FormControl(),
+    player2: new FormControl()
   })
 
   constructor(private userService: UserService) { }
@@ -33,8 +34,8 @@ export class ScoreDialogComponent implements OnInit {
         this.player1 = p1.username;
         this.player2 = p2.username;
         const arrayScore = this.match.score.split('-');
-        this.scoreForm.value.player1 = parseInt(arrayScore[0]);
-        this.scoreForm.value.player2 = parseInt(arrayScore[1]);
+        this.match.matchState === MatchState.readyToStart ? this.isReportable = true : this.isReportable = false;
+        this.scoreForm.setValue({player1: parseInt(arrayScore[0]), player2: parseInt(arrayScore[1])})
       });
     }
   }

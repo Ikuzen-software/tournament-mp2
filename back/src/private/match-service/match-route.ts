@@ -89,7 +89,7 @@ matchRouter.put("/report", isReportable, async (request, response) => {
                     const node = arrayRounds[i][j]
                     if (!(node instanceof tournamentTree.Player) && node.identifier === parseInt(request.body.identifier)) {
                         // fetch the next match from next round
-                        nextMatch = arrayRounds[i + 1][Math.floor(j / 2)]
+                        nextMatch = arrayRounds?.[i + 1]?.[Math.floor(j / 2)]
                         round = i;
                         position = j
                     }

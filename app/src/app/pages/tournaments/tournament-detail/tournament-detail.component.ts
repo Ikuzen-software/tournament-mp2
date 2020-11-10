@@ -46,8 +46,8 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
         this.tournament = tournament;
         this.matchService.getAllMatchesByTournamentId(this.tournament._id).subscribe((matches) => {
           this.allMatches = matches;
-          if(this.tournament.status = TnStatus.ongoing)
-          setTimeout(() => { this.addMatchClickEvents() }, 500);
+          if (this.tournament.status = TnStatus.ongoing)
+            setTimeout(() => { this.addMatchClickEvents() }, 300);
         });
         this.isStarted$
           .pipe(
@@ -55,13 +55,13 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
             debounceTime(500)
           )
           .subscribe((x) => {
-            if (this.isStarted$.getValue().value === TnStatus.notStarted) {
+            if (this.isStarted$.getValue().value === TnStatus.ongoing) {
               this.tournamentService.startTournament(tournament).subscribe();
               this.matchService.createAllMatchesById(tournament._id).subscribe();
               this.toastService.success("Tournament start", "successfully started the tournament");
               this.isStarted$.next({ propagate: false, value: TnStatus.ongoing })
               this.tournament.status = TnStatus.ongoing
-            } else if (this.isStarted$.getValue().value === TnStatus.ongoing) {
+            } else if (this.isStarted$.getValue().value === TnStatus.notStarted) {
               this.tournamentService.stopTournament(tournament).subscribe();
               this.matchService.deleteAllMatchesById(tournament._id).subscribe();
               this.toastService.success("Tournament stop", "successfully stopped the tournament");
@@ -106,9 +106,6 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
   onMatchClick(i) {
     this.currentMatchDisplayed = this.allMatches[i];
     this.showScoreDialog$.next(true)
-    console.log(this.currentMatchDisplayed)
-    console.log(this.showScoreDialog$.getValue()
-    )
   }
 
   addMatchClickEvents() {
@@ -117,20 +114,27 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
       for (let i = 1; i < this.allMatches.length; i++) {
         // Selecting the specific matches elements
         const ele = Array.from(document.getElementsByClassName(`match${i}`))[0].children[0].children[0].children[1].children[0];
-        ele?.addEventListener('click', () => { this.onMatchClick(i-1) })
+        ele?.addEventListener('click', () => { this.onMatchClick(i - 1) })
         console.log(ele)
         console.log(ele.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.children[1].children[0])
       }
       // last match is the mother node
       const lastEle = Array.from(document.getElementsByClassName(`match${this.allMatches.length}`))[0].children[0].children[0].children[0].children[0];
-      lastEle?.addEventListener('click', () => { this.onMatchClick(this.allMatches.length-1) })
+      lastEle?.addEventListener('click', () => { this.onMatchClick(this.allMatches.length - 1) })
       console.log(lastEle)
     }
   }
 
   refresh(): void {
-    this.tournamentService.getById(this.tournament._id).subscribe((tournament) => {
-      this.tournament = tournament;
+    this.matchService.getAllMatchesByTournamentId(this.tournament._id).subscribe((matches) => {
+      this.allMatches = matches;
+      this.tournamentService.getById(this.tournament._id).pipe(
+        take(1)
+      ).subscribe((tournament) => {
+        this.tournament = tournament;
+        this.tournament = this.tournament; //refresh the child component
+        setTimeout(() => { this.addMatchClickEvents() }, 300);
+      });
     })
   }
 
@@ -179,11 +183,19 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
     return this.tournament.size > this.tournament.participants.length ? true : false;
   }
 
-  startStopTournament(): void {
+  startTournament(): void {
     if (!this.isLoggedIn) {
       this.utilService.navigate("login")
     } else {
-      this.isStarted$.next({ propagate: true, value: this.tournament.status })
+      this.isStarted$.next({ propagate: true, value: TnStatus.notStarted })
+    }
+  }
+
+  stopTournament(): void {
+    if (!this.isLoggedIn) {
+      this.utilService.navigate("login")
+    } else {
+      this.isStarted$.next({ propagate: true, value: TnStatus.ongoing })
     }
   }
 
@@ -200,15 +212,17 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
     console.log(this.tournament.participants)
   }
 
-  onScoreDialogClose(bool){
+  onScoreDialogClose(bool) {
     this.showScoreDialog$.next(bool);
   }
 
-  onScoreDialogSubmit(match){
+  onScoreDialogSubmit(match) {
     console.log(match)
     this.matchService.reportMatch(match).pipe(
       take(1)
-    ).subscribe();
+    ).subscribe(() => {
+      this.refresh();
+    });
   }
 }
 
