@@ -109,8 +109,9 @@ matchRouter.put("/report", isReportable, async (request, response) => {
                     }
 
                     //set ready to start if both players id
-                    if(secondMatch[0].player1_id && secondMatch.player2_id){
+                    if(secondMatch[0]?.player1_id && secondMatch[0]?.player2_id){
                         secondMatch[0].matchState = MATCH_STATUS.readyToStart
+                        console.log(secondMatch[0].matchState)
                     }
 
                     await secondMatch[0].save();
