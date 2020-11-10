@@ -119,6 +119,7 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
         const ele = Array.from(document.getElementsByClassName(`match${i}`))[0].children[0].children[0].children[1].children[0];
         ele?.addEventListener('click', () => { this.onMatchClick(i-1) })
         console.log(ele)
+        console.log(ele.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.children[1].children[0])
       }
       // last match is the mother node
       const lastEle = Array.from(document.getElementsByClassName(`match${this.allMatches.length}`))[0].children[0].children[0].children[0].children[0];

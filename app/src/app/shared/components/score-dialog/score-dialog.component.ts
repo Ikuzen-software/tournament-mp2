@@ -51,11 +51,11 @@ export class ScoreDialogComponent implements OnInit {
     }else{
       this.match.score = this.scoreForm.value.player1+"-"+this.scoreForm.value.player2
       if(this.scoreForm.value.player1 > this.scoreForm.value.player2){
-        this.match.winner_id = this.match.player1_id
-        this.match.loser_id = this.match.player2_id
+        this.match.winner_id = this.match.player1_id;
+        this.match.loser_id = this.match.player2_id;
       }else{
-        this.match.winner_id = this.match.player1_id
-        this.match.loser_id = this.match.player2_id
+        this.match.winner_id = this.match.player1_id;
+        this.match.loser_id = this.match.player2_id;
       }
       this.submitEvent.emit(this.match);
       this.cancel();

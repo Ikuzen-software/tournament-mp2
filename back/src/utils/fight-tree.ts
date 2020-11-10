@@ -158,7 +158,8 @@ export function getTreeWithIdentifiers(tree: Tournament): TournamentNode { // re
     return tree.root
 }
 // gets array of rounds of a tournament
-export function getTreeRounds(tree: Tournament, withBye = false): (TournamentNode | Player)[] { // return array of rounds in order, and matches to play
+export function getTreeRounds(tree: Tournament, withBye = false): (TournamentNode | Player)[][] { // return array of rounds in order, and matches to play
+    getArrayOfMatchesInOrderAndSetIdentifier(tree.root)
     const numRounds = calculateRounds(tree.players.length);
     console.log(numRounds)
     let numMatches = 1;

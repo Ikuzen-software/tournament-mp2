@@ -30,13 +30,13 @@ matchRouter.get("/:id", async (request, response) => {
     }
 });
 // gets a tree of the tournament with players name and id
-matchRouter.get("/getTree/:tnId", async (request, response) => { 
+matchRouter.get("/getArrayOfRounds/:tnId", async (request, response) => { 
     try {
         const tournament = await TournamentModel.findById(request.params.tnId).exec();
         const playersList = tournament.participants;
         console.log(playersList)
         const tree = tournamentTree.createTree(playersList);
-        const result = tournamentTree.getTreeWithIdentifiers(tree);
+        const result = tournamentTree.getTreeRounds(tree);
         response.send(result)
     } catch (error) {
         console.log(error)
