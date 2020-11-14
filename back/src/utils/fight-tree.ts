@@ -1,3 +1,4 @@
+import { Match } from "../models/matches/matches-interface";
 
 export class Player {
     username: string;
@@ -56,27 +57,27 @@ function highestPowerOfTwo(value: number) {
 
 
 export function createTree(players: Player[]): Tournament {
-    if(players.length >1){
+    if (players.length > 1) {
 
         const pow = highestPowerOfTwo(players.length);
         const nb = 1 << pow;
-        
+
         function createNode(node: number, roundNB: number): TournamentNode {
             if (roundNB === nb) {
                 return new TournamentNode(players[node - 1], players[roundNB - node]);
             }
-            
+
             const nextNB = roundNB << 1;
             const a = createNode(node, nextNB);
             const b = createNode(roundNB - node + 1, nextNB);
-            
+
             return new TournamentNode(a, b);
         }
         const tournament = new Tournament(createNode(1, 2), players);
         tournament.rounds = pow;
-        
+
         return tournament;
-    }else{
+    } else {
         return new Tournament(new TournamentNode(players[0]), players)
     }
 }
@@ -98,12 +99,12 @@ export function removeBye(node: TournamentNode, matchesCount = 1): number {
 }
 
 //return node with identifiers
-export function setIdentifiers(root: TournamentNode, withBye = false) {
+export function setIdentifiers(root: TournamentNode, matches: Match[], withBye = false) {
     let id = 0;
     if (!withBye) id = removeBye(root) - 1;
-    let nodes: TournamentNode[] = [root];
+    let nodes: (TournamentNode | Player)[] = [root];
     nodes = nodes.reverse();
-    nodes[0].identifier = id + 1
+    (nodes[0] as TournamentNode).identifier = id + 1
     for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i];
 
@@ -151,7 +152,7 @@ function calculateRounds(numPlayers: number): number {
     return Math.ceil(Math.log2(numPlayers))
 }
 
-// gets array of rounds of a tournament
+// gets array of matches of a tournament
 export function getTreeWithIdentifiers(tree: Tournament): TournamentNode { // return array of rounds in order, and matches to play
     // method call solely for setting the identifier
     getArrayOfMatchesInOrderAndSetIdentifier(tree.root)
@@ -161,8 +162,8 @@ export function getTreeWithIdentifiers(tree: Tournament): TournamentNode { // re
 export function getTreeRounds(tree: Tournament, withBye = false): (TournamentNode | Player)[][] { // return array of rounds in order, and matches to play
     getArrayOfMatchesInOrderAndSetIdentifier(tree.root)
     const numRounds = calculateRounds(tree.players.length);
-    console.log(numRounds)
     let numMatches = 1;
+    console.log(numRounds)
     let result = [];
     for (let currentRound = 1; currentRound <= numRounds; currentRound++) {
         result.push(tree.findMatchUpForRound(currentRound));
@@ -172,7 +173,7 @@ export function getTreeRounds(tree: Tournament, withBye = false): (TournamentNod
 }
 
 // copy of interface TreeNode from PrimeNG
-interface NGNode{
+interface NGNode {
     label: string;
     children: NGNode[] | null;
     expanded: boolean;

@@ -84,7 +84,6 @@ export class TournamentEditComponent implements OnInit {
       this.store.select(userSelector).subscribe((appState) => {
         const _organizer = appState.currentUser
         const tournamentId = this.tournament._id;
-        console.log(this.tournament)
         this.tournament = { ...this.tournament, name: this.name, description: this.description, game: this.game, format: this.format, size: this.size, startDate: this.startDate, organizer: _organizer };
         this.tournamentService.update(tournamentId, this.tournament).subscribe((result) => {
           this.toastService.success('Success', 'Edit successful');

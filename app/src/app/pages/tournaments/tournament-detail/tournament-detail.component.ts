@@ -109,19 +109,15 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
   }
 
   addMatchClickEvents() {
-    console.log(this.allMatches)
     if (this.allMatches.length > 0) {
       for (let i = 1; i < this.allMatches.length; i++) {
         // Selecting the specific matches elements
         const ele = Array.from(document.getElementsByClassName(`match${i}`))[0].children[0].children[0].children[1].children[0];
         ele?.addEventListener('click', () => { this.onMatchClick(i - 1) })
-        console.log(ele)
-        console.log(ele.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.children[1].children[0])
       }
       // last match is the mother node
       const lastEle = Array.from(document.getElementsByClassName(`match${this.allMatches.length}`))[0].children[0].children[0].children[0].children[0];
       lastEle?.addEventListener('click', () => { this.onMatchClick(this.allMatches.length - 1) })
-      console.log(lastEle)
     }
   }
 
@@ -146,7 +142,6 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
         this.tournamentService.joinTournament(this.tournament._id, appState.currentUser as User).pipe(
           take(1)
         ).subscribe((result) => {
-          console.log(result)
           this.isParticipating = true;
           this.tournament.participants.push(appState.currentUser);
           this.toastService.success("participation", "successfully joined the tournament")
@@ -217,7 +212,6 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
   }
 
   onScoreDialogSubmit(match) {
-    console.log(match)
     this.matchService.reportMatch(match).pipe(
       take(1)
     ).subscribe(() => {

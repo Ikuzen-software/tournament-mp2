@@ -152,10 +152,7 @@ export async function isReportable(req, res, next) {
         const user = getUserFromToken(token);
         const tournament = await TournamentModel.findOne({ _id: req.body.tournament_id}).exec();
 
-        console.log(tournament)
         //check if admin or organizer
-        console.log(user._id)
-        console.log(tournament.organizer.organizer_id)
         if (user.role === "admin" || user._id === tournament?.organizer?.organizer_id) {
             next();
         } else {

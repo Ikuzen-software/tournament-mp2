@@ -25,7 +25,6 @@ export class ScoreDialogComponent implements OnInit {
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
-    console.log(this.match)
     if (this.match.player1_id && this.match.player2_id) {
       combineLatest([
         this.userService.getById(this.match.player1_id),
@@ -60,7 +59,6 @@ export class ScoreDialogComponent implements OnInit {
       }
       this.submitEvent.emit(this.match);
       this.cancel();
-      console.log(this.scoreForm);
     }
   }
 
