@@ -42,3 +42,11 @@ p-panel.overall-infos {
         padding-left: 10px;
     }
 }
+
+.bracket-wrapper{
+    display: flex; 
+    flex-direction: column;
+    button{
+        padding-top: 10px;
+    }
+}

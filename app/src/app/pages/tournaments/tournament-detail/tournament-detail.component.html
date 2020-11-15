@@ -56,11 +56,12 @@
 
                         <td class="match-icon">
                             <div *ngFor="let match of participant.matchesPlayed">
-                                <div *ngIf="isWinner(match, participant.participant_id); else loserBlock" (click)="onMatchClick(match.identifier-1)">
+                                <div *ngIf="isWinner(match, participant.participant_id); else loserBlock"
+                                    (click)="onMatchClick(match.identifier-1)">
                                     Win
                                 </div>
                                 <ng-template #loserBlock>
-                                    <div  (click)="onMatchClick(match.identifier-1)">
+                                    <div (click)="onMatchClick(match.identifier-1)">
                                         Loss
                                     </div>
                                 </ng-template>
@@ -76,11 +77,15 @@
     </p-tabPanel>
     <!-- Bracket -->
     <p-tabPanel header="Bracket">
-        <app-bracket-tree [tournament]=tournament></app-bracket-tree>
-        <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'ongoing'" pButton class="p-col-2 "
-            (click)='stopTournament()'> Stop Tournament</button>
-        <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'not started'" pButton class="p-col-2 "
-            (click)='startTournament()'> Start Tournament</button>
+        <div class="bracket-wrapper">
+            <app-bracket-tree [tournament]=tournament></app-bracket-tree>
+            <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'ongoing'" pButton class="p-col-2 "
+                (click)='stopTournament()'> Cancel Tournament</button>
+            <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'not started'" pButton class="p-col-2 "
+                (click)='startTournament()'> Start Tournament</button>
+            <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'ongoing' && allMatches && allMatches[allMatches.length-1].matchState === 'finished'" pButton class="p-col-2 "
+                (click)='endTournament()'> End Tournament</button>
+        </div>
     </p-tabPanel>
     <!-- Options -->
     <p-tabPanel *ngIf="isTournamentOwner" header="Edit tournament">
@@ -99,6 +104,5 @@
     <app-tournament-not-found></app-tournament-not-found>
 </div>
 
-<app-score-dialog *ngIf="showScoreDialog$ | async" [visible]="showScoreDialog$ | async"[match]="currentMatchDisplayed" (onCloseDialog)="onScoreDialogClose($event)" (submitEvent)="onScoreDialogSubmit($event)"></app-score-dialog>
-
-
+<app-score-dialog *ngIf="showScoreDialog$ | async" [visible]="showScoreDialog$ | async" [match]="currentMatchDisplayed"
+    (onCloseDialog)="onScoreDialogClose($event)" (submitEvent)="onScoreDialogSubmit($event)"></app-score-dialog>

@@ -4,6 +4,7 @@ import { Tournament } from '../../models/tournaments/tournament-interface';
 import { UserModel } from '../../models/users/user-model';
 import { STATUS as TnStatus } from '../../models/tournaments/tournament-status.enum';
 import * as _ from "lodash"
+import { MatchModel } from '../../models/matches/matches-model';
 
 const express = require('express');
 const tournamentRouter = express.Router();
@@ -135,7 +136,7 @@ tournamentRouter.patch("/start/:id", isTournamentOwner, async (request, response
                 case TnStatus.notStarted:
                     tournament.status = TnStatus.ongoing;
                     tournament.save()
-                    response.send({result:tournament.status});
+                    response.send({ result: tournament.status });
                     break
                 case TnStatus.finished:
                     response.status(403).send(`tournament ${request.params.id} is already finished`);
@@ -153,14 +154,14 @@ tournamentRouter.patch("/start/:id", isTournamentOwner, async (request, response
         response.status(404).send(`${error}`);
     }
 });
-
+//cancels a tournament
 tournamentRouter.patch("/stop/:id", isTournamentOwner, async (request, response) => {
     try {
         const tournament = await TournamentModel.findById(request.params.id).exec();
-        if (tournament.status === TnStatus.ongoing) { 
+        if (tournament.status === TnStatus.ongoing) {
             tournament.status = TnStatus.notStarted;
             tournament.save()
-            response.send({result:tournament.status});
+            response.send({ result: tournament.status });
         }
         else {
             response.status(403).send(`tournament ${request.params.id} isn't ongoing`);
@@ -170,19 +171,45 @@ tournamentRouter.patch("/stop/:id", isTournamentOwner, async (request, response)
         response.status(404).send(`${error}`);
     }
 });
+//end a tournament
+tournamentRouter.patch("/end/:id", isTournamentOwner, async (request, response) => {
+    try {
+        const tournament = await TournamentModel.findById(request.body._id).exec();
+        const matches = await MatchModel.find({ tournament_id: request.body._id }).exec();
+        console.log(tournament)
+        if (tournament.status === TnStatus.ongoing && matches[matches.length - 1].matchState === 'finished') {
+            tournament.status = TnStatus.finished;
+            tournament.save()
+            response.send({ result: tournament.status });
+        }
+        else {
+            response.status(403).send(`tournament ${request.params.id} cannot be ended yet`);
+
+        }
+    } catch (error) {
+        response.status(404).send(`${error}`);
+    }
+});
+
+
 // save new tournament seeding
 tournamentRouter.patch("/seeding", isTournamentOwner, async (request, response) => {
     try {
         const tournament = await TournamentModel.findById(request.body._id).exec();
-        if(_.isEqual(tournament.participants.map(participant => participant.username).sort(), request.body.participants.map(participant => participant.username).sort())){
-            tournament.participants = request.body.participants;
-            tournament.save();
-            response.send({success:true})
-        }
-        else{
-            console.log(_.isEqual(tournament.participants.map(participant => participant.username).sort, request.body.participants.map(participant => participant.username).sort))
-            response.status(400).send(`something went wrong when trying to save the participant list`);
+        if (tournament.status !== TnStatus.notStarted) {
+            response.status(400).send(`tournament status must be not started in order to change the seeding`);
+        } else {
 
+            if (_.isEqual(tournament.participants.map(participant => participant.username).sort(), request.body.participants.map(participant => participant.username).sort())) {
+                tournament.participants = request.body.participants;
+                tournament.save();
+                response.send({ success: true })
+            }
+            else {
+                console.log(_.isEqual(tournament.participants.map(participant => participant.username).sort, request.body.participants.map(participant => participant.username).sort))
+                response.status(400).send(`something went wrong when trying to save the participant list`);
+
+            }
         }
     } catch (error) {
         response.status(404).send(`${error}`);

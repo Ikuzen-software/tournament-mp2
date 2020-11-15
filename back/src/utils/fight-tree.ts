@@ -99,7 +99,7 @@ export function removeBye(node: TournamentNode, matchesCount = 1): number {
 }
 
 //return node with identifiers
-export function setIdentifiers(root: TournamentNode, matches: Match[], withBye = false) {
+export function setIdentifiers(root: TournamentNode, withBye = false) {
     let id = 0;
     if (!withBye) id = removeBye(root) - 1;
     let nodes: (TournamentNode | Player)[] = [root];

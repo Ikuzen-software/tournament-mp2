@@ -56,7 +56,7 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
         })
         this.matchService.getAllMatchesByTournamentId(this.tournament._id).subscribe((matches) => {
           this.allMatches = matches;
-          if (this.tournament.status = TnStatus.ongoing)
+          if (this.tournament.status === TnStatus.ongoing)
             setTimeout(() => { this.addMatchClickEvents() }, 300);
         });
         this.isStarted$
@@ -85,6 +85,7 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
             }
           );
         this.isStarted$.next({ propagate: false, value: tournament.status })
+
 
         this.store.pipe(select(userSelector)).subscribe((appState) => {
           if (appState.currentUser.username) {
@@ -141,8 +142,7 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
       this.tournamentService.getById(this.tournament._id).pipe(
         take(1)
       ).subscribe((tournament) => {
-        this.tournament = tournament;
-        this.tournament = this.tournament; //refresh the child component
+        this.tournament = tournament; //refresh the child component
         setTimeout(() => { this.addMatchClickEvents() }, 300);
       });
     })
@@ -232,6 +232,11 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
       this.refresh();
     });
   }
+
+  endTournament(){
+    this.tournamentService.endTournament(this.tournament).subscribe();
+  }
+
 }
 
 
