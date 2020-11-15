@@ -32,3 +32,13 @@ p-panel.overall-infos {
         }
     }
 }
+
+.match-icon{
+    display: flex;
+    flex-direction: row-reverse;
+    border: none;
+    justify-content: flex-end;
+    div{
+        padding-left: 10px;
+    }
+}

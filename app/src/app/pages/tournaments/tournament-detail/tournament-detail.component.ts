@@ -31,6 +31,12 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
   allMatches: Match[];
   currentMatchDisplayed: Match;
   showScoreDialog$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  tournamentStanding: {
+    username: string,
+    participant_id: string,
+    rank: number,
+    matchesPlayed: Match[]
+  }[];
   constructor(private route: ActivatedRoute, private toastService: ToastService, private tournamentService: TournamentService, private router: Router, private readonly store: Store<fromAuth.ApplicationState>, public utilService: UtilService, private matchService: MatchService) {
 
   }
@@ -44,6 +50,10 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
         take(1)
       ).subscribe((tournament) => {
         this.tournament = tournament;
+        this.tournamentService.getTournamentStanding(this.tournament._id).subscribe((standing)=>{
+          this.tournamentStanding = standing
+          console.log(this.tournamentStanding)
+        })
         this.matchService.getAllMatchesByTournamentId(this.tournament._id).subscribe((matches) => {
           this.allMatches = matches;
           if (this.tournament.status = TnStatus.ongoing)
@@ -106,6 +116,10 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
   onMatchClick(i) {
     this.currentMatchDisplayed = this.allMatches[i];
     this.showScoreDialog$.next(true)
+  }
+
+  isWinner(match:Match, id:string){
+    return match.winner_id === id ? true : false;
   }
 
   addMatchClickEvents() {

@@ -27,7 +27,7 @@
     <!-- Standing -->
     <p-tabPanel header="Standing">
         <div class="card">
-            <p-table #dt [value]="tournament.participants" styleClass="p-datatable-tournaments" [rowHover]="true"
+            <p-table #dt [value]="tournamentStanding" styleClass="p-datatable-tournaments" [rowHover]="true"
                 [showCurrentPageReport]="true" [loading]="false" currentPageReportTemplate="Showing entries"
                 [filterDelay]="0">
                 <ng-template pTemplate="caption">
@@ -47,15 +47,24 @@
                     <tr class="p-selectable-row">
                         <td><img style="width: 40px; height: 50px; " src="../../../../favicon.ico" alt="tree-icon"></td>
                         <td>
-                            <p>1</p>
+                            <p>{{participant?.rank}}</p>
                         </td>
                         <td>
                             <a class="p-column-title" style="cursor: pointer;"
                                 (click)="utilService.navigate('user/'+participant?.participant_id)">{{participant?.username}}</a>
                         </td>
 
-                        <td>
-                            <span class="p-column-title">match x</span>
+                        <td class="match-icon">
+                            <div *ngFor="let match of participant.matchesPlayed">
+                                <div *ngIf="isWinner(match, participant.participant_id); else loserBlock" (click)="onMatchClick(match.identifier-1)">
+                                    Win
+                                </div>
+                                <ng-template #loserBlock>
+                                    <div  (click)="onMatchClick(match.identifier-1)">
+                                        Loss
+                                    </div>
+                                </ng-template>
+                            </div>
                         </td>
                     </tr>
                 </ng-template>

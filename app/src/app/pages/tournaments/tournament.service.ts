@@ -98,4 +98,8 @@ export class TournamentService {
   updateSeeding(tournament: Tournament){
     return this.http.patch<Tournament>(`${env.SERVER_API_URL}/tournament/seeding`, tournament ,this.getOptions());
   }
+
+  getTournamentStanding(id: string){
+    return this.http.get<any>(`${env.SERVER_API_URL}/tournament/getStanding/${id}`)
+  }
 }

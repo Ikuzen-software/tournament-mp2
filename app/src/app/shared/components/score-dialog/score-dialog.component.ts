@@ -44,6 +44,9 @@ export class ScoreDialogComponent implements OnInit {
   }
 
 
+  getWinner(): string{
+    return this.scoreForm.value.player1 > this.scoreForm.value.player2 ? this.player1 : this.player2
+  }
   onSubmit() {
     ///TODO replace the checks with reactive forms validators
     if(this.scoreForm.value.player1 === this.scoreForm.value.player2){
