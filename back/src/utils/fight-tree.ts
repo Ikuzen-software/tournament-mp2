@@ -258,27 +258,40 @@ export async function getStanding(request, response) {
             matchesPlayed: Match[]
         }[] = [];
         const matches = await MatchModel.find({ tournament_id: request.params.tnId }).exec();
-        for (let i = roundsArray.length - 1; i >= 0; i--) {
-            const currentRound = roundsArray[i]
-            for (let j = currentRound.length - 1; j >= 0; j--) {
-                const currentMatch = roundsArray[i][j]
-                if (!(currentMatch instanceof Player) && currentMatch?.identifier && matches[currentMatch.identifier - 1].matchState !== "not started") {
-                    const winner = playersList.find(player => player.participant_id === matches[currentMatch.identifier - 1].winner_id)
-                    const loser = playersList.find(player => player.participant_id === matches[currentMatch.identifier - 1].loser_id)
-                    let winnerPlayer, loserPlayer;
-                    winnerPlayer = { username: winner.username, participant_id: winner.participant_id, rank: numberOfRounds - i < 3 ? numberOfRounds - i : roundsArray[i].length + 1, matchesPlayed: [matches[currentMatch.identifier - 1]] }
-                    loserPlayer = { username: loser.username, participant_id: loser.participant_id, rank: numberOfRounds - i + 1 < 3 ? numberOfRounds - i + 1 : roundsArray[i].length + 1, matchesPlayed: [matches[currentMatch.identifier - 1]] }
-                    if (!standingArray.find((participant) => participant.participant_id === winnerPlayer.participant_id)) {
-                        standingArray.push(winnerPlayer)
-                    } else {
-                        standingArray.find((participant) => participant.participant_id === winnerPlayer.participant_id).matchesPlayed.push(matches[currentMatch.identifier - 1])
-                    }
-                    if (!standingArray.find((participant) => participant.participant_id === loserPlayer.participant_id)) {
-                        standingArray.push(loserPlayer)
-                    } else {
-                        standingArray.find((participant) => participant.participant_id === loserPlayer.participant_id).matchesPlayed.push(matches[currentMatch.identifier - 1])
+        if(matches.length > 0){
+            for (let i = roundsArray.length - 1; i >= 0; i--) {
+                const currentRound = roundsArray[i]
+                for (let j = currentRound.length - 1; j >= 0; j--) {
+                    const currentMatch = roundsArray[i][j]
+                    if (!(currentMatch instanceof Player) && currentMatch?.identifier && matches?.[currentMatch.identifier - 1]?.matchState !== "not started") {
+                        const winner = playersList.find(player => player.participant_id === matches?.[currentMatch.identifier - 1]?.winner_id)
+                        const loser = playersList.find(player => player.participant_id === matches?.[currentMatch.identifier - 1]?.loser_id)
+                        let winnerPlayer, loserPlayer;
+                        winnerPlayer = { username: winner.username, participant_id: winner.participant_id, rank: numberOfRounds - i < 3 ? numberOfRounds - i : roundsArray[i].length + 1, matchesPlayed: [matches[currentMatch.identifier - 1]] }
+                        loserPlayer = { username: loser.username, participant_id: loser.participant_id, rank: numberOfRounds - i + 1 < 3 ? numberOfRounds - i + 1 : roundsArray[i].length + 1, matchesPlayed: [matches[currentMatch.identifier - 1]] }
+                        if (!standingArray.find((participant) => participant.participant_id === winnerPlayer.participant_id)) {
+                            standingArray.push(winnerPlayer)
+                        } else {
+                            standingArray.find((participant) => participant.participant_id === winnerPlayer.participant_id).matchesPlayed.push(matches[currentMatch.identifier - 1])
+                        }
+                        if (!standingArray.find((participant) => participant.participant_id === loserPlayer.participant_id)) {
+                            standingArray.push(loserPlayer)
+                        } else {
+                            standingArray.find((participant) => participant.participant_id === loserPlayer.participant_id).matchesPlayed.push(matches[currentMatch.identifier - 1])
+                        }
                     }
                 }
+            }
+        }
+        //case no matches, everyone is first
+        else{
+            for(let player of playersList){
+                standingArray.push({
+                    username: player.username,
+                    participant_id: player.participant_id,
+                    rank: 1,
+                    matchesPlayed:[]
+                })
             }
         }
         return standingArray
