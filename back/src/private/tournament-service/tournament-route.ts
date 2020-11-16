@@ -5,6 +5,7 @@ import { UserModel } from '../../models/users/user-model';
 import { STATUS as TnStatus } from '../../models/tournaments/tournament-status.enum';
 import * as _ from "lodash"
 import { MatchModel } from '../../models/matches/matches-model';
+import * as tournamentTree from '../../utils/fight-tree'
 
 const express = require('express');
 const tournamentRouter = express.Router();
@@ -42,7 +43,7 @@ tournamentRouter.put("/:id", isTournamentOwner, async (request, response) => {
         const tournamentResult = await tournament.save();
         response.send(tournamentResult);
     } catch (error) {
-        response.status(404).send(`tournament ${request.params.id} not found`);
+        response.status(500).send(`tournament ${request.params.id} not found`);
     }
 });
 // joining a tournament
@@ -54,10 +55,12 @@ tournamentRouter.put("/join/:id", isLoggedIn, async (request, response) => {
                 response.status(401).send(`participant ${user.username} is not the authentified user`);
             } else {
                 const tournament = await TournamentModel.findById(request.params.id).exec();
+                // case tournament status isn't "not started"
                 if (tournament.status !== TnStatus.notStarted) {
                     response.status(401).send(`Cannot join a tournament that is either started or finished`)
                 }
                 else {
+                    // case tournament is full
                     if (tournament.participants.length >= tournament.size) {
                         response.status(401).send('tournament is full')
                     } else {
@@ -85,7 +88,7 @@ tournamentRouter.put("/join/:id", isLoggedIn, async (request, response) => {
         }
     } catch (error) {
         console.log(error)
-        response.status(404).send(`tournament ${request.params.id} not found`);
+        response.status(500).send(`tournament ${request.params.id} not found`);
     }
 });
 //leaving a tournament 
@@ -118,7 +121,7 @@ tournamentRouter.put("/leave/:id", isLoggedIn, async (request, response) => {
             response.status(400).send(`request body is not a user`)
         }
     } catch (error) {
-        response.status(404).send(`tournament ${request.params.id} not found`);
+        response.status(500).send(`tournament ${request.params.id} not found`);
     }
 });
 
@@ -130,7 +133,7 @@ tournamentRouter.delete("/clean/:id", isTournamentOwner, async (request, respons
         const result = await tournament.save();
         response.send(result);
     } catch (error) {
-        response.status(404).send(`tournament ${request.params.id} not found`);
+        response.status(500).send(`tournament ${request.params.id} not found`);
     }
 });
 
@@ -161,7 +164,7 @@ tournamentRouter.patch("/start/:id", isTournamentOwner, async (request, response
         }
     } catch (error) {
         console.log(error)
-        response.status(404).send(`${error}`);
+        response.status(500).send(`${error}`);
     }
 });
 //cancels a tournament
@@ -178,26 +181,47 @@ tournamentRouter.patch("/stop/:id", isTournamentOwner, async (request, response)
 
         }
     } catch (error) {
-        response.status(404).send(`${error}`);
+        response.status(500).send(`${error}`);
     }
 });
 //end a tournament
-tournamentRouter.patch("/end/:id", isTournamentOwner, async (request, response) => {
+tournamentRouter.patch("/end/:tnId", isTournamentOwner, async (request, response) => {
     try {
-        const tournament = await TournamentModel.findById(request.body._id).exec();
-        const matches = await MatchModel.find({ tournament_id: request.body._id }).exec();
-        console.log(tournament)
+        const tournament = await TournamentModel.findById(request.params.tnId).exec();
+        if (!tournament) response.status(404).send('no tournament found')
+        const matches = await MatchModel.find({ tournament_id: request.params.tnId }).exec();
         if (tournament.status === TnStatus.ongoing && matches[matches.length - 1].matchState === 'finished') {
-            tournament.status = TnStatus.finished;
-            tournament.save()
+                tournament.status = TnStatus.finished;
+                tournament.save();
+            //update every users score
+            const players = await UserModel.find({tournaments:{ $elemMatch: { tournament_id: tournament._id, name: tournament.name } }}).exec()
+            const standingArray = await tournamentTree.getStanding(request, response);
+            console.log(players)
+            console.log(standingArray)
+            for (let player of standingArray) {
+                if (player.rank === 1) {
+                    players.map((currentP) => { if (currentP._id == player.participant_id) currentP.overview.firstPlace++ })
+                } else if (player.rank === 2) {
+                    players.map((currentP) => { if (currentP._id == player.participant_id) currentP.overview.secondPlace++ })
+                } else if (player.rank === 3) {
+                    players.map((currentP) => { if (currentP._id == player.participant_id) currentP.overview.thirdPlace++ })
+                } else if (player.rank <= 8) {
+                    players.map((currentP) => { if (currentP._id == player.participant_id) currentP.overview.top8++ })
+                }
+                players.map((currentP) => { if (currentP._id == player.participant_id) currentP.overview.totalMatches+= player.matchesPlayed.length })
+            }
+
+            for(let player of players){
+                player.save();
+            }
             response.send({ result: tournament.status });
         }
         else {
-            response.status(403).send(`tournament ${request.params.id} cannot be ended yet`);
+            response.status(403).send(`tournament ${request.params.id} cannot be ended or is already ended`);
 
         }
     } catch (error) {
-        response.status(404).send(`${error}`);
+        response.status(500).send(`${error.message}`);
     }
 });
 
@@ -222,7 +246,7 @@ tournamentRouter.patch("/seeding", isTournamentOwner, async (request, response) 
             }
         }
     } catch (error) {
-        response.status(404).send(`${error}`);
+        response.status(400).send(`${error}`);
     }
 });
 
@@ -231,7 +255,7 @@ tournamentRouter.delete("/:id", isTournamentOwner, async (request, response) => 
         const result = await TournamentModel.deleteOne({ _id: request.params.id }).exec();
         response.send(result);
     } catch (error) {
-        response.status(404).send(`tournament ${request.params.id}not found`);
+        response.status(400).send(`tournament ${request.params.id}not found`);
     }
 });
 //DELETE ALL

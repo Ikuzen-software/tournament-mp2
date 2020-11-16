@@ -213,7 +213,7 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
       this.toastService.success("Update seeding", "successfully updated the tournament seeding list");
       this.refresh();
     }, (err) => {
-      this.toastService.showError("Error", "couldn't update the seeding");
+      this.toastService.showError("Error", err.error);
     }
     );
   }
