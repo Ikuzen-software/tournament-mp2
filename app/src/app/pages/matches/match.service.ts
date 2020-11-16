@@ -24,8 +24,12 @@ export class MatchService {
     };
   }
 
+  getAllMatchesByTournamentId(id: string){
+    return this.http.get<(Match)[]>(`${env.SERVER_API_URL}/match/all/${id}`);
+  }
+
   getById(id: string){
-    return this.http.get<(Match)[]>(`${env.SERVER_API_URL}/match/${id}`);
+    return this.http.get<(Match)>(`${env.SERVER_API_URL}/match/${id}`);
   }
   getSeedingById(id: string){
     return this.http.get<(string | TournamentNode)[]>(`${env.SERVER_API_URL}/match/getTree/${id}`);
@@ -38,5 +42,9 @@ export class MatchService {
   }
   deleteAllMatchesById(id: string){
     return this.http.delete<Match[]>(`${env.SERVER_API_URL}/match/many/${id}`, this.getOptions() );
+  }
+  reportMatch(match: Match){
+    return this.http.put<Match>(`${env.SERVER_API_URL}/match/report`, match, this.getOptions() );
+
   }
 }

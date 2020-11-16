@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, pipe } from 'rxjs';
 import { map, debounceTime, take, filter, tap } from 'rxjs/operators';
 import { TournamentService } from '../tournament.service';
 import { Tournament } from '../tournament';
@@ -13,45 +13,70 @@ import { User } from '../../users/user';
 import { MatchService } from '../../matches/match.service';
 import { STATUS as TnStatus } from '../../../../../../back/src/models/tournaments/tournament-status.enum';
 import { Subject } from 'rxjs/internal/Subject';
+import { Match } from '../../matches/match';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-tournament-detail',
   templateUrl: './tournament-detail.component.html',
   styleUrls: ['./tournament-detail.component.scss']
 })
-export class TournamentDetailComponent implements OnInit {
+export class TournamentDetailComponent implements OnInit, AfterViewInit {
   tournament: Tournament;
   isLoggedIn: boolean;
   isParticipating: boolean;
   isTournamentOwner: boolean = false;
   isAvailable$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   isStarted$: BehaviorSubject<{ propagate: boolean, value: string }> = new BehaviorSubject({ propagate: false, value: '' })
-
-
+  allMatches: Match[];
+  currentMatchDisplayed: Match;
+  showScoreDialog$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  tournamentStanding: {
+    username: string,
+    participant_id: string,
+    rank: number,
+    matchesPlayed: Match[]
+  }[];
   constructor(private route: ActivatedRoute, private toastService: ToastService, private tournamentService: TournamentService, private router: Router, private readonly store: Store<fromAuth.ApplicationState>, public utilService: UtilService, private matchService: MatchService) {
-    route.params.subscribe((value) => {
-      tournamentService.getById(value.tournamentId).pipe(
+
+  }
+
+  ngOnInit(): void {
+  }
+
+  ngAfterViewInit() {
+    this.route.params.subscribe((value) => {
+      this.tournamentService.getById(value.tournamentId).pipe(
         take(1)
       ).subscribe((tournament) => {
         this.tournament = tournament;
+        this.tournamentService.getTournamentStanding(this.tournament._id).subscribe((standing)=>{
+          this.tournamentStanding = standing
+          console.log(this.tournamentStanding)
+        })
+        this.matchService.getAllMatchesByTournamentId(this.tournament._id).subscribe((matches) => {
+          this.allMatches = matches;
+          if (this.tournament.status === TnStatus.ongoing)
+            setTimeout(() => { this.addMatchClickEvents() }, 300);
+        });
         this.isStarted$
           .pipe(
             filter(x => x.propagate),
             debounceTime(500)
           )
           .subscribe((x) => {
-            if (this.isStarted$.getValue().value === TnStatus.notStarted) {
+            if (this.isStarted$.getValue().value === TnStatus.ongoing) {
               this.tournamentService.startTournament(tournament).subscribe();
               this.matchService.createAllMatchesById(tournament._id).subscribe();
               this.toastService.success("Tournament start", "successfully started the tournament");
-              this.isStarted$.next({propagate:false, value: TnStatus.ongoing})
+              this.isStarted$.next({ propagate: false, value: TnStatus.ongoing })
               this.tournament.status = TnStatus.ongoing
-            } else if (this.isStarted$.getValue().value === TnStatus.ongoing) {
+            } else if (this.isStarted$.getValue().value === TnStatus.notStarted) {
               this.tournamentService.stopTournament(tournament).subscribe();
               this.matchService.deleteAllMatchesById(tournament._id).subscribe();
               this.toastService.success("Tournament stop", "successfully stopped the tournament");
               this.tournament.status = TnStatus.notStarted
-              this.isStarted$.next({propagate:false, value: TnStatus.notStarted})
+              this.isStarted$.next({ propagate: false, value: TnStatus.notStarted })
             }
           },
             (error) => {
@@ -60,6 +85,7 @@ export class TournamentDetailComponent implements OnInit {
             }
           );
         this.isStarted$.next({ propagate: false, value: tournament.status })
+
 
         this.store.pipe(select(userSelector)).subscribe((appState) => {
           if (appState.currentUser.username) {
@@ -84,16 +110,43 @@ export class TournamentDetailComponent implements OnInit {
 
         });
     });
+
   }
 
-  ngOnInit(): void {
+
+  onMatchClick(i) {
+    this.currentMatchDisplayed = this.allMatches[i];
+    this.showScoreDialog$.next(true)
   }
 
-  // refresh(): void {
-  //   this.tournamentService.getById(this.tournament._id).subscribe((tournament) => {
-  //     this.tournament = tournament;
-  //   })
-  // }
+  isWinner(match:Match, id:string){
+    return match.winner_id === id ? true : false;
+  }
+
+  addMatchClickEvents() {
+    if (this.allMatches.length > 0) {
+      for (let i = 1; i < this.allMatches.length; i++) {
+        // Selecting the specific matches elements
+        const ele = Array.from(document.getElementsByClassName(`match${i}`))[0].children[0].children[0].children[1].children[0];
+        ele?.addEventListener('click', () => { this.onMatchClick(i - 1) })
+      }
+      // last match is the mother node
+      const lastEle = Array.from(document.getElementsByClassName(`match${this.allMatches.length}`))[0].children[0].children[0].children[0].children[0];
+      lastEle?.addEventListener('click', () => { this.onMatchClick(this.allMatches.length - 1) })
+    }
+  }
+
+  refresh(): void {
+    this.matchService.getAllMatchesByTournamentId(this.tournament._id).subscribe((matches) => {
+      this.allMatches = matches;
+      this.tournamentService.getById(this.tournament._id).pipe(
+        take(1)
+      ).subscribe((tournament) => {
+        this.tournament = tournament; //refresh the child component
+        setTimeout(() => { this.addMatchClickEvents() }, 300);
+      });
+    })
+  }
 
   joinTournament() {
     if (!this.isLoggedIn) {
@@ -103,7 +156,6 @@ export class TournamentDetailComponent implements OnInit {
         this.tournamentService.joinTournament(this.tournament._id, appState.currentUser as User).pipe(
           take(1)
         ).subscribe((result) => {
-          console.log(result)
           this.isParticipating = true;
           this.tournament.participants.push(appState.currentUser);
           this.toastService.success("participation", "successfully joined the tournament")
@@ -140,13 +192,51 @@ export class TournamentDetailComponent implements OnInit {
     return this.tournament.size > this.tournament.participants.length ? true : false;
   }
 
-  startStopTournament(): void {
+  startTournament(): void {
     if (!this.isLoggedIn) {
       this.utilService.navigate("login")
     } else {
-      this.isStarted$.next({propagate:true, value:this.tournament.status})
+      this.isStarted$.next({ propagate: true, value: TnStatus.notStarted })
     }
   }
+
+  stopTournament(): void {
+    if (!this.isLoggedIn) {
+      this.utilService.navigate("login")
+    } else {
+      this.isStarted$.next({ propagate: true, value: TnStatus.ongoing })
+    }
+  }
+
+  updateSeeding(): void {
+    this.tournamentService.updateSeeding(this.tournament).subscribe(() => {
+      this.toastService.success("Update seeding", "successfully updated the tournament seeding list");
+      this.refresh();
+    }, (err) => {
+      this.toastService.showError("Error", err.error);
+    }
+    );
+  }
+  showParticipantList() {
+    console.log(this.tournament.participants)
+  }
+
+  onScoreDialogClose(bool) {
+    this.showScoreDialog$.next(bool);
+  }
+
+  onScoreDialogSubmit(match) {
+    this.matchService.reportMatch(match).pipe(
+      take(1)
+    ).subscribe(() => {
+      this.refresh();
+    });
+  }
+
+  endTournament(){
+    this.tournamentService.endTournament(this.tournament).subscribe();
+  }
+
 }
 
 
