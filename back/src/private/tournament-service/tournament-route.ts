@@ -174,6 +174,8 @@ tournamentRouter.patch("/stop/:id", isTournamentOwner, async (request, response)
         if (tournament.status === TnStatus.ongoing) {
             tournament.status = TnStatus.notStarted;
             tournament.save()
+            // deleting all current matches
+            await MatchModel.deleteMany({ tournament_id: request.params.tnId }).exec();
             response.send({ result: tournament.status });
         }
         else {
@@ -190,6 +192,7 @@ tournamentRouter.patch("/end/:tnId", isTournamentOwner, async (request, response
         const tournament = await TournamentModel.findById(request.params.tnId).exec();
         if (!tournament) response.status(404).send('no tournament found')
         const matches = await MatchModel.find({ tournament_id: request.params.tnId }).exec();
+        console.log(matches[matches.length-1])
         if (tournament.status === TnStatus.ongoing && matches[matches.length - 1].matchState === 'finished') {
                 tournament.status = TnStatus.finished;
                 tournament.save();
@@ -217,7 +220,7 @@ tournamentRouter.patch("/end/:tnId", isTournamentOwner, async (request, response
             response.send({ result: tournament.status });
         }
         else {
-            response.status(403).send(`tournament ${request.params.id} cannot be ended or is already ended`);
+            response.status(403).send(`tournament ${request.params.tnId} cannot be ended or is already ended`);
 
         }
     } catch (error) {
