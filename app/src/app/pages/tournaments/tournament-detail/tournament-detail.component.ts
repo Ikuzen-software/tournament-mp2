@@ -24,6 +24,7 @@ import { element } from 'protractor';
 export class TournamentDetailComponent implements OnInit, AfterViewInit {
   tournament: Tournament;
   isLoggedIn: boolean;
+  currentUser: User;
   isParticipating: boolean;
   isTournamentOwner: boolean = false;
   isAvailable$: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -52,7 +53,6 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
         this.tournament = tournament;
         this.tournamentService.getTournamentStanding(this.tournament._id).subscribe((standing)=>{
           this.tournamentStanding = standing
-          console.log(this.tournamentStanding)
         })
         this.matchService.getAllMatchesByTournamentId(this.tournament._id).subscribe((matches) => {
           this.allMatches = matches;
@@ -90,6 +90,7 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
         this.store.pipe(select(userSelector)).subscribe((appState) => {
           if (appState.currentUser.username) {
             this.isLoggedIn = true;
+            this.currentUser = appState.currentUser as User;
             if (appState.currentUser.username === this.tournament.organizer.username || appState.currentUser.role === 'admin') { // if owner or admin, has edit rights
               this.isTournamentOwner = true;
             }
@@ -143,7 +144,10 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
         take(1)
       ).subscribe((tournament) => {
         this.tournament = tournament; //refresh the child component
-        setTimeout(() => { this.addMatchClickEvents() }, 300);
+        this.tournamentService.getTournamentStanding(this.tournament._id).subscribe((standing)=>{
+          this.tournamentStanding = standing
+        });
+          setTimeout(() => { this.addMatchClickEvents() }, 300);
       });
     })
   }
@@ -152,39 +156,38 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
     if (!this.isLoggedIn) {
       this.utilService.navigate("login")
     } else {
-      this.store.pipe(select(userSelector)).subscribe((appState) => {
-        this.tournamentService.joinTournament(this.tournament._id, appState.currentUser as User).pipe(
+        this.tournamentService.joinTournament(this.tournament._id, this.currentUser as User).pipe(
           take(1)
         ).subscribe((result) => {
           this.isParticipating = true;
-          this.tournament.participants.push(appState.currentUser);
+          this.tournament.participants.push(this.currentUser);
           this.toastService.success("participation", "successfully joined the tournament")
+          this.refresh();
         },
           (error) => {
             console.log(error)
-            this.toastService.showError("error", error.error);
+            this.toastService.showError("error","error");
           })
-      })
-    }
+      }
   }
 
   leaveTournament() {
     if (!this.isLoggedIn) {
       this.utilService.navigate("login")
     } else {
-      this.store.pipe(select(userSelector)).subscribe((appState) => {
-        this.tournament.participants = this.tournament.participants.filter(user => user.username !== appState.currentUser.username);
-        this.tournamentService.leavetournament(this.tournament._id, appState.currentUser as User).pipe(
+        this.tournament.participants = this.tournament.participants.filter(user => user.username !== this.currentUser.username);
+        this.tournamentService.leavetournament(this.tournament._id, this.currentUser as User).pipe(
           take(1)
         ).subscribe((result) => {
           this.isParticipating = false;
           this.toastService.success("participation", "successfully removed from the tournament")
+          this.refresh();
+
         },
           (error) => {
             this.toastService.showError("error", error.error);
           });
-      });
-    }
+      }
   }
 
 
@@ -196,7 +199,7 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
     if (!this.isLoggedIn) {
       this.utilService.navigate("login")
     } else {
-      this.isStarted$.next({ propagate: true, value: TnStatus.notStarted })
+      this.isStarted$.next({ propagate: true, value: TnStatus.ongoing })
     }
   }
 
@@ -204,7 +207,7 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
     if (!this.isLoggedIn) {
       this.utilService.navigate("login")
     } else {
-      this.isStarted$.next({ propagate: true, value: TnStatus.ongoing })
+      this.isStarted$.next({ propagate: true, value: TnStatus.notStarted })
     }
   }
 
