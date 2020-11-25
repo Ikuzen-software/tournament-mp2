@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/shared/services/local-storage.service';
@@ -18,7 +18,7 @@ import { UtilService } from '../../shared/services/util.service';
 export class NavbarTopComponent implements OnInit {
 
   items: MenuItem[];
-  constructor(private router: Router, private localStorageService: LocalStorageService, private loginService: LoginService, private readonly store: Store<fromAuth.ApplicationState>,public utilService: UtilService) {
+  constructor(private router: Router, private localStorageService: LocalStorageService, private loginService: LoginService, private readonly store: Store<fromAuth.ApplicationState>, public utilService: UtilService) {
   }
   private user$: BehaviorSubject<{ username?: string, role?: string, id?: string }> = new BehaviorSubject(this.loginService.getUserFromToken(this.localStorageService.getToken()));
 
@@ -29,13 +29,55 @@ export class NavbarTopComponent implements OnInit {
   ngOnInit() {
     this.store.pipe(select(userSelector)).subscribe((appState) => {
       this.user$.next(appState.currentUser);
+      this.refreshItems();
+    });
+
+
+  }
+
+  refreshItems() {
+    this.items =  [{
+      label: 'Accueil',
+      icon: 'pi pi-fw pi-home',
+      command: () => this.utilService.navigate('/')
+    }, {
+      label: 'Users',
+      icon:'pi pi-fw pi-user',
+      command: () => this.utilService.navigate('/register')
+    }, {
+      label: 'Tournaments',
+      icon: 'pi pi-fw pi-sitemap',
+      command: () => this.utilService.navigate('/tournaments')
+    }
+  ];
+    if (this.user$.getValue()?.role === 'guest') {
+    this.items.push({
+      label: 'Login',
+      icon: 'pi pi-fw pi-sign-in',
+      command: () => this.utilService.navigate('/login')
+    });
+    this.items.push({
+      label: 'Register',
+      icon: 'pi pi-fw pi-arrow-circle-right',
+      command: () => this.utilService.navigate('/register')
+    });
+  } else {
+    this.items.push({
+      label: 'Logout',
+      icon: 'pi pi-fw pi-sign-out',
+      command: () => this.logout()
     });
   }
+  }
+
+  // ngOnChanges() {
+  //   this.refreshItems();
+  // }
 
   show() {
     this._user$.pipe(
       take(1),
-      tap((result) => { console.log(result) })
+      tap((result) => { console.log(result); })
     ).subscribe();
   }
 
