@@ -33,7 +33,6 @@ export class UserDetailComponent implements OnInit {
         tournamentService.getAll({"participant": user.username, "organizer":user.username, "limit":1000}).pipe(
           take(1)
         ).subscribe((tournaments)=>{
-          console.log(tournaments)
           this.tournaments = tournaments;
         },
         (err)=>{

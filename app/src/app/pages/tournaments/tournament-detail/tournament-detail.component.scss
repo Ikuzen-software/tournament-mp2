@@ -19,3 +19,34 @@ a{
         }
     }
 }
+
+p-panel.overall-infos {
+    ::ng-deep{
+        div{
+            .ui-panel-content-wrapper{
+                .ui-panel-content{
+                    display: flex;
+                    justify-content: space-between;
+                }
+            }
+        }
+    }
+}
+
+.match-icon{
+    display: flex;
+    flex-direction: row-reverse;
+    border: none;
+    justify-content: flex-end;
+    div{
+        padding-left: 10px;
+    }
+}
+
+.bracket-wrapper{
+    display: flex; 
+    flex-direction: column;
+    button{
+        padding-top: 10px;
+    }
+}

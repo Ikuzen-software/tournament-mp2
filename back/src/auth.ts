@@ -37,11 +37,12 @@ export async function isTournamentOwner(req, res, next) {
         return res.status(401).send({
             success: false,
             message: `Sign in to continue.`,
+
         });
     }
     try {
         const user = getUserFromToken(token);
-        const tournament = await TournamentModel.findOne({ _id: req.params.id }).exec();
+        const tournament = await TournamentModel.findOne({ _id: req.params.id || req.body._id }).exec();
         if (user.role === "admin" || user._id === tournament?.organizer?.organizer_id) {
             next();
         } else {
@@ -55,6 +56,7 @@ export async function isTournamentOwner(req, res, next) {
         return res.status(401).send({
             success: false,
             message: "Sign in to continue.",
+            error: err
         });
     }
 }
@@ -123,7 +125,7 @@ export function isAdmin(req, res, next) {
         // return an error
         return res.status(401).send({
             success: false,
-            message: 'Sign in to continue.'
+            message: 'Sign in to continue. '
         });
     }
 }
@@ -134,13 +136,13 @@ export async function isReportable(req, res, next) {
     if (!token) {
         return res.status(401).send({
             success: false,
-            message: `Sign in to continue.`,
+            message: `Sign in to continue. `,
         });
     }
     try {
         // check is Match is in a reportable state
         const match = await MatchModel.findOne({tournament_id: req.body.tournament_id, identifier:req.body.identifier})
-        if(!match.player1_id || !match.player2_id){
+        if(!match?.player1_id || !match?.player2_id){
             return res.status(401).send({
                 success: false,
                 message: "match is not reportable yet",
@@ -148,7 +150,8 @@ export async function isReportable(req, res, next) {
         }//
 
         const user = getUserFromToken(token);
-        const tournament = await TournamentModel.findOne({ _id: req.params.id }).exec();
+        const tournament = await TournamentModel.findOne({ _id: req.body.tournament_id}).exec();
+
         //check if admin or organizer
         if (user.role === "admin" || user._id === tournament?.organizer?.organizer_id) {
             next();
@@ -159,14 +162,15 @@ export async function isReportable(req, res, next) {
                 return res.status(401).send({
                     success: false,
                     message: `You don't have the rights on this tournament.`,
-                    error: user+"  -  "+ tournament.organizer
+                    error: user+"  -  "+ tournament?.organizer
                 });
             }
         }
     } catch (err) {
+        console.log(err)
         return res.status(401).send({
             success: false,
-            message: "Sign in to continue.",
+            message: "Sign in to continue. ",
         });
     }
 }
