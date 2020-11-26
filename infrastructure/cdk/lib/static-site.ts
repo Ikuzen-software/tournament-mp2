@@ -1,9 +1,12 @@
 import { Construct } from "@aws-cdk/core";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as cloudfront from "@aws-cdk/aws-cloudfront";
+import * as iam from "@aws-cdk/aws-iam";
+import { PolicyStatement } from "@aws-cdk/aws-iam";
 
 export interface StaticSiteProps {
   domainName: string;
+  iamUser: iam.User;
 }
 
 export class StaticSite extends Construct {
@@ -13,9 +16,6 @@ export class StaticSite extends Construct {
     const siteBucket = new s3.Bucket(this, "SiteBucket", {
       bucketName: props.domainName,
       versioned: true,
-      websiteIndexDocument: "index.html",
-      websiteErrorDocument: "index.html",
-      publicReadAccess: true,
     });
 
     const distribution = new cloudfront.CloudFrontWebDistribution(
@@ -24,14 +24,31 @@ export class StaticSite extends Construct {
       {
         originConfigs: [
           {
-            customOriginSource: {
-              domainName: siteBucket.bucketWebsiteDomainName,
-              originProtocolPolicy: cloudfront.OriginProtocolPolicy.HTTP_ONLY,
+            s3OriginSource: {
+              s3BucketSource: siteBucket,
             },
             behaviors: [{ isDefaultBehavior: true }],
           },
         ],
       }
     );
+
+    new iam.Policy(this, "AccessS3AndCFPolicy", {
+      statements: [
+        new PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ["s3:PutObject", "s3:PutObjectAcl"],
+          resources: [siteBucket.bucketArn],
+        }),
+        new PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ["cloudfront:CreateInvalidation"],
+          resources: [
+            `arn:aws:cloudfront::*:distribution/${distribution.distributionId}`,
+          ],
+        }),
+      ],
+      users: [props.iamUser],
+    });
   }
 }
