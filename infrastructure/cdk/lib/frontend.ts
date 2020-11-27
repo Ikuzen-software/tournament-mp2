@@ -4,13 +4,13 @@ import * as cloudfront from "@aws-cdk/aws-cloudfront";
 import * as iam from "@aws-cdk/aws-iam";
 import { PolicyStatement } from "@aws-cdk/aws-iam";
 
-export interface StaticSiteProps {
+export interface FrontendProps {
   domainName: string;
   iamUser: iam.User;
 }
 
-export class StaticSite extends Construct {
-  constructor(parent: Construct, name: string, props: StaticSiteProps) {
+export class Frontend extends Construct {
+  constructor(parent: Construct, name: string, props: FrontendProps) {
     super(parent, name);
 
     const siteBucket = new s3.Bucket(this, "SiteBucket", {

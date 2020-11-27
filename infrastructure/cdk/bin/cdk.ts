@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import cdk = require("@aws-cdk/core");
-import { MyStaticSiteStack } from "../lib/stack";
+import { Treenament } from "../lib/stack";
 
 const app = new cdk.App();
 
-new MyStaticSiteStack(app, "MyStaticSite", {
+new Treenament(app, "Treenament", {
   env: {
     region: "us-east-1",
   },

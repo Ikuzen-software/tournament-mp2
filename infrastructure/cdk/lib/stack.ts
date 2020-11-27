@@ -1,15 +1,15 @@
 import { Stack, App, StackProps } from "@aws-cdk/core";
-import { StaticSite } from "./static-site";
+import { Frontend } from "./frontend";
 import * as iam from "@aws-cdk/aws-iam";
 import { Backend } from "./backend";
 
-export class MyStaticSiteStack extends Stack {
+export class Treenament extends Stack {
   constructor(parent: App, name: string, props: StackProps) {
     super(parent, name, props);
 
     const cicdUser = new iam.User(this, "CiCdUser", {});
 
-    new StaticSite(this, "StaticSite", {
+    new Frontend(this, "Frontend", {
       domainName: "treenament.com",
       iamUser: cicdUser,
     });
