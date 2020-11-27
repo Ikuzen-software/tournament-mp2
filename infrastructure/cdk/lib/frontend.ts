@@ -36,8 +36,8 @@ export class Frontend extends Construct {
       statements: [
         new iam.PolicyStatement({
           effect: iam.Effect.ALLOW,
-          actions: ["s3:PutObject", "s3:PutObjectAcl"],
-          resources: [siteBucket.bucketArn],
+          actions: ["s3:*"],
+          resources: [siteBucket.bucketArn, `${siteBucket.bucketArn}/*`],
         }),
         new iam.PolicyStatement({
           effect: iam.Effect.ALLOW,

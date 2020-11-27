@@ -106,13 +106,8 @@ export class Backend extends Construct {
         }),
         new iam.PolicyStatement({
           effect: iam.Effect.ALLOW,
-          actions: ["ecr:PutImage"],
-          resources: [repository.repositoryArn],
-        }),
-        new iam.PolicyStatement({
-          effect: iam.Effect.ALLOW,
-          actions: ["ecr:GetAuthorizationToken"],
-          resources: ["*"],
+          actions: ["ecr:*"],
+          resources: ['*'],
         }),
       ],
       users: [props.iamUser],
