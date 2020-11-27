@@ -2,7 +2,6 @@ import { Construct } from "@aws-cdk/core";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as cloudfront from "@aws-cdk/aws-cloudfront";
 import * as iam from "@aws-cdk/aws-iam";
-import { PolicyStatement } from "@aws-cdk/aws-iam";
 
 export interface FrontendProps {
   domainName: string;
@@ -35,12 +34,12 @@ export class Frontend extends Construct {
 
     new iam.Policy(this, "AccessS3AndCFPolicy", {
       statements: [
-        new PolicyStatement({
+        new iam.PolicyStatement({
           effect: iam.Effect.ALLOW,
           actions: ["s3:PutObject", "s3:PutObjectAcl"],
           resources: [siteBucket.bucketArn],
         }),
-        new PolicyStatement({
+        new iam.PolicyStatement({
           effect: iam.Effect.ALLOW,
           actions: ["cloudfront:CreateInvalidation"],
           resources: [

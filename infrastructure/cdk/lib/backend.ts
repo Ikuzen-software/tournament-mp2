@@ -4,12 +4,14 @@ import * as ecr from "@aws-cdk/aws-ecr";
 import * as ec2 from "@aws-cdk/aws-ec2";
 import * as elb from "@aws-cdk/aws-elasticloadbalancingv2";
 import * as ssm from "@aws-cdk/aws-ssm";
+import * as iam from "@aws-cdk/aws-iam";
 
 export interface BackendProps {
   imageName: string;
   clusterName: string;
   instanceType: string;
   ssmVariables: string[];
+  iamUser: iam.User;
 }
 
 export class Backend extends Construct {
@@ -94,5 +96,21 @@ export class Backend extends Construct {
       port: 80,
       targets: [service],
     });
+
+    new iam.Policy(this, "AccessS3AndCFPolicy", {
+        statements: [
+          new iam.PolicyStatement({
+            effect: iam.Effect.ALLOW,
+            actions: ["ecs:UpdateService"],
+            resources: [service.serviceArn],
+          }),
+          new iam.PolicyStatement({
+            effect: iam.Effect.ALLOW,
+            actions: ["ecr:PutImage"],
+            resources: [repository.repositoryArn],
+          }),
+        ],
+        users: [props.iamUser],
+      });
   }
 }

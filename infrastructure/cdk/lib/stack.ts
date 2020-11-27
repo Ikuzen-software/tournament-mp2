@@ -25,6 +25,7 @@ export class Treenament extends Stack {
         "TOURNAMENT_MONGO_HOST",
         "TOURNAMENT_MONGO_PROTOCOL",
       ],
+      iamUser: cicdUser,
     });
   }
 }
