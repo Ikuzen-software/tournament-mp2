@@ -98,19 +98,19 @@ export class Backend extends Construct {
     });
 
     new iam.Policy(this, "AccessS3AndCFPolicy", {
-        statements: [
-          new iam.PolicyStatement({
-            effect: iam.Effect.ALLOW,
-            actions: ["ecs:UpdateService"],
-            resources: [service.serviceArn],
-          }),
-          new iam.PolicyStatement({
-            effect: iam.Effect.ALLOW,
-            actions: ["ecr:PutImage"],
-            resources: [repository.repositoryArn],
-          }),
-        ],
-        users: [props.iamUser],
-      });
+      statements: [
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ["ecs:UpdateService"],
+          resources: [service.serviceArn],
+        }),
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ["ecr:PutImage", "ecr:GetAuthorizationToken"],
+          resources: [repository.repositoryArn],
+        }),
+      ],
+      users: [props.iamUser],
+    });
   }
 }

@@ -29,7 +29,7 @@ jobs:
           npm run build
       - name: Deploy static site to S3 bucket and invalidate cache
         run: |
-          aws s3 sync ./dist/ s3://treenament.com --delete
+          aws s3 sync app/dist/ s3://treenament.com --delete
           aws cloudfront create-invalidation --distribution-id ${{secrets.CLOUDFRONT_DISTRIBUTION}}
 
   deploy-back:
