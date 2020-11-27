@@ -59,6 +59,6 @@ jobs:
 
       - name: Restart ECS Service
         run: |
-          export SERVICE=aws ecs list-services --cluster treenament-dev --query serviceArns[0] --output text | awk -F'/' '{print $3}'
-          export CLUSTER=aws ecs list-clusters --query clusterArns[0] --output text | awk -F'/' '{print $2}'
+          export SERVICE=$(aws ecs list-services --cluster treenament-dev --query serviceArns[0] --output text | awk -F'/' '{print $3}')
+          export CLUSTER=$(aws ecs list-clusters --query clusterArns[0] --output text | awk -F'/' '{print $2}')
           aws ecs update-service --force-new-deployment --service ${SERVICE} --cluster ${CLUSTER}
