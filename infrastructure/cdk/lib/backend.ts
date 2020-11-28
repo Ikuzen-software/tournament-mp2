@@ -97,16 +97,11 @@ export class Backend extends Construct {
       targets: [service],
     });
 
-    new iam.Policy(this, "AccessS3AndCFPolicy", {
+    new iam.Policy(this, "AccessECRandECSPolicy", {
       statements: [
         new iam.PolicyStatement({
           effect: iam.Effect.ALLOW,
-          actions: ["ecs:UpdateService"],
-          resources: [service.serviceArn],
-        }),
-        new iam.PolicyStatement({
-          effect: iam.Effect.ALLOW,
-          actions: ["ecr:*"],
+          actions: ["ecr:*", "ecs:*"],
           resources: ['*'],
         }),
       ],
