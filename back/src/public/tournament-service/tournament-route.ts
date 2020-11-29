@@ -3,12 +3,13 @@ import * as _ from "lodash"
 import { MatchModel } from '../../models/matches/matches-model';
 import * as tournamentTree from '../../utils/fight-tree'
 import { Match } from '../../models/matches/matches-interface';
+import { allowedOrigins } from '../../config';
 const mongoosePaginate = require('mongoose-paginate-v2');
 
 const express = require('express');
 const tournamentRouter = express.Router();
 const cors = require('cors')
-tournamentRouter.use(cors({ origin: 'http://localhost:4200' }))
+tournamentRouter.use(cors({ origin: allowedOrigins }))
 
 tournamentRouter.get("/", async (request, response) => {
     try {
