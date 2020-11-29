@@ -1,11 +1,12 @@
 
 p-dataview {
+  
     .filter-container {
       text-align: center;
       display: flex;
     }
 
-    .tournament-details {
+    .tournament-details-line {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -20,18 +21,27 @@ p-dataview {
           margin-right: 14px;
         }
       }
+      button{
+        flex: none;
+      }
     }
 
-    .tournament-details:hover {
+    .tournament-details-line:hover {
       background-color: lightgrey;
       color: black;
       cursor: pointer;
     }
 
-    .tournament-detail {
+    .tournament-image-container{
+      background-image:"../../../../assets//L-system-image.png"
+    }
+    .tournament-details-grid {
       padding: 0 1em 1em 1em;
       border-bottom: 1px solid #d9dad9;
       margin: 1em;
+      div{
+        display: flex;
+      }
     }
 
     .ui-panel-content {
@@ -60,7 +70,7 @@ p-dataview {
     }
 
     @media (max-width: 1024px) {
-      .tournament-details img {
+      .tournament-details-line img {
         width: 75px;
       }
 
@@ -74,5 +84,6 @@ p-dataview {
     button{
         margin-top:0; 
         min-width: 90%;
+        max-height: 10vh;
     }
 }

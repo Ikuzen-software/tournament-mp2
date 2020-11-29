@@ -24,8 +24,8 @@
                 (click)="utilService.navigate('user/'+tournament.organizer?.organizer_id)">{{tournament?.organizer?.username}}</a>
         </p-card>
         <p-card>
-                <button *ngIf="!isParticipating && checkAvailability()" pButton (click)="joinTournament()"> Participate</button>
-                <button *ngIf="isParticipating" pButton (click)="leaveTournament()"> Cancel participation</button>
+                <button *ngIf="!isParticipating && checkAvailability()" pButton label="Participate" (click)="joinTournament()"> </button>
+                <button *ngIf="isParticipating" pButton label="Cancel participation" (click)="leaveTournament()"> </button>
         </p-card>
     </p-tabPanel>
     <!-- Standing -->

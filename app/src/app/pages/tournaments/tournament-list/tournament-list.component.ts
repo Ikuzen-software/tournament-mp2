@@ -47,7 +47,8 @@ export class TournamentListComponent implements OnInit {
       { label: 'Most recent', value: '!createdAt' },
       { label: 'Least recent', value: 'createdAt' },
       { label: 'Name', value: 'name' },
-      { label: 'Attendance', value: '!size' }
+      { label: 'Attendance', value: '!size' },
+      { label: 'Start date', value: 'startDate'}
     ];
     this.statusFilterOptions = [
       { label: 'not started', value: 'not started' },

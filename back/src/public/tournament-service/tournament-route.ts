@@ -17,7 +17,7 @@ tournamentRouter.get("/", async (request, response) => {
             page: request.query.page
         }
         if (!paginationQuery.limit) {
-            paginationQuery.limit = 10;
+            paginationQuery.limit = 12;
         }
         if (!paginationQuery.page) {
             paginationQuery.page = 1
