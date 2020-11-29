@@ -6,11 +6,12 @@ import { STATUS as TnStatus } from '../../models/tournaments/tournament-status.e
 import * as _ from "lodash"
 import { MatchModel } from '../../models/matches/matches-model';
 import * as tournamentTree from '../../utils/fight-tree'
+import {allowedOrigins} from '../../config'
 
 const express = require('express');
 const tournamentRouter = express.Router();
 const cors = require('cors')
-tournamentRouter.use(cors({ origin: 'http://localhost:4200' }))
+tournamentRouter.use(cors({ origin: allowedOrigins }))
 tournamentRouter.use(jwtMW);
 
 tournamentRouter.post("/", isLoggedIn, async (request, response) => {
