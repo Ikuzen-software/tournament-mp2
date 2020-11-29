@@ -29,6 +29,11 @@ export class Frontend extends Construct {
             behaviors: [{ isDefaultBehavior: true }],
           },
         ],
+        errorConfigurations: [{
+          errorCode: 403,
+          responseCode: 200,
+          responsePagePath: '/'
+        }]
       }
     );
 
