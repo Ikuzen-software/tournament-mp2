@@ -22,4 +22,4 @@ const database = env('TOURNAMENT_MONGO_DATABASE');
 const protocol = env('TOURNAMENT_MONGO_PROTOCOL');
 const host = env('TOURNAMENT_MONGO_HOST');
 uri = `${protocol}+srv://${username}:${password}@${host}/${database}`;
-export const allowedOrigins = ['http://localhost:3000', 'http://localhost:4200', 'http://treen-backe-14phrg0ikl66j-442006098.us-east-1.elb.amazonaws.com'];
+export const allowedOrigins = '*';
