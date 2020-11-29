@@ -80,6 +80,8 @@ export class Backend extends Construct {
     const service = new ecs.Ec2Service(this, "Ec2Service", {
       cluster,
       taskDefinition,
+      minHealthyPercent: 0,
+      maxHealthyPercent: 100
     });
 
     const alb = new elb.ApplicationLoadBalancer(this, "ALB", {
