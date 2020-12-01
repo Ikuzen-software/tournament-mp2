@@ -7,16 +7,18 @@
                     <p-dropdown [options]="sortOptions" placeholder="Sort By"
                         (onChange)="onSortChange($event)" [style]="{'min-width':'140px'}"></p-dropdown>
                 </div>
-                <div class="p-col-6 p-md-4 filter-container">
+                <div class="filter-container">
                     <div style="position:relative">
                         <input type="search" pInputText placeholder="Search a tournament"
                             (input)="dv.filter($event.target.value)">
                     </div>
-                    <div class="game-filter">
-                        <p-dropdown placeholder="Game" (onChange)="updateTournamentListByGame(gameFilterInput)" [options]="gameFilterOptions" [(ngModel)]="gameFilterInput"  [filter]="true"></p-dropdown>
-                    </div>
-                    <div class="status-filter">
-                        <p-dropdown placeholder="Status" [filter]=false (onChange)="updateTournamentListByStatus(statusFilterInput)" [options]="statusFilterOptions" [(ngModel)]="statusFilterInput" ></p-dropdown>
+                    <div style="display: flex;">
+                        <div class="game-filter">
+                            <p-dropdown placeholder="Game" (onChange)="updateTournamentListByGame(gameFilterInput)" [options]="gameFilterOptions" [(ngModel)]="gameFilterInput"  [filter]="true"></p-dropdown>
+                        </div>
+                        <div class="status-filter">
+                            <p-dropdown placeholder="Status" [filter]=false (onChange)="updateTournamentListByStatus(statusFilterInput)" [options]="statusFilterOptions" [(ngModel)]="statusFilterInput" ></p-dropdown>
+                        </div>
                     </div>
                 </div>
             </div>

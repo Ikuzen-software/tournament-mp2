@@ -5,6 +5,11 @@ p-dataview {
       text-align: center;
       display: flex;
     }
+    @media(max-width: 450px) {
+      .filter-container {
+        flex-direction: column;
+      }
+    }
 
     .tournament-details-line {
       display: flex;
