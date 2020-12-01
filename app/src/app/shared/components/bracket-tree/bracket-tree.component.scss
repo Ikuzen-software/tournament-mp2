@@ -10,7 +10,9 @@ p-tree ::ng-deep {
       max-width: 250px;
       min-width: 250px;
       transform: scaleX(-1);
-
+      .p-treenode-content{
+        min-height: 37px;
+      }
       span.p-tree-toggler {
         display: none;
       }

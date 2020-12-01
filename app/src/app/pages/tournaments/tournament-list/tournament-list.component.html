@@ -31,7 +31,7 @@
         <div style="padding:.5em" class="p-col-12 p-md-6 p-lg-4 p-xl-3 p-ai-stretch">
             <p-panel [header]="tournament.name" class="panel-grid-view" [style]="{'text-align':'center'}">
                 <div class="tournament-image-container"  alt="tree-image"></div>
-                <div class="tournament-details-grid ">
+                <div class="tournament-details-grid">
                     <div class="p-col-12">game: <b>{{tournament.game}}</b></div>
                     <div class="p-col-12">organizer: <b>{{tournament.organizer.username}}</b></div>
                     <div class="p-col-12"><b>{{tournament.participants.length}}/{{tournament.size}} Participants</b></div>
@@ -40,7 +40,7 @@
                     <div class="p-col-12">status :  <b>{{tournament.status}}</b></div>
 
                 </div>
-                <button pButton type="button" icon="pi pi-search" (click)="navigateTournament(tournament)">View </button>
+                <button pButton label="View " type="button" icon="pi pi-search" (click)="navigateTournament(tournament)"></button>
             </p-panel>
         </div>
     </ng-template>

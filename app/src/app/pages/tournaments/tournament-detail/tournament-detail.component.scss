@@ -1,52 +1,74 @@
-a{
-    cursor: pointer;
-    width: fit-content;
+a {
+  cursor: pointer;
+  width: fit-content;
 }
-.tournament-banner-body{
-    margin: 20px;
-    .main{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        .tournament-infos{
-            padding-left: 0;
-            margin-bottom: 0;
-            list-style-type: none;
-            display: flex;
-            align-items: center;
-            flex-direction: column;
 
-        }
+.tournament-banner-body {
+  margin: 20px;
+
+  .main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .tournament-infos {
+      padding-left: 0;
+      margin-bottom: 0;
+      list-style-type: none;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+
     }
+  }
 }
 
 p-panel.overall-infos {
-    ::ng-deep{
-        div{
-            .ui-panel-content-wrapper{
-                .ui-panel-content{
-                    display: flex;
-                    justify-content: space-between;
-                }
-            }
+  ::ng-deep {
+    div {
+      .ui-panel-content-wrapper {
+        .ui-panel-content {
+          display: flex;
+          justify-content: space-between;
         }
+      }
+    }
+  }
+}
+@media (max-width: 600px){
+    .first-column{
+    display: none;
     }
 }
-
-.match-icon{
+.match-icons {
+  tr {
     display: flex;
-    flex-direction: row-reverse;
-    border: none;
-    justify-content: flex-end;
-    div{
+
+    .match-icon {
+      display: flex;
+      flex-direction: row-reverse;
+      border: none;
+      justify-content: flex-end;
+      vertical-align: top;
+      text-align: center;
+
+      div {
         padding-left: 10px;
+      }
     }
+  }
+  @media (max-width: 600px){
+      tr{
+          display: block;
+      }
+  }
 }
 
-.bracket-wrapper{
-    display: flex; 
-    flex-direction: column;
-    button{
-        padding-top: 10px;
-    }
+.bracket-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  button {
+    padding-top: 10px;
+  }
 }

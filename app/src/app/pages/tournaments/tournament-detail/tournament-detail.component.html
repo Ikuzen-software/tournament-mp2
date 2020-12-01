@@ -33,7 +33,7 @@
         <div class="card">
             <p-table #dt [value]="tournamentStanding" styleClass="p-datatable-tournaments" [rowHover]="true"
                 [showCurrentPageReport]="true" [loading]="false" currentPageReportTemplate="Showing entries"
-                [filterDelay]="0">
+                [filterDelay]="0" [autoLayout]="true">
                 <ng-template pTemplate="caption">
                     <div class="table-header">
                         <h1>Standing</h1>
@@ -41,15 +41,15 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="width: 3rem"></th>
-                        <th>Rank</th>
-                        <th>Participant username</th>
-                        <th>matches played</th>
+                        <th style="width: 3rem" class="first-column"></th>
+                        <th class="p-col-1">Rank</th>
+                        <th class="p-col-2 p-sm-1">Participant username</th>
+                        <th class="p-col-9 p-sm-10">Matches played</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-participant>
                     <tr class="p-selectable-row">
-                        <td><img style="width: 40px; height: 50px; " src="../../../../favicon.ico" alt="tree-icon"></td>
+                        <td class="first-column"><img style="width: 40px; height: 50px; " src="../../../../favicon.ico" alt="tree-icon"></td>
                         <td>
                             <p>{{participant?.rank}}</p>
                         </td>
@@ -58,18 +58,20 @@
                                 (click)="utilService.navigate('user/'+participant?.participant_id)">{{participant?.username}}</a>
                         </td>
 
-                        <td class="match-icon">
-                            <div *ngFor="let match of participant.matchesPlayed">
-                                <div *ngIf="isWinner(match, participant.participant_id); else loserBlock"
+                        <td class="match-icons">
+                            <tr>
+                                <td class="match-icon"  *ngFor="let match of participant.matchesPlayed.reverse()">
+                                    <div style="padding:.5em;">
+                                    <button pButton [label]="'Win'" class="p-button-success" *ngIf="isWinner(match, participant.participant_id); else loserBlock"
                                     (click)="onMatchClick(match.identifier-1)">
-                                    Win
+                                    </button>
+                                     <ng-template #loserBlock>
+                                        <button pButton [label]="'Loss'" class="p-button-danger" (click)="onMatchClick(match.identifier-1)">
+                                        </button>
+                                    </ng-template>
                                 </div>
-                                <ng-template #loserBlock>
-                                    <div (click)="onMatchClick(match.identifier-1)">
-                                        Loss
-                                    </div>
-                                </ng-template>
-                            </div>
+                                </td>
+                            </tr>
                         </td>
                     </tr>
                 </ng-template>
@@ -84,11 +86,11 @@
         <div class="bracket-wrapper">
             <app-bracket-tree [tournament]=tournament></app-bracket-tree>
             <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'ongoing'" pButton class="p-col-2 "
-                (click)='stopTournament()'> Cancel Tournament</button>
+                (click)='stopTournament()' label="Cancel Tournament"> </button>
             <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'not started'" pButton class="p-col-2 "
-                (click)='startTournament()'> Start Tournament</button>
+                (click)='startTournament()' label="Start Tournament"> </button>
             <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'ongoing' && allMatches && allMatches[allMatches.length-1].matchState === 'finished'" pButton class="p-col-2 "
-                (click)='endTournament()'> End Tournament</button>
+                (click)='endTournament()' label="End Tournament"> </button>
         </div>
     </p-tabPanel>
     <!-- Options -->
@@ -99,7 +101,7 @@
     <p-tabPanel *ngIf="isTournamentOwner" header="seeding list">
         <div *ngIf="isTournamentOwner && tournament?.participants" class="seeding-list">
             <app-drag-order-list [list]="tournament.participants"></app-drag-order-list>
-            <button pButton (click)="updateSeeding()">update seeding</button>
+            <button pButton (click)="updateSeeding()" label="update seeding"></button>
         </div>
     </p-tabPanel>
 </p-tabView>

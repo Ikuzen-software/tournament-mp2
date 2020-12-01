@@ -1,6 +1,25 @@
-.button-group {
-    display: flex;
-    button{
-        margin:5px;
+#tournament-form{
+    .button-group {
+        display: flex;
+        button{
+            margin:5px;
+        }
     }
+    .input-tournament-description{
+        textarea{
+            height: 100%;
+            min-height: fit-content
+        }
+    }
+    // .p-grid{
+    //     display: flex;
+    //     align-items: flex-start;
+    //     div{
+    //         display: flex;
+    //         justify-content: center;
+    //         align-items: center;
+    //         flex-direction: column;
+    //     }
+    // }
 }
+

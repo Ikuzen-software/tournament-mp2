@@ -43,7 +43,7 @@ export class NavbarTopComponent implements OnInit {
     }, {
       label: 'Users',
       icon:'pi pi-fw pi-user',
-      command: () => this.utilService.navigate('/register')
+      command: () => this.utilService.navigate('/users')
     }, {
       label: 'Tournaments',
       icon: 'pi pi-fw pi-sitemap',
