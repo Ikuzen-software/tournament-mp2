@@ -1,5 +1,5 @@
-<p-dataView #dv [value]="tournaments?.docs" [paginator]="false" [rows]="10" paginatorPosition="both" filterBy="name"
-    [sortField]="sortField" [totalRecords]="3" [sortOrder]="sortOrder">
+<p-dataView #dv [value]="tournaments?.docs" [paginator]="false" [rows]="1" paginatorPosition="both" filterBy="name"
+    [sortField]="sortField" [totalRecords]="1" [sortOrder]="sortOrder" showJumpToPageDropdown=true layout="grid" [alwaysShowPaginator]="false">
     <p-header>
         <div class="ui-helper-clearfix">
             <div class="p-grid">
@@ -7,64 +7,46 @@
                     <p-dropdown [options]="sortOptions" placeholder="Sort By"
                         (onChange)="onSortChange($event)" [style]="{'min-width':'140px'}"></p-dropdown>
                 </div>
-                <div class="p-col-6 p-md-4 filter-container">
+                <div class="filter-container">
                     <div style="position:relative">
                         <input type="search" pInputText placeholder="Search a tournament"
                             (input)="dv.filter($event.target.value)">
                     </div>
-                    <div class="game-filter">
-                        <p-dropdown placeholder="Game" (onChange)="updateTournamentListByGame(gameFilterInput)" [options]="gameFilterOptions" [(ngModel)]="gameFilterInput"  [filter]="true"></p-dropdown>
+                    <div style="display: flex;">
+                        <div class="game-filter">
+                            <p-dropdown placeholder="Game" (onChange)="updateTournamentListByGame(gameFilterInput)" [options]="gameFilterOptions" [(ngModel)]="gameFilterInput"  [filter]="true"></p-dropdown>
+                        </div>
+                        <div class="status-filter">
+                            <p-dropdown placeholder="Status" [filter]=false (onChange)="updateTournamentListByStatus(statusFilterInput)" [options]="statusFilterOptions" [(ngModel)]="statusFilterInput" ></p-dropdown>
+                        </div>
                     </div>
-                    <div class="status-filter">
-                        <p-dropdown placeholder="Status" (onChange)="updateTournamentListByStatus(statusFilterInput)" [options]="statusFilterOptions" [(ngModel)]="statusFilterInput"  [filter]="true"></p-dropdown>
-                    </div>
-                </div>
-                <div class="p-col-6 p-md-4" style="text-align:right">
-                    <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
                 </div>
             </div>
             <p *ngIf="tournaments?.totalDocs"style="display: flex; justify-content: center;margin-bottom: 0;
             margin-top: 10px;">{{paginationToolbar}} </p>
-            <p-paginator [rows]="10" [totalRecords]="tournaments?.totalDocs" pageLinkSize="3" (onPageChange)="onPageChange($event)"></p-paginator>
+            <p-paginator [rows]="12" [totalRecords]="tournaments?.totalDocs" pageLinkSize="3" (onPageChange)="onPageChange($event)"></p-paginator>
         </div>
     </p-header>
     
-    <!-- line view -->
-    <ng-template let-tournament pTemplate="listItem">
-        <div class="p-col-12">
-            <div class="tournament-details">
-                <div>
-                    <div class="p-grid">
-                        <div class="p-col-12">name: <b>{{tournament.name}}</b></div>
-                        <div class="p-col-12">game: <b>{{tournament.game}}</b></div>
-                        <div class="p-col-12">organizer: <b>{{tournament.organizer.username}}</b></div>
-                        <div class="p-col-12"><b>{{tournament.participants.length}}/{{tournament.size}} Participants</b></div>
-                        <div class="p-col-12">created at : <b>{{tournament.createdAt | date}}</b></div>
-                        <div class="p-col-12">status :  <b>{{tournament.status}}</b></div>
-                    </div>
-                </div>
-                <button pButton type="button" icon="pi pi-search" (click)="navigateTournament(tournament)">View</button>
-            </div>
-        </div>
-    </ng-template>
     <!-- grid view -->
     <ng-template let-tournament pTemplate="gridItem">
-        <div style="padding:.5em" class="p-col-12 p-md-3">
-            <p-panel [header]="tournament.vin" class="panel-grid-view" [style]="{'text-align':'center'}">
-                <div class="tournament-detail">
-                    <div class="p-col-12">name: <b>{{tournament.name}}</b></div>
+        <div style="padding:.5em" class="p-col-12 p-md-6 p-lg-4 p-xl-3 p-ai-stretch">
+            <p-panel [header]="tournament.name" class="panel-grid-view" [style]="{'text-align':'center'}">
+                <div class="tournament-image-container"  alt="tree-image"></div>
+                <div class="tournament-details-grid">
                     <div class="p-col-12">game: <b>{{tournament.game}}</b></div>
                     <div class="p-col-12">organizer: <b>{{tournament.organizer.username}}</b></div>
                     <div class="p-col-12"><b>{{tournament.participants.length}}/{{tournament.size}} Participants</b></div>
                     <div class="p-col-12">createdAt: <b>{{tournament.createdAt | date}}</b></div>
+                    <div class="p-col-12">starts at : <b>{{tournament.startDate | date}}</b></div>
                     <div class="p-col-12">status :  <b>{{tournament.status}}</b></div>
 
                 </div>
-                <button pButton type="button" icon="pi pi-search" (click)="navigateTournament(tournament)">View</button>
+                <button pButton label="View " type="button" icon="pi pi-search" (click)="navigateTournament(tournament)"></button>
             </p-panel>
         </div>
     </ng-template>
 </p-dataView>
 <p *ngIf="tournaments?.totalDocs"style="display: flex; justify-content: center;margin-bottom: 0;
             margin-top: 10px;">{{paginationToolbar}} </p>
-            <p-paginator [rows]="10" [totalRecords]="tournaments?.totalDocs" pageLinkSize="3" (onPageChange)="onPageChange($event)"></p-paginator>
+            <p-paginator [rows]="12" [totalRecords]="tournaments?.totalDocs" pageLinkSize="3" (onPageChange)="onPageChange($event)"></p-paginator>

@@ -18,7 +18,7 @@
     </form>
 
     <div class="buttons-container">
-        <button *ngIf="isReportable"(click)="onSubmit()" pButton>Save</button>
-        <button pButton (click)="cancel()">Cancel</button>
+        <button *ngIf="isReportable" label="Save" (click)="onSubmit()" pButton></button>
+        <button pButton label="Cancel" (click)="cancel()"></button>
     </div>
 </p-dialog>

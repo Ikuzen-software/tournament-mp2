@@ -45,7 +45,7 @@ export class BracketTreeComponent implements OnInit, AfterViewInit, OnChanges {
 
   enableDragScroll() {
     let pos = { top: 0, left: 0, x: 0, y: 0 };
-    let ele = Array.from(document.getElementsByClassName('ui-tree-horizontal'))[0] as HTMLElement;
+    let ele = Array.from(document.getElementsByClassName('p-tree-horizontal'))[0] as HTMLElement;
     const mouseMoveHandler = (e) => {
       // How far the mouse has been moved
       const dx = pos.x - e.clientX;

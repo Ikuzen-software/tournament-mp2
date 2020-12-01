@@ -6,16 +6,15 @@ p-tree ::ng-deep {
     overflow: auto;
     cursor: grab;
 
-    table p-treenode table tbody td.ui-treenode {
+    table p-treenode table tbody td.p-treenode {
       max-width: 250px;
       min-width: 250px;
-
-      span.ui-tree-toggler {
-        display: none;
+      transform: scaleX(-1);
+      .p-treenode-content{
+        min-height: 37px;
       }
-
-      span {
-        transform: scaleX(-1);
+      span.p-tree-toggler {
+        display: none;
       }
 
     }

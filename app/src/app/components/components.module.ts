@@ -8,6 +8,8 @@ import {ButtonModule} from 'primeng/button';
 import {InputTextModule} from 'primeng/inputtext';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ToastModule } from 'primeng/toast';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -22,7 +24,9 @@ import { ToastModule } from 'primeng/toast';
     MenubarModule,
     ButtonModule,
     InputTextModule,
-    ToastModule
+    ToastModule,
+    BrowserModule,
+    BrowserAnimationsModule,
   ],
   exports:[
     NavbarTopComponent,
