@@ -60,7 +60,7 @@
 
                         <td class="match-icons">
                             <tr>
-                                <td class="match-icon"  *ngFor="let match of participant.matchesPlayed.reverse()">
+                                <td class="match-icon"  *ngFor="let match of participant.matchesPlayed">
                                     <div style="padding:.5em;">
                                     <button pButton [label]="'Win'" class="p-button-success" *ngIf="isWinner(match, participant.participant_id); else loserBlock"
                                     (click)="onMatchClick(match.identifier-1)">
