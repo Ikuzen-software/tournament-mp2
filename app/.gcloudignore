@@ -1,9 +1,0 @@
-e2e/
-node_modules/
-src/
-coverage
-^(.*/)?\..*$
-^(.*/)?.*\.json$
-^(.*/)?.*\.md$
-^(.*/)?.*\.yaml$
-^LICENSE

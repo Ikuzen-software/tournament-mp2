@@ -86,4 +86,24 @@ export class TournamentService {
   getTournamentAvailability(id: string){
     return this.http.get<string>(`${env.SERVER_API_URL}/tournament/other/size/${id}`);
   }
+  
+  startTournament(tournament: Tournament){
+    return this.http.patch<Tournament>(`${env.SERVER_API_URL}/tournament/start/${tournament._id}`, tournament ,this.getOptions());
+  }
+  
+  stopTournament(tournament: Tournament){
+    return this.http.patch<Tournament>(`${env.SERVER_API_URL}/tournament/stop/${tournament._id}`, tournament ,this.getOptions());
+  }
+  
+  endTournament(tournament: Tournament){
+    return this.http.patch<Tournament>(`${env.SERVER_API_URL}/tournament/end/${tournament._id}`, tournament ,this.getOptions());
+
+  }
+  updateSeeding(tournament: Tournament){
+    return this.http.patch<Tournament>(`${env.SERVER_API_URL}/tournament/seeding`, tournament ,this.getOptions());
+  }
+
+  getTournamentStanding(id: string){
+    return this.http.get<any>(`${env.SERVER_API_URL}/tournament/getStanding/${id}`)
+  }
 }

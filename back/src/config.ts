@@ -22,4 +22,4 @@ const database = env('TOURNAMENT_MONGO_DATABASE');
 const protocol = env('TOURNAMENT_MONGO_PROTOCOL');
 const host = env('TOURNAMENT_MONGO_HOST');
 uri = `${protocol}+srv://${username}:${password}@${host}/${database}`;
-export const allowedOrigins = ['http://localhost:3000', 'http://localhost:4200'];
+export const allowedOrigins = '*';

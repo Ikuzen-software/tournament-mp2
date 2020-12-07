@@ -6,6 +6,7 @@ export interface Tournament {
     description?: string;
     game?: string;
     format?: string;
+    reportOptions: {anyParticipant: boolean, bothParticipant: boolean}
     name: string;
     size: number;
     startDate: Date;

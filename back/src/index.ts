@@ -1,13 +1,14 @@
-import express from 'express';
-import debug from 'debug';
+import express = require('express');
+import debug = require('debug');
 import * as config from './config';
-
 console.log("Starting Application \s")
 
 const userRoutePublic = require('./public/user-service/user-route')
 const userRoutePrivate = require('./private/user-service/user-route')
 const tournamentRoutePublic = require('./public/tournament-service/tournament-route')
 const tournamentRoutePrivate = require('./private/tournament-service/tournament-route')
+const matchRoutePublic = require('./public/match-service/match-route')
+const matchRoutePrivate = require('./private/match-service/match-route')
 const loginRoute = require('./public/login/login-route')
 const tokenRoute = require('./public/token-route/token-route')
 const cors = require('cors')
@@ -32,13 +33,14 @@ fs.readFile('./keys/private.pem', (err, data) => {
 
 app.use(cors())
 app.use(BodyParser.json());
-app.use(cors());
 app.use('/token', tokenRoute)
 app.use('/login', loginRoute)
 app.use('/user', userRoutePublic)
 app.use('/user', userRoutePrivate)
 app.use('/tournament', tournamentRoutePublic)
 app.use('/tournament', tournamentRoutePrivate)
+app.use('/match', matchRoutePublic)
+app.use('/match', matchRoutePrivate)
 
 db.once('open', function () {
     console.log("connected to the db")
@@ -50,4 +52,3 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => log('Listening on port', PORT));
 
-module.exports = app

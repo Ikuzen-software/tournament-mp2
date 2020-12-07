@@ -18,7 +18,7 @@ import { User } from '../../users/user';
   styleUrls: ['./tournament-edit.component.scss']
 })
 export class TournamentEditComponent implements OnInit {
-  tournament: Tournament;
+  @Input() tournament: Tournament;
   tournamentForm: FormGroup = this.fb.group({
     name: ['', [
       Validators.required,
@@ -38,59 +38,53 @@ export class TournamentEditComponent implements OnInit {
     ]],
     startDate: ['', []],
   });
-  
+
   get name() { return this.tournamentForm.value.name; }
   get description() { return this.tournamentForm.value.description; }
   get game() { return this.tournamentForm.value.game; }
   get format() { return this.tournamentForm.value.format; }
   get size() { return this.tournamentForm.value.size; }
   get startDate() { return this.tournamentForm.value.startDate; }
-  
-  constructor(private route: ActivatedRoute, private tournamentService: TournamentService, private fb: FormBuilder, private validation: ValidationErrorsService, private router: Router, private readonly store: Store<fromAuth.ApplicationState>, public utilService: UtilService, public toastService: ToastService) {
-    route.params.subscribe((value) => {
-      tournamentService.getById(value.tournamentId).pipe(
-        take(1)
-      ).subscribe((tournament) => {
-        this.store.pipe(select(userSelector)).subscribe((appState) => {
-          if (appState?.currentUser?.username !== tournament.organizer.username && appState.currentUser.role !== 'admin') { // if owner or admin, has edit rights
-            utilService.navigate('forbidden');
-          }
-          this.tournament = tournament;
-          this.tournamentForm = this.fb.group({
-            name: [this.tournament?.name, [
-              Validators.required,
-              Validators.minLength(4)],
-              [this.validation.forbiddenTournamentNameValidator(this.tournament?.name)]
-            ],
-            description: [this.tournament?.description, [
-            ]],
-            game: [this.tournament?.game, [
-              Validators.required
-            ]],
-            format: [this.tournament?.format, [
-              Validators.required
-        
-            ]],
-            size: [this.tournament?.size, [
-              Validators.required
-            ]],
-            startDate: [this.utilService.formatDate(this.tournament?.startDate), []],
-          });
-        });
+
+  constructor(private tournamentService: TournamentService, private fb: FormBuilder, private validation: ValidationErrorsService, private router: Router, private readonly store: Store<fromAuth.ApplicationState>, public utilService: UtilService, public toastService: ToastService) {
+
+      
+  }
+
+  ngOnInit(): void {
+    this.store.pipe(select(userSelector)).subscribe((appState) => {
+      if (appState?.currentUser?.username !== this.tournament?.organizer.username && appState.currentUser.role !== 'admin') { // if owner or admin, has edit rights
+        this.utilService.navigate('forbidden');
+      }
+      this.tournamentForm = this.fb.group({
+        name: [this.tournament?.name, [
+          Validators.required,
+          Validators.minLength(4)],
+        [this.validation.forbiddenTournamentNameValidator(this.tournament?.name)]
+        ],
+        description: [this.tournament?.description, [
+        ]],
+        game: [this.tournament?.game, [
+          Validators.required
+        ]],
+        format: [this.tournament?.format, [
+          Validators.required
+
+        ]],
+        size: [this.tournament?.size, [
+          Validators.required
+        ]],
+        startDate: [this.utilService.formatDate(this.tournament?.startDate), []],
       });
     });
   }
 
-  ngOnInit(): void {
-  }
-
-  updateTournament(){
+  updateTournament() {
     if (this.tournamentForm.valid) {
       this.store.select(userSelector).subscribe((appState) => {
         const _organizer = appState.currentUser
         const tournamentId = this.tournament._id;
-        console.log(this.tournament)
-        this.tournament = {...this.tournament, name: this.name, description: this.description, game: this.game, format: this.format, size: this.size, startDate: this.startDate, organizer: _organizer };
+        this.tournament = { ...this.tournament, name: this.name, description: this.description, game: this.game, format: this.format, size: this.size, startDate: this.startDate, organizer: _organizer };
         this.tournamentService.update(tournamentId, this.tournament).subscribe((result) => {
           this.toastService.success('Success', 'Edit successful');
           this.router.navigate([`/tournament/${result._id}`]);
@@ -105,11 +99,11 @@ export class TournamentEditComponent implements OnInit {
     }
   }
 
-  removeUser(user: User){
+  removeUser(user: User) {
     this.tournament.participants = this.tournament.participants.filter(participant => participant !== user);
   }
 
-  goBack(){
-    this.utilService.navigate("/tournament/"+this.tournament._id)
+  goBack() {
+    this.utilService.navigate("/tournament/" + this.tournament._id)
   }
 }

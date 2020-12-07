@@ -1,0 +1,21 @@
+:host{
+
+    p-orderlist{
+        ::ng-deep{
+            div.ui-orderlist{
+                div.ui-orderlist-list-container{
+                    ul{
+                        height: fit-content;
+                    }
+                }
+                div.ui-orderlist-controls{
+                    display: flex;
+                    flex-direction: column;
+                    button:nth-child(2){
+                        order:-1
+                    }
+                }
+            }
+        }
+    }
+}

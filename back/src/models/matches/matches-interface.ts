@@ -1,8 +1,8 @@
 export enum MatchState {
-    STARTED = 'STARTED',
-    READY = 'READY',
-    NOT_READY = 'NOT_READY',
-    FINISHED = 'FINISHED'
+    ongoing = 'ongoing',
+    finished = 'finished',
+    notStarted = 'not started',
+    readyToStart = 'ready to start'
 }
 
 export interface Match {

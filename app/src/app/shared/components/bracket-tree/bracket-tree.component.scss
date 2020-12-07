@@ -1,14 +1,26 @@
-p-tree ::ng-deep > div {
+p-tree ::ng-deep {
+  > div {
     transform: scaleX(-1);
-    float:left;
+    float: left;
+    max-width: 90vw;
+    overflow: auto;
+    cursor: grab;
 
-  table p-treenode table tbody td.ui-treenode {
-    max-width: 250px;
-    min-width: 250px;
+    table p-treenode table tbody td.p-treenode {
+      max-width: 250px;
+      min-width: 250px;
+      transform: scaleX(-1);
+      .p-treenode-content{
+        min-height: 37px;
+      }
+      span.p-tree-toggler {
+        display: none;
+      }
 
-    span {
-        transform: scaleX(-1);
     }
   }
 
+  ::-webkit-scrollbar {
+    display: none;
+  }
 }

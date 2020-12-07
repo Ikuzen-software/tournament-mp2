@@ -8,7 +8,6 @@ import { UserListComponent } from './users/user-list/user-list.component';
 import { TournamentListComponent } from './tournaments/tournament-list/tournament-list.component';
 import { TournamentDetailComponent } from './tournaments/tournament-detail/tournament-detail.component';
 import { MainComponent } from './main/main.component';
-import { TreeModule } from 'primeng/tree';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
@@ -41,16 +40,16 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
 import {FilterUtils} from 'primeng/utils';
 import { TournamentEditComponent } from './tournaments/tournament-edit/tournament-edit.component';
 import {ProgressBarModule} from 'primeng/progressbar';
+import { MatchesComponent } from './matches/matches.component';
 
 
 
 @NgModule({
-  declarations: [UserDetailComponent, UserListComponent, TournamentListComponent, TournamentDetailComponent, TournamentsComponent, TournamentCreationComponent, MainComponent, LoginComponent, RegisterComponent, PasswordRecoveryComponent, ForbiddenComponent, TournamentCreationComponent, TournamentNotFoundComponent, TournamentEditComponent],
+  declarations: [UserDetailComponent, UserListComponent, TournamentListComponent, TournamentDetailComponent, TournamentsComponent, TournamentCreationComponent, MainComponent, LoginComponent, RegisterComponent, PasswordRecoveryComponent, ForbiddenComponent, TournamentCreationComponent, TournamentNotFoundComponent, TournamentEditComponent, MatchesComponent],
   imports: [
     CommonModule,
     CarouselModule,
     CardModule,
-    TreeModule,
     HttpClientModule,
     FormsModule,
     MenuModule,

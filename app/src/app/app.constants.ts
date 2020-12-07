@@ -1,3 +1,3 @@
-import {commonEnv} from '../environments/environment.common';
+import {environment} from '../environments/environment';
 
-export const env = commonEnv;
+export const env = environment;

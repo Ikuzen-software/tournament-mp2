@@ -4,10 +4,10 @@
         <div class="tournament-form-group">
             <!-- tournament name -->
             <div class="p-grid">
-                <div class="input-label p-col">
+                <div class="input-label p-col-6" style="display: flex; align-items: center;">
                     <h2>tournament name<span style="color: red;">*</span></h2>
                 </div>
-                <div class="input-tournament-name p-col">
+                <div class="input-tournament-name p-col-6" style="display: flex; align-items: center;">
                     <span class=" ui-inputgroup-addon"></span>
                     <input name="name" type="text" pInputText placeholder="Tournament name" formControlName="name">
                     <mat-error
@@ -18,21 +18,21 @@
             </div>
             <!-- description -->
             <div class="p-grid">
-                <div class="input-label p-col">
+                <div class="input-label p-col-6" style="display: flex; align-items: center;">
                     <h2>tournament description</h2>
                 </div>
-                <div class="input-tournament-description p-col">
+                <div class="input-tournament-description p-col-6" style="display: flex; align-items: center;">
                     <span class=" ui-inputgroup-addon"></span>
-                    <textarea pInputTextarea [rows]="5" [cols]="30" placeholder="Description" autoResize="autoResize"
+                    <textarea pInputTextarea [rows]="5" [cols]="30" placeholder="Description" 
                         formControlName="description"></textarea>
                 </div>
             </div>
             <!-- game -->
             <div class="p-grid">
-                <div class="input-label p-col">
+                <div class="input-label p-col-6" style="display: flex; align-items: center;">
                     <h2>game<span style="color: red;">*</span></h2>
                 </div>
-                <div class="input-tournament-game p-col">
+                <div class="input-tournament-game p-col-6" style="display: flex; align-items: center;">
                     <span class=" ui-inputgroup-addon"></span>
                     <input pInput placeholder="game"
                         formControlName="game">
@@ -40,10 +40,10 @@
             </div>
             <!-- format -->
             <div class="p-grid">
-                <div class="input-label p-col">
+                <div class="input-label p-col-6" style="display: flex; align-items: center;">
                     <h2>format<span style="color: red;">*</span></h2>
                 </div>
-                <div class="input-tournament-format p-col">
+                <div class="input-tournament-format p-col-6" style="display: flex; align-items: center;">
                     <span class=" ui-inputgroup-addon"></span>
                     <select name="format" formControlName="format">
                         <option value="single-elimination" selected="true">single-elimination</option>
@@ -53,10 +53,10 @@
             </div>
             <!-- size -->
             <div class="p-grid">
-                <div class="input-label p-col">
+                <div class="input-label p-col-6" style="display: flex; align-items: center;">
                     <h2>tournament size<span style="color: red;">*</span></h2>
                 </div>
-                <div class="input-tournament-size p-col">
+                <div class="input-tournament-size p-col-6" style="display: flex; align-items: center;">
                     <span class=" ui-inputgroup-addon"></span>
                     <select name="size" formControlName="size">
                         <option value="4">4</option>
@@ -69,10 +69,10 @@
             </div>
             <!-- startDate -->
             <div class="p-grid">
-                <div class="input-label p-col">
+                <div class="input-label p-col-6" style="display: flex; align-items: center;">
                     <h2>tournament start</h2>
                 </div>
-                <div class="input-tournament-start p-col">
+                <div class="input-tournament-start p-col-6" style="display: flex; align-items: center;">
                     <span class=" ui-inputgroup-addon"></span>
                     <input pInput type="date" name="startDate" formControlName="startDate">
                 </div>
@@ -80,13 +80,13 @@
 
             <!-- participant list -->
             <div class="p-grid">
-                <div class="input-label p-col">
+                <div class="input-label p-col-6" style="display: flex; align-items: center;">
                     <h2>Participant list </h2>
                 </div>
-                <div class="input-tournament-list p-col">
+                <div class="input-tournament-list p-col-6" style="display: flex; align-items: center;">
                     <ul>
-                        <div *ngFor="let user of tournament?.participants" style="display: flex; align-items: center;">
-                            <li>{{user.username}}</li><button pButton pRipple (click)="removeUser(user)"type="button" style="margin: 5px;"icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text"></button>
+                        <div *ngFor="let user of tournament?.participants " style="display: flex; align-items: center;">
+                            <li>{{user.username}}</li><button pButton pRipple *ngIf="tournament.status ==='not started' " (click)="removeUser(user)"type="button" style="margin: 5px;"icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text"></button>
 
                         </div>
                     </ul>
@@ -96,7 +96,6 @@
         </div>
         <div class="button-group">
             <button pButton type="submit" [disabled]="!tournamentForm.valid" label="update tournament"></button>
-            <button pButton type="button" (click)="goBack()" label="back"></button>
         </div>
     </form>
 </div>
