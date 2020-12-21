@@ -3,5 +3,5 @@
     <button pButton label="Your tournaments" (click)="utilService.navigate('user/'+user$.value.id)"></button>
 </div>
 <h3>Welcome to Treenament</h3>
-<img src="../../../assets/logoMP.png" alt="logo">
+<!-- <img src="../../../assets/logoMP.png" alt="logo"> -->
 <app-bracket-tree *ngIf="tournament" [tournament]=tournament></app-bracket-tree>

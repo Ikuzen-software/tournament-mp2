@@ -51,7 +51,7 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
         take(1)
       ).subscribe((tournament) => {
         this.tournament = tournament;
-        this.tournamentService.getTournamentStanding(this.tournament._id).subscribe((standing)=>{
+        this.tournamentService.getTournamentStanding(this.tournament._id).subscribe((standing) => {
           this.tournamentStanding = standing
         })
         this.matchService.getAllMatchesByTournamentId(this.tournament._id).subscribe((matches) => {
@@ -66,16 +66,21 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
           )
           .subscribe((x) => {
             if (this.isStarted$.getValue().value === TnStatus.ongoing) {
-              this.tournamentService.startTournament(tournament).subscribe();
-              this.matchService.createAllMatchesById(tournament._id).subscribe();
-              this.toastService.success("Tournament start", "successfully started the tournament");
-              this.isStarted$.next({ propagate: false, value: TnStatus.ongoing })
-              this.tournament.status = TnStatus.ongoing
+              this.tournamentService.startTournament(tournament).subscribe(
+                () => {
+                  this.matchService.createAllMatchesById(tournament._id).subscribe();
+                  this.toastService.success("Tournament start", "successfully started the tournament");
+                  this.isStarted$.next({ propagate: false, value: TnStatus.ongoing })
+                  this.tournament.status = TnStatus.ongoing;
+                },
+                (error) => {
+                  this.toastService.success("failure", "cannot start the tournament");
+                });
             } else if (this.isStarted$.getValue().value === TnStatus.notStarted) {
               this.tournamentService.stopTournament(tournament).subscribe();
               this.matchService.deleteAllMatchesById(tournament._id).subscribe();
               this.toastService.success("Tournament stop", "successfully stopped the tournament");
-              this.tournament.status = TnStatus.notStarted
+              this.tournament.status = TnStatus.notStarted;
               this.isStarted$.next({ propagate: false, value: TnStatus.notStarted })
             }
           },
@@ -116,11 +121,12 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
 
 
   onMatchClick(i) {
+    console.log('test')
     this.currentMatchDisplayed = this.allMatches[i];
-    this.showScoreDialog$.next(true)
+    this.showScoreDialog$.next(true);
   }
 
-  isWinner(match:Match, id:string){
+  isWinner(match: Match, id: string) {
     return match.winner_id === id ? true : false;
   }
 
@@ -144,10 +150,10 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
         take(1)
       ).subscribe((tournament) => {
         this.tournament = tournament; //refresh the child component
-        this.tournamentService.getTournamentStanding(this.tournament._id).subscribe((standing)=>{
+        this.tournamentService.getTournamentStanding(this.tournament._id).subscribe((standing) => {
           this.tournamentStanding = standing
         });
-          setTimeout(() => { this.addMatchClickEvents() }, 300);
+        setTimeout(() => { this.addMatchClickEvents() }, 300);
       });
     })
   }
@@ -156,38 +162,38 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
     if (!this.isLoggedIn) {
       this.utilService.navigate("login")
     } else {
-        this.tournamentService.joinTournament(this.tournament._id, this.currentUser as User).pipe(
-          take(1)
-        ).subscribe((result) => {
-          this.isParticipating = true;
-          this.tournament.participants.push(this.currentUser);
-          this.toastService.success("participation", "successfully joined the tournament")
-          this.refresh();
-        },
-          (error) => {
-            console.log(error)
-            this.toastService.showError("error","error");
-          })
-      }
+      this.tournamentService.joinTournament(this.tournament._id, this.currentUser as User).pipe(
+        take(1)
+      ).subscribe((result) => {
+        this.isParticipating = true;
+        this.tournament.participants.push(this.currentUser);
+        this.toastService.success("participation", "successfully joined the tournament")
+        this.refresh();
+      },
+        (error) => {
+          console.log(error)
+          this.toastService.showError("error", "error");
+        })
+    }
   }
 
   leaveTournament() {
     if (!this.isLoggedIn) {
       this.utilService.navigate("login")
     } else {
-        this.tournament.participants = this.tournament.participants.filter(user => user.username !== this.currentUser.username);
-        this.tournamentService.leavetournament(this.tournament._id, this.currentUser as User).pipe(
-          take(1)
-        ).subscribe((result) => {
-          this.isParticipating = false;
-          this.toastService.success("participation", "successfully removed from the tournament")
-          this.refresh();
+      this.tournament.participants = this.tournament.participants.filter(user => user.username !== this.currentUser.username);
+      this.tournamentService.leavetournament(this.tournament._id, this.currentUser as User).pipe(
+        take(1)
+      ).subscribe((result) => {
+        this.isParticipating = false;
+        this.toastService.success("participation", "successfully removed from the tournament")
+        this.refresh();
 
-        },
-          (error) => {
-            this.toastService.showError("error", error.error);
-          });
-      }
+      },
+        (error) => {
+          this.toastService.showError("error", error.error);
+        });
+    }
   }
 
 
@@ -199,7 +205,7 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
     if (!this.isLoggedIn) {
       this.utilService.navigate("login")
     } else {
-      this.isStarted$.next({ propagate: true, value: TnStatus.ongoing })
+        this.isStarted$.next({ propagate: true, value: TnStatus.ongoing })
     }
   }
 
@@ -236,8 +242,12 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
-  endTournament(){
+  endTournament() {
     this.tournamentService.endTournament(this.tournament).subscribe();
+  }
+
+  isStartable() {
+    return this.tournament?.participants?.length > 1 ? true : false
   }
 
 }
