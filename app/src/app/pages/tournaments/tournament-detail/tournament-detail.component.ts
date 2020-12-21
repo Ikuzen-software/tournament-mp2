@@ -53,6 +53,8 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
         this.tournament = tournament;
         this.tournamentService.getTournamentStanding(this.tournament._id).subscribe((standing) => {
           this.tournamentStanding = standing
+          this.tournamentStanding.forEach(participant => participant.matchesPlayed.reverse())
+
         })
         this.matchService.getAllMatchesByTournamentId(this.tournament._id).subscribe((matches) => {
           this.allMatches = matches;
@@ -152,6 +154,7 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
         this.tournament = tournament; //refresh the child component
         this.tournamentService.getTournamentStanding(this.tournament._id).subscribe((standing) => {
           this.tournamentStanding = standing
+          this.tournamentStanding.forEach(participant => participant.matchesPlayed.reverse())
         });
         setTimeout(() => { this.addMatchClickEvents() }, 300);
       });
