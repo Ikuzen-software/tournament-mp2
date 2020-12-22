@@ -62,3 +62,59 @@ Pour la BDD, lister les entités, dictionnaire de données.
 UML
 quel systeme de bdd utiliser
 
+TEST SCENARI
+
+SCENARIO 
+NOM: créer un tournoi
+DESCRIPTION: En tant qu'utilisateur, créer un tournoi depuis le page tournament-list, remplir le formulaire de création et valider.
+
+cas 1 : nom de tournoi déjà pris
+Input - name : my tournament
+        game : some game
+        format: simple-elimination
+        tournament size: 4
+        tournament start: 11/30/2020
+Ouput - bouton de formulaire non clickable -> formulaire reactive non valide, et case du formulaire en surbrillance rouge
+Resultat - formulaire non valide
+
+cas 2: date de tournoi dans le passé
+Input - name : my other tournament
+        game : some game
+        format: simple-elimination
+        tournament size: 4
+        tournament start: 11/30/1900
+Ouput - bouton de formulaire non clickable -> formulaire reactive non valide, et case du formulaire en surbrillance rouge
+Resultat - formulaire non valide
+
+SCENARIO 
+NOM: Participer à un tournoi
+DESCRIPTION: En tant qu'utilisateur, participer à un tournoi sur la page de detail d'un tournoi
+
+cas 1 : le tournoi est complet
+Input - none 
+Ouput - bouton participer non visible -> isParticipating is false
+Resultat - bouton participer non visible
+
+cas 2 : tournoi non complet
+Input - none 
+Ouput - bouton participer visible -> isParticipating is true
+Resultat - bouton participer visible
+
+SCENARIO 
+NOM: valider le resultat d'un match
+DESCRIPTION: En tant qu'utilisateur et organisateur d'un tournoi, je veux valider le resultat d'un match après avoir rempli le formulaire du score.
+
+cas 1 : je met un score egal des deux côtés
+Input - 3 - 3
+Ouput - bouton valider le score non clickable - formulaire non valide
+Resultat - bouton valider le score non clickable
+
+cas 2 : je met un score superieur à l'autre
+Input - 3-0 
+Ouput - bouton valider clickable -> valider rend le joueur 1 gagnant, et fait avancer le tournoi
+Resultat - bouton valider clickable, et rend le joueur 1 gagnant. Update l'affichage de l'arbre.
+
+
+
+
+

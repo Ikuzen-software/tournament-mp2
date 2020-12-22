@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MainComponent } from './pages/main/main.component';
 import { UserListComponent } from './pages/users/user-list/user-list.component';
-import { NotFoundComponent } from './components/not-found/not-found.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
 import { AuthGuard } from './auth/auth.guard';
@@ -13,6 +12,7 @@ import { TournamentDetailComponent } from './pages/tournaments/tournament-detail
 import { UserDetailComponent } from './pages/users/user-detail/user-detail.component';
 import { TournamentCreationComponent } from './pages/tournaments/tournament-creation/tournament-creation.component';
 import { TournamentEditComponent } from './pages/tournaments/tournament-edit/tournament-edit.component';
+import { NotFoundComponent } from './layout/not-found/not-found.component';
 
 
 

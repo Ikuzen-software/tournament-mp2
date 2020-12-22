@@ -87,9 +87,9 @@
             <app-bracket-tree [tournament]=tournament></app-bracket-tree>
             <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'ongoing'" pButton class="p-col-2 "
                 (click)='stopTournament()' label="Cancel Tournament"> </button>
-            <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'not started'" pButton class="p-col-2 "
+            <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'not started'" [disabled]="!isStartable()"pButton class="p-col-2 "
                 (click)='startTournament()' label="Start Tournament"> </button>
-            <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'ongoing' && allMatches && allMatches[allMatches.length-1].matchState === 'finished'" pButton class="p-col-2 "
+            <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'ongoing' && allMatches && allMatches[allMatches.length-1]?.matchState === 'finished'" pButton class="p-col-2 "
                 (click)='endTournament()' label="End Tournament"> </button>
         </div>
     </p-tabPanel>

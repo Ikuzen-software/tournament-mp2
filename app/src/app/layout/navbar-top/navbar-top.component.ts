@@ -18,21 +18,19 @@ import { UtilService } from '../../shared/services/util.service';
 export class NavbarTopComponent implements OnInit {
 
   items: MenuItem[];
+  private user$: BehaviorSubject<{ username?: string, role?: string, id?: string }> = new BehaviorSubject({});
   constructor(private router: Router, private localStorageService: LocalStorageService, private loginService: LoginService, private readonly store: Store<fromAuth.ApplicationState>, public utilService: UtilService) {
-  }
-  private user$: BehaviorSubject<{ username?: string, role?: string, id?: string }> = new BehaviorSubject(this.loginService.getUserFromToken(this.localStorageService.getToken()));
-
-  get _user$(): Observable<{ username?: string, role?: string, id?: string }> {
-    return from(this.user$);
-  }
-
-  ngOnInit() {
-    this.store.pipe(select(userSelector)).subscribe((appState) => {
+    store.select(userSelector).subscribe((appState)=>{
       this.user$.next(appState.currentUser);
       this.refreshItems();
     });
+  }
+  get _user$(): { username?: string, role?: string, id?: string } {
+    return this.user$.getValue();
+  }
 
-
+  ngOnInit() {
+    this.refreshItems();
   }
 
   refreshItems() {
@@ -50,7 +48,7 @@ export class NavbarTopComponent implements OnInit {
       command: () => this.utilService.navigate('/tournaments')
     }
   ];
-    if (this.user$.getValue()?.role === 'guest') {
+    if (this._user$?.role === 'guest') {
     this.items.push({
       label: 'Login',
       icon: 'pi pi-fw pi-sign-in',
@@ -70,21 +68,8 @@ export class NavbarTopComponent implements OnInit {
   }
   }
 
-  // ngOnChanges() {
-  //   this.refreshItems();
-  // }
-
-  show() {
-    this._user$.pipe(
-      take(1),
-      tap((result) => { console.log(result); })
-    ).subscribe();
-  }
-
   isLoggedIn() {
-    this._user$.subscribe((result) => {
-      return result.role === 'guest' ? false : true;
-    });
+    return  this._user$.role === 'guest' ? false : true;
   }
 
   logout() {

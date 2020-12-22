@@ -33,4 +33,4 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NavbarBottomComponent
   ]
 })
-export class ComponentsModule { }
+export class LayoutModule { }

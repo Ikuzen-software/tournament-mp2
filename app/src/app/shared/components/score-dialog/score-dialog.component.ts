@@ -57,8 +57,8 @@ export class ScoreDialogComponent implements OnInit {
         this.match.winner_id = this.match.player1_id;
         this.match.loser_id = this.match.player2_id;
       }else{
-        this.match.winner_id = this.match.player1_id;
-        this.match.loser_id = this.match.player2_id;
+        this.match.winner_id = this.match.player2_id;
+        this.match.loser_id = this.match.player1_id;
       }
       this.submitEvent.emit(this.match);
       this.cancel();
