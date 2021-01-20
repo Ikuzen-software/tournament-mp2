@@ -281,7 +281,7 @@ export async function getStanding(request, response) {
                         }
                     }
                     // case a match is not finished (non finished match is always the first match to find going from the top, for a given player)
-                    else if (matches?.[currentMatch.identifier - 1]?.matchState === "ready to start" || matches?.[currentMatch.identifier - 1]?.matchState === "not started") {
+                    else if (!(currentMatch instanceof Player) && matches?.[currentMatch.identifier - 1]?.matchState === "ready to start" || !(currentMatch instanceof Player) && matches?.[currentMatch.identifier - 1]?.matchState === "not started") {
                         if (matches[currentMatch.identifier - 1].player1_id || matches[currentMatch.identifier - 1].player1_id) {
 
                             const player1 = playersList.find(player => player.participant_id === matches?.[currentMatch?.identifier - 1]?.player1_id)
