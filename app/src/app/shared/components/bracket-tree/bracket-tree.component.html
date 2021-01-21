@@ -1,1 +1,3 @@
-<p-tree scrollHeight="flex" [value]="filesTree" layout="horizontal" selectionMode="single"></p-tree>
+<p-tree scrollHeight="flex" [value]="filesTree" layout="horizontal" selectionMode="single" (onNodeSelect)="showMatch($event)" ></p-tree>
+<app-score-dialog *ngIf="showScoreDialog$ | async" [visible]="showScoreDialog$ | async" [match]="currentMatchDisplayed"
+    (onCloseDialog)="onScoreDialogClose($event)" (submitEvent)="onScoreDialogSubmit($event)"></app-score-dialog>

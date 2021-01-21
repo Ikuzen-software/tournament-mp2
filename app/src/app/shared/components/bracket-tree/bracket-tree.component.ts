@@ -6,8 +6,8 @@ import { MatchService } from '@tn/src/app/pages/matches/match.service';
 import { Match } from '@tn/src/app/pages/matches/match';
 import { Tournament } from '@tn/src/app/pages/tournaments/tournament';
 import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
-import { debounceTime, filter } from 'rxjs/operators';
-import { STATUS } from '@tn/../back/src/models/tournaments/tournament-status.enum';
+import { debounceTime, filter, take } from 'rxjs/operators';
+import { STATUS as TnStatus } from '../../../../../../back/src/models/tournaments/tournament-status.enum';
 
 @Component({
   selector: 'app-bracket-tree',
@@ -16,8 +16,11 @@ import { STATUS } from '@tn/../back/src/models/tournaments/tournament-status.enu
 })
 export class BracketTreeComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() tournament: Tournament;
+  @Input() allMatches: Match[];
   filesTree: TreeNode[] = [];
-  allMatches: Match[];
+  showScoreDialog$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  currentMatchDisplayed: Match;
+
   constructor(private matchService: MatchService) {
   }
 
@@ -27,6 +30,7 @@ export class BracketTreeComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnChanges():void{
     this.updateBracket();
+    console.log("some change")
   }
 
   ngAfterViewInit() {
@@ -39,8 +43,26 @@ export class BracketTreeComponent implements OnInit, AfterViewInit, OnChanges {
     });
   }
 
-  onMatchClick(i) {
-    console.log(i)
+  showMatch(event){
+    // checks if tournament is on, and has children (not players at the leftmost bracket)
+    console.log(this.tournament)
+    if(this.tournament.status === TnStatus.ongoing && event.node.children !== null){
+      this.showScoreDialog$.next(true);
+      this.currentMatchDisplayed = this.allMatches[event.node?.identifier - 1];
+    }
+  }
+
+  onScoreDialogClose(bool) {
+    this.showScoreDialog$.next(bool);
+    this.currentMatchDisplayed = null;
+  }
+
+  onScoreDialogSubmit(match) {
+    this.matchService.reportMatch(match).pipe(
+      take(1)
+    ).subscribe(() => {
+      this.updateBracket();
+    });
   }
 
   enableDragScroll() {
@@ -75,5 +97,4 @@ export class BracketTreeComponent implements OnInit, AfterViewInit, OnChanges {
     ele.onmousedown = mouseDownHandler;
     window.onmouseup = mouseUpHandler;
   }
-
 }
