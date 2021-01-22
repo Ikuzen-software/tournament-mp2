@@ -1,4 +1,4 @@
-<p-dialog [header]="'Match number'+match.identifier" [visible]="visible" [closable]="false" [modal]="true">
+<p-dialog [header]="'Match number'+match?.identifier" [visible]="visible" [closable]="false" [modal]="true">
     <form [formGroup]="scoreForm" (ngSubmit)="onSubmit()">
         <div class="match-container">
             <!-- player 1 -->
@@ -11,7 +11,7 @@
                 <span>{{player2}}</span>
                 <input formControlName="player2" value="" type="number" min="0">
             </div>
-            <div *ngIf="match.matchState === 'finished'">
+            <div *ngIf="match?.matchState === 'finished'">
                 winner: {{getWinner()}}
             </div>
         </div>

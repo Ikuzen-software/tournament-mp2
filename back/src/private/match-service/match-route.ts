@@ -19,6 +19,7 @@ matchRouter.post("/many/:id", isTournamentOwner, async (request, response) => {
         const tournament = await TournamentModel.findById(request.params.id).exec();
         const playersList = tournament.participants
         const tree = tournamentTree.createTree(playersList);
+        const matchList =[]
         const treeArray = tournamentTree.getArrayOfMatchesInOrderAndSetIdentifier(tree.root);
         for (let i = 0; i < treeArray.length; i++) {
             const current = treeArray[i]
@@ -36,10 +37,10 @@ matchRouter.post("/many/:id", isTournamentOwner, async (request, response) => {
             if(match.player1_id && match.player2_id){
                 match.matchState = MATCH_STATUS.readyToStart
             }
-            console.log(match)
+            matchList.push(match)
             const matchResult = await match.save();
         }
-        response.send({ result: 'successfully created matches' })
+        response.send(matchList)
 
     } catch (error) {
         console.log(error)

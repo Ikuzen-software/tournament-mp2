@@ -1,5 +1,5 @@
-<p-dataView #dv [value]="tournaments?.docs" [paginator]="false" [rows]="1" paginatorPosition="both" filterBy="name"
-    [sortField]="sortField" [totalRecords]="1" [sortOrder]="sortOrder" showJumpToPageDropdown=true layout="grid" [alwaysShowPaginator]="false">
+<p-dataView #dv [value]="tournaments?.docs" [paginator]="false" [rows]="10" paginatorPosition="both" filterBy="name"
+    [sortField]="sortField" [sortOrder]="sortOrder" showJumpToPageDropdown=true layout="grid" [alwaysShowPaginator]="false">
     <p-header>
         <div class="ui-helper-clearfix">
             <div class="p-grid">
@@ -24,7 +24,7 @@
             </div>
             <p *ngIf="tournaments?.totalDocs"style="display: flex; justify-content: center;margin-bottom: 0;
             margin-top: 10px;">{{paginationToolbar}} </p>
-            <p-paginator [rows]="12" [totalRecords]="tournaments?.totalDocs" pageLinkSize="3" (onPageChange)="onPageChange($event)"></p-paginator>
+            <p-paginator [rows]="10" [totalRecords]="tournaments?.totalDocs" pageLinkSize="3" (onPageChange)="onPageChange($event)"></p-paginator>
         </div>
     </p-header>
     
@@ -47,6 +47,3 @@
         </div>
     </ng-template>
 </p-dataView>
-<p *ngIf="tournaments?.totalDocs"style="display: flex; justify-content: center;margin-bottom: 0;
-            margin-top: 10px;">{{paginationToolbar}} </p>
-            <p-paginator [rows]="12" [totalRecords]="tournaments?.totalDocs" pageLinkSize="3" (onPageChange)="onPageChange($event)"></p-paginator>

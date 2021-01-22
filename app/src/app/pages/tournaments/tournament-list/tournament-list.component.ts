@@ -34,6 +34,7 @@ export class TournamentListComponent implements OnInit {
       take(1)
     ).subscribe((result) => {
       this.tournaments = result;
+      console.log(this.tournaments)
     });
 
     this.tournamentService.getAllGames().pipe(
