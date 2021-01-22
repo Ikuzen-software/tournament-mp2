@@ -77,6 +77,7 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
             } else if (this.isStarted$.getValue().value === TnStatus.notStarted) {
               this.tournamentService.stopTournament(tournament).subscribe((result) => {
                 this.matchService.deleteAllMatchesById(tournament._id).subscribe((result) => {
+                  this.allMatches = [];
                   this.toastService.success("Tournament stop", "successfully stopped the tournament");
                   this.isStarted$.next({ propagate: false, value: TnStatus.notStarted })
                   this.tournament.status = TnStatus.notStarted;
