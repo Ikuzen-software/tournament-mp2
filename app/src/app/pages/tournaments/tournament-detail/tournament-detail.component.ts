@@ -137,7 +137,7 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
   }
 
 
-  refresh(): void {
+  refresh(event?): void {
     this.matchService.getAllMatchesByTournamentId(this.tournament._id).subscribe((matches) => {
       this.allMatches = matches;
       this.tournamentService.getById(this.tournament._id).pipe(
@@ -171,12 +171,12 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
     if (!this.isLoggedIn) {
       this.utilService.navigate("login")
     } else {
-      this.tournament.participants = this.tournament.participants.filter(user => user.username !== this.currentUser.username);
       this.tournamentService.leavetournament(this.tournament._id, this.currentUser as User).pipe(
         take(1)
       ).subscribe((result) => {
         this.isParticipating = false;
-        this.toastService.success("participation", "successfully removed from the tournament")
+        this.toastService.success("participation", "successfully removed from the tournament");
+        this.tournament.participants = this.tournament.participants.filter(user => user.username !== this.currentUser.username);
         this.refresh();
 
       },
@@ -224,7 +224,7 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
     this.showScoreDialog$.next(event)
   }
 
-  
+
 
   endTournament() {
     this.tournamentService.endTournament(this.tournament).subscribe();

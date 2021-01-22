@@ -1,4 +1,3 @@
-<button (click)="showTournament()">click</button>
 <p-tabView *ngIf="tournament">
     <!-- Description -->
     <p-tabPanel header="Overall" class="overall-infos">
@@ -94,7 +93,7 @@
     <!-- Bracket -->
     <p-tabPanel header="Bracket">
         <div class="bracket-wrapper">
-            <app-bracket-tree [tournament]="tournament" [allMatches]="allMatches"></app-bracket-tree>
+            <app-bracket-tree [tournament]="tournament" [allMatches]="allMatches" (scoreUpdated)="refresh($event)"></app-bracket-tree>
             <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'ongoing'" pButton class="p-col-2 "
                 (click)='stopTournament()' label="Cancel Tournament"> </button>
             <button *ngIf="isTournamentOwner && (isStarted$ | async).value === 'not started'"

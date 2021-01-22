@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit,Output, ViewChild } from '@angular/core';
 import { Tree } from 'primeng/tree/tree';
 import { TreeNode } from 'primeng/api/treenode';
 import { Round, TournamentNode } from '../tree';
@@ -17,6 +17,7 @@ import { STATUS as TnStatus } from '../../../../../../back/src/models/tournament
 export class BracketTreeComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() tournament: Tournament;
   @Input() allMatches: Match[];
+  @Output() scoreUpdated =  new EventEmitter();
   filesTree: TreeNode[] = [];
   showScoreDialog$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   currentMatchDisplayed: Match;
@@ -62,6 +63,7 @@ export class BracketTreeComponent implements OnInit, AfterViewInit, OnChanges {
       take(1)
     ).subscribe(() => {
       this.updateBracket();
+      this.scoreUpdated.emit(true);
     });
   }
 
