@@ -50,7 +50,7 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
         take(1)
       ).subscribe((tournament) => {
         this.tournament = tournament;
-        this.getTournamentStanding()
+        this.getTournamentStanding();
         this.matchService.getAllMatchesByTournamentId(this.tournament._id).subscribe((matches) => {
           this.allMatches = matches;
         });
@@ -144,7 +144,7 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
         take(1)
       ).subscribe((tournament) => {
         this.tournament = tournament; //refresh the child component
-        this.getTournamentStanding().subscribe();
+        this.getTournamentStanding();
       });
     })
   }
@@ -220,9 +220,11 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
     console.log(this.tournament)
   }
 
-  onScoreDialogClose(){
-    this.showScoreDialog$.next(false)
+  onScoreDialogClose(event){
+    this.showScoreDialog$.next(event)
   }
+
+  
 
   endTournament() {
     this.tournamentService.endTournament(this.tournament).subscribe();

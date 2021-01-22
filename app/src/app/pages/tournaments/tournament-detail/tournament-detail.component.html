@@ -8,6 +8,9 @@
         <p-card header="Game : ">
             <a (click)="utilService.navigate('tournaments')">{{tournament?.game}}</a>
         </p-card>
+        <p-card header="Description : ">
+            {{tournament?.description}}
+        </p-card>
         <p-card header="Entrants : ">
             {{tournament?.participants?.length}}/{{tournament?.size}}
         </p-card>
@@ -120,4 +123,4 @@
 </div>
 
 <app-score-dialog *ngIf="showScoreDialog$ | async" [visible]="showScoreDialog$ | async" [match]="currentMatchDisplayed"
-    (onCloseDialog)="onScoreDialogClose($event)" (submitEvent)="onScoreDialogSubmit($event)"></app-score-dialog>
+    (onCloseDialog)="onScoreDialogClose($event)"></app-score-dialog>
