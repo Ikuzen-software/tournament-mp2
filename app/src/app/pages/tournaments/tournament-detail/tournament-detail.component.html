@@ -106,7 +106,7 @@
     </p-tabPanel>
     <!-- Options -->
     <p-tabPanel *ngIf="isTournamentOwner" header="Edit tournament">
-        <app-tournament-edit [tournament]="tournament"></app-tournament-edit>
+        <app-tournament-edit [tournament]="tournament" (editedTournament)="refresh($event)"></app-tournament-edit>
     </p-tabPanel>
     <!-- seeding list -->
     <p-tabPanel *ngIf="isTournamentOwner" header="seeding list">
