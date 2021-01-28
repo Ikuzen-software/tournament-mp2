@@ -12,7 +12,8 @@ tokenRoute.get("/verify", async (req, res) => {
         res.send(err.userMessage)
       }
       else if (verifiedJwt.body.exp < new Date(Date.now())) {
-        res.send(`token expired. Expiration date :${new Date(verifiedJwt.body.exp)}\n current time : ${new Date(Date.now())}`)
+        res.send(`token expired. Expiration date :${new Date(verifiedJwt.body.exp)}\n 
+        current time : ${new Date(Date.now())}`)
       }
       else {
         res.send(verifiedJwt)

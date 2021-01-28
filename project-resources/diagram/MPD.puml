@@ -1,0 +1,55 @@
+@startuml
+
+skinparam linetype polyline    
+skinparam classAttributeIconSize 0
+
+class Match{
+  id_match AI
+  --
+  #player1_id
+  #player2_id
+  --
+  #tournament_id NN
+  identifier INT NN
+  match_state VARCHAR(10) NN
+  score VARCHAR(10) NN
+  #winner_id
+  #loser_id
+}
+
+class User {
+id_user AI
+  --
+username VARCHAR(30) NN
+email VARCHAR(50) NN
+birthdate DATE NN
+register_date DATE NN
+role VARCHAR(10) NN
+password VARCHAR(30) NN
+#overview id 
+#tournaments id
+}
+
+
+class Tournament{
+id_tournament AI
+  --
+name VARCHAR(30) NN
+size INT NN
+createdAt DATE NN
+startDate DATE
+description TEXT
+game VARCHAR(40)
+format VARCHAR(30) NN
+status VARCHAR(10) NN
+  --
+#participants id
+#organizer id
+}
+
+
+User --|> Tournament: 0, n
+
+Tournament--|> Match : 0,n
+User <|-- Match : 0, 2
+@enduml

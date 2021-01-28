@@ -1,0 +1,71 @@
+@startuml
+
+
+interface Organize{
+}
+
+Interface Has_Matches{
+
+}
+
+Interface Plays{
+
+}
+
+class Match{
+  id
+  --
+  player1_id
+  player2_id
+  --
+  tournament_id
+  identifier
+  match_state
+  score
+  winner_id
+  loser_id
+}
+
+class User {
+id
+  --
+username
+email
+birthdate
+register_date
+role
+password
+overview
+tournaments id
+}
+
+Interface Participate{
+
+}
+
+class Tournament{
+id
+  --
+name
+size
+createdAt
+startDate
+description
+game
+format
+status
+  --
+participants
+organizer
+}
+
+User --|> Participate : 0, n
+Participate --|> Tournament : 0, n
+User --|> Organize : 0, n
+Organize --|> Tournament: 0, n
+Tournament --|> Organize : is organized by 1 user
+Tournament --|> Has_Matches : 0, n
+Has_Matches --|> Match : 0,n
+User --|> Plays : 0, n
+Plays --|> Match : 0, n
+@enduml

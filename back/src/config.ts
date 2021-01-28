@@ -23,3 +23,4 @@ const protocol = env('TOURNAMENT_MONGO_PROTOCOL');
 const host = env('TOURNAMENT_MONGO_HOST');
 uri = `${protocol}+srv://${username}:${password}@${host}/${database}`;
 export const allowedOrigins = '*';
+export let _secret = env('SECRET')
