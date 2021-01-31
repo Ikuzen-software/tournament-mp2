@@ -50,7 +50,7 @@ tournamentRouter.get("/", async (request, response) => {
 
         const tournaments = await TournamentModel.paginate(tournamentQueries, paginationQuery, 1, function (error, pageCount, paginatedResults) {
             if (error) {
-                response.status(404).send(error);
+                response.status(400).send(error);
             }
         })
         response.send(tournaments);

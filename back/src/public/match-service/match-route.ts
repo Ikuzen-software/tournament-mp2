@@ -40,7 +40,6 @@ matchRouter.get("/getArrayOfRounds/:tnId", async (request, response) => {
         const result = tournamentTree.getTreeRounds(tree);
         response.send(result)
     } catch (error) {
-        console.log(error)
         response.status(500).send(error);
     }
 });
@@ -66,7 +65,6 @@ matchRouter.get("/getTreeArrayForComponent/:id", async (request, response) => {
         }
         response.send(result)
     } catch (error) {
-        console.log(error)
         response.status(500).send(error);
     }
 });
@@ -80,7 +78,6 @@ matchRouter.get("/getTreeArray/:tnId", async (request, response) => {
         const result = tournamentTree.getArrayOfMatchesInOrderAndSetIdentifier(tree.root);
         response.send(result)
     } catch (error) {
-        console.log(error)
         response.status(500).send(error);
     }
 });

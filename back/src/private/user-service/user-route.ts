@@ -37,7 +37,7 @@ userRouter.delete("/", isAdmin, async (request, response) => {
         const result = await UserModel.deleteMany().exec();
         response.send(result);
     } catch (error) {
-        response.status(500).send(error);
+        response.status(404).send(error);
     }
 });
 

@@ -24,7 +24,6 @@ userRouter.get("/", async (request, response) => {
         const users = await UserModel.find().select("-password");
         response.send(users);
     } catch (error) {
-        console.log(error)
         response.status(404).send(error);
     }
 });
@@ -47,7 +46,7 @@ userRouter.get("/username/:username",  async (request, response) => {
         const user = await UserModel.find({ username: new RegExp(`^${request.params.username}$`) }).select("-password");
         response.send(user);
     } catch (error) {
-        response.status(500).send(error);
+        response.status(404).send(error);
     }
 });
 

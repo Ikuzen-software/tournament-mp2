@@ -13,14 +13,14 @@ loginRouter.post("/", async (req, res) => {
     try {
         const user = await UserModel.findOne({ username: username }).exec();
         if (!user) {
-            res.status(401).json({
+            res.status(400).json({
                 success: false,
                 access_token: null,
                 err: 'Username or password is incorrect'
             })
         }
         if(!Bcrypt.compareSync(password, user.password)){
-            return res.status(401).json({
+            return res.status(400).json({
                 success: false,
                 message: 'Invalid login credentials!'
             });

@@ -34,7 +34,7 @@ export function getUserFromToken(token?: string): any {
 export async function isTournamentOwner(req, res, next) {
     var token = req.headers.authorization?.split(" ")[1];
     if (!token) {
-        return res.status(401).send({
+        return res.status(403).send({
             success: false,
             message: `Sign in to continue.`,
 
@@ -46,14 +46,14 @@ export async function isTournamentOwner(req, res, next) {
         if (user.role === "admin" || user._id === tournament?.organizer?.organizer_id) {
             next();
         } else {
-            return res.status(401).send({
+            return res.status(403).send({
                 success: false,
                 message: `You don't have the rights on this tournament.`,
                 error: user+"  -  "+ tournament.organizer
             });
         }
     } catch (err) {
-        return res.status(401).send({
+        return res.status(403).send({
             success: false,
             message: "Sign in to continue.",
             error: err
@@ -70,7 +70,7 @@ export function isLoggedIn(req, res, next) {
         // verifies secret and checks exp
         jwt.verify(token, _secret, function (err, decoded) {
             if (err) {
-                return res.status(401).send({
+                return res.status(403).send({
                     success: false,
                     message: 'Missing token. Sign in to continue.'
                 });
@@ -89,7 +89,7 @@ export function isLoggedIn(req, res, next) {
     } else {
         // if there is no token
         // return an error
-        return res.status(401).send({
+        return res.status(403).send({
             success: false,
             message: 'Sign in to continue.'
         });
@@ -104,7 +104,7 @@ export function isAdmin(req, res, next) {
         // verifies secret and checks exp
         jwt.verify(token, _secret, function (err, decoded) {
             if (err) {
-                return res.status(401).send({
+                return res.status(403).send({
                     success: false,
                     message: 'Sign in to continue.'
                 });
@@ -113,7 +113,7 @@ export function isAdmin(req, res, next) {
                     next();
                 }
                 else {
-                    return res.status(401).send({
+                    return res.status(403).send({
                         success: false,
                         message: 'You need to have admin rights.'
                     });
@@ -123,7 +123,7 @@ export function isAdmin(req, res, next) {
     } else {
         // if there is no token
         // return an error
-        return res.status(401).send({
+        return res.status(403).send({
             success: false,
             message: 'Sign in to continue. '
         });
@@ -134,7 +134,7 @@ export function isAdmin(req, res, next) {
 export async function isReportable(req, res, next) {
     var token = req.headers.authorization?.split(" ")[1];
     if (!token) {
-        return res.status(401).send({
+        return res.status(403).send({
             success: false,
             message: `Sign in to continue. `,
         });
@@ -143,7 +143,7 @@ export async function isReportable(req, res, next) {
         // check is Match is in a reportable state
         const match = await MatchModel.findOne({tournament_id: req.body.tournament_id, identifier:req.body.identifier})
         if(!match?.player1_id || !match?.player2_id){
-            return res.status(401).send({
+            return res.status(400).send({
                 success: false,
                 message: "match is not reportable yet",
             });
@@ -159,7 +159,7 @@ export async function isReportable(req, res, next) {
             //checks if user is one of the match participant
             if(user._id === match.player1_id || user._id === match.player2_id) next();
             else{
-                return res.status(401).send({
+                return res.status(403).send({
                     success: false,
                     message: `You don't have the rights on this tournament.`,
                     error: user+"  -  "+ tournament?.organizer
@@ -168,7 +168,7 @@ export async function isReportable(req, res, next) {
         }
     } catch (err) {
         console.log(err)
-        return res.status(401).send({
+        return res.status(403).send({
             success: false,
             message: "Sign in to continue. ",
         });
