@@ -3,10 +3,10 @@ import { jwtMW, isTournamentOwner, isAdmin, isLoggedIn, getUserFromToken, isRepo
 import { MatchModel } from '../../models/matches/matches-model';
 import * as tournamentTree from '../../utils/fight-tree'
 import { TournamentNode } from '../../utils/fight-tree';
-import {allowedOrigins} from '../../config'
 import * as _ from 'lodash'
 import { Match } from '../../models/matches/matches-interface';
 import {STATUS as MATCH_STATUS} from "../../models/matches/match-status.enum"
+import { allowedOrigins } from '../../config';
 const express = require('express');
 const matchRouter = express.Router();
 const cors = require('cors')
@@ -20,12 +20,13 @@ matchRouter.post("/many/:id", isTournamentOwner, async (request, response) => {
         const tournament = await TournamentModel.findById(request.params.id).exec();
         const playersList = tournament.participants
         const tree = tournamentTree.createTree(playersList);
+        const matchList =[]
         const treeArray = tournamentTree.getArrayOfMatchesInOrderAndSetIdentifier(tree.root);
         for (let i = 0; i < treeArray.length; i++) {
             const current = treeArray[i]
             let player1_id, player2_id;
-            !(current.a instanceof TournamentNode) ? player1_id = current.a.participant_id : player1_id = null;
-            !(current.b instanceof TournamentNode) ? player2_id = current.b.participant_id : player2_id = null;
+            !(current.a instanceof TournamentNode) ? player1_id = current?.a?.participant_id : player1_id = null;
+            !(current.b instanceof TournamentNode) ? player2_id = current?.b?.participant_id : player2_id = null;
             const tournamentId = tournament._id;
             const identifier = current.identifier
             let match = new MatchModel({
@@ -37,10 +38,10 @@ matchRouter.post("/many/:id", isTournamentOwner, async (request, response) => {
             if(match.player1_id && match.player2_id){
                 match.matchState = MATCH_STATUS.readyToStart
             }
-            console.log(match)
+            matchList.push(match)
             const matchResult = await match.save();
         }
-        response.send({ result: 'successfully created matches' })
+        response.send(matchList)
 
     } catch (error) {
         console.log(error)
@@ -75,6 +76,7 @@ matchRouter.put("/report", isReportable, async (request, response) => {
             response.status(400).send({ error: "can't report a match which isn't ready to start" })
         }
         else {
+            console.log(request.body)
             match.winner_id = request.body.winner_id
             match.loser_id = request.body.loser_id
             match.score = request.body.score
@@ -112,7 +114,6 @@ matchRouter.put("/report", isReportable, async (request, response) => {
                     //set ready to start if both players id
                     if(secondMatch[0]?.player1_id && secondMatch[0]?.player2_id){
                         secondMatch[0].matchState = MATCH_STATUS.readyToStart
-                        console.log(secondMatch[0].matchState)
                     }
 
                     await secondMatch[0].save();

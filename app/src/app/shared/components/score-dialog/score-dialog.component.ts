@@ -25,13 +25,15 @@ export class ScoreDialogComponent implements OnInit {
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
-    if (this.match.player1_id && this.match.player2_id) {
+    console.log(this.match)
+    if (this.match?.player1_id && this.match?.player2_id) {
       combineLatest([
         this.userService.getById(this.match.player1_id),
         this.userService.getById(this.match.player2_id)
       ]).subscribe(([p1, p2]) => {
-        this.player1 = p1.username;
-        this.player2 = p2.username;
+        this.player1 = p1?.username;
+        this.player2 = p2?.username;
+        
         const arrayScore = this.match.score.split('-');
         this.match.matchState === MatchState.readyToStart ? this.isReportable = true : this.isReportable = false;
         this.scoreForm.setValue({player1: parseInt(arrayScore[0]), player2: parseInt(arrayScore[1])})
@@ -57,8 +59,8 @@ export class ScoreDialogComponent implements OnInit {
         this.match.winner_id = this.match.player1_id;
         this.match.loser_id = this.match.player2_id;
       }else{
-        this.match.winner_id = this.match.player1_id;
-        this.match.loser_id = this.match.player2_id;
+        this.match.winner_id = this.match.player2_id;
+        this.match.loser_id = this.match.player1_id;
       }
       this.submitEvent.emit(this.match);
       this.cancel();

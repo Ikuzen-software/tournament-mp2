@@ -5,8 +5,7 @@ import { TournamentNode } from '../../shared/components/tree';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 import { LoginService } from '../login/login.service';
 import { Match } from './match';
-import {env} from '@app/app.constants';
-import { Tournament } from '../tournaments/tournament';
+import {env} from "@app/app.constants";
 
 @Injectable({
   providedIn: 'root'

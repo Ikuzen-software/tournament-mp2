@@ -13,7 +13,7 @@ export class UtilService {
   }
 
   navigate(url: string) {
-    this.router.navigate([url]);
+    return this.router.navigate([url]);
   }
 
   formatDate(date?) {

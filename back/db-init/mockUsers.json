@@ -219,5 +219,29 @@
             "totalParticipated": 2,
             "totalOrganized": 1
         }
+    },
+
+    {            
+        "_id": "5f60b2cc037e5c307ce6611d",
+        "role": "user",
+        "username": "Widah",
+        "password": "password",
+        "email": "Rikkel@Rikkel.com",
+        "birthdate": "1223-12-11T23:50:39.000+00:00",
+        "tournaments": [
+            {"tournament_id": "5f5a133e33adad4c48dd0bd2", "name": "Another tournament"},
+            {"tournament_id": "5f5a0eac1840ae5ccc45d34f","name": "NamelessMelee#10"},
+            {"tournament_id": "5f58d9b99a355f6c248db8c9","name": "Blame the game"}
+
+        ],
+        "overview": {
+            "firstPlace": 0,
+            "secondPlace": 0,
+            "thirdPlace": 0,
+            "top8": 0,
+            "totalMatches": 0,
+            "totalParticipated": 2,
+            "totalOrganized": 1
+        }
     }
 ]
