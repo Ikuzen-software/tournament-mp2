@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output,EventEmitter } from '@angular/core';
 import { Tournament } from '../tournament';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentService } from '../tournament.service';
@@ -19,6 +19,7 @@ import { User } from '../../users/user';
 })
 export class TournamentEditComponent implements OnInit {
   @Input() tournament: Tournament;
+  @Output() editedTournament = new EventEmitter();
   tournamentForm: FormGroup = this.fb.group({
     name: ['', [
       Validators.required,
@@ -87,6 +88,7 @@ export class TournamentEditComponent implements OnInit {
         this.tournament = { ...this.tournament, name: this.name, description: this.description, game: this.game, format: this.format, size: this.size, startDate: this.startDate, organizer: _organizer };
         this.tournamentService.update(tournamentId, this.tournament).subscribe((result) => {
           this.toastService.success('Success', 'Edit successful');
+          this.editedTournament.emit(true);
           this.router.navigate([`/tournament/${result._id}`]);
         },
           (error) => {

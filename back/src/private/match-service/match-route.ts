@@ -6,10 +6,11 @@ import { TournamentNode } from '../../utils/fight-tree';
 import * as _ from 'lodash'
 import { Match } from '../../models/matches/matches-interface';
 import {STATUS as MATCH_STATUS} from "../../models/matches/match-status.enum"
+import { allowedOrigins } from '../../config';
 const express = require('express');
 const matchRouter = express.Router();
 const cors = require('cors')
-matchRouter.use(cors({ origin: 'http://localhost:4200' }))
+matchRouter.use(cors({ origin: allowedOrigins }))
 matchRouter.use(jwtMW);
 
 // CREATE all matches from a single elimination tournament
@@ -19,6 +20,7 @@ matchRouter.post("/many/:id", isTournamentOwner, async (request, response) => {
         const tournament = await TournamentModel.findById(request.params.id).exec();
         const playersList = tournament.participants
         const tree = tournamentTree.createTree(playersList);
+        const matchList =[]
         const treeArray = tournamentTree.getArrayOfMatchesInOrderAndSetIdentifier(tree.root);
         for (let i = 0; i < treeArray.length; i++) {
             const current = treeArray[i]
@@ -36,10 +38,10 @@ matchRouter.post("/many/:id", isTournamentOwner, async (request, response) => {
             if(match.player1_id && match.player2_id){
                 match.matchState = MATCH_STATUS.readyToStart
             }
-            console.log(match)
+            matchList.push(match)
             const matchResult = await match.save();
         }
-        response.send({ result: 'successfully created matches' })
+        response.send(matchList)
 
     } catch (error) {
         console.log(error)

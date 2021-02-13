@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, BehaviorSubject, pipe } from 'rxjs';
+import { Observable, BehaviorSubject, pipe, from, iif, of, empty } from 'rxjs';
 import { map, debounceTime, take, filter, tap } from 'rxjs/operators';
 import { TournamentService } from '../tournament.service';
 import { Tournament } from '../tournament';
@@ -12,9 +12,7 @@ import { ToastService } from '@tn/src/app/shared/services/toast.service';
 import { User } from '../../users/user';
 import { MatchService } from '../../matches/match.service';
 import { STATUS as TnStatus } from '../../../../../../back/src/models/tournaments/tournament-status.enum';
-import { Subject } from 'rxjs/internal/Subject';
 import { Match } from '../../matches/match';
-import { element } from 'protractor';
 
 @Component({
   selector: 'app-tournament-detail',
@@ -30,8 +28,9 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
   isAvailable$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   isStarted$: BehaviorSubject<{ propagate: boolean, value: string }> = new BehaviorSubject({ propagate: false, value: '' })
   allMatches: Match[];
-  currentMatchDisplayed: Match;
   showScoreDialog$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  currentMatchDisplayed: Match;
+
   tournamentStanding: {
     username: string,
     participant_id: string,
@@ -51,15 +50,9 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
         take(1)
       ).subscribe((tournament) => {
         this.tournament = tournament;
-        this.tournamentService.getTournamentStanding(this.tournament._id).subscribe((standing) => {
-          this.tournamentStanding = standing
-          this.tournamentStanding.forEach(participant => participant.matchesPlayed.reverse())
-
-        })
+        this.getTournamentStanding();
         this.matchService.getAllMatchesByTournamentId(this.tournament._id).subscribe((matches) => {
           this.allMatches = matches;
-          if (this.tournament.status === TnStatus.ongoing)
-            setTimeout(() => { this.addMatchClickEvents() }, 300);
         });
         this.isStarted$
           .pipe(
@@ -70,20 +63,35 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
             if (this.isStarted$.getValue().value === TnStatus.ongoing) {
               this.tournamentService.startTournament(tournament).subscribe(
                 () => {
-                  this.matchService.createAllMatchesById(tournament._id).subscribe();
+                  this.matchService.createAllMatchesById(tournament._id).subscribe((matches) => {
+                    this.allMatches = matches;
+                  });
                   this.toastService.success("Tournament start", "successfully started the tournament");
                   this.isStarted$.next({ propagate: false, value: TnStatus.ongoing })
                   this.tournament.status = TnStatus.ongoing;
+                  this.getTournamentStanding();
                 },
                 (error) => {
                   this.toastService.success("failure", "cannot start the tournament");
                 });
             } else if (this.isStarted$.getValue().value === TnStatus.notStarted) {
-              this.tournamentService.stopTournament(tournament).subscribe();
-              this.matchService.deleteAllMatchesById(tournament._id).subscribe();
-              this.toastService.success("Tournament stop", "successfully stopped the tournament");
-              this.tournament.status = TnStatus.notStarted;
-              this.isStarted$.next({ propagate: false, value: TnStatus.notStarted })
+              this.tournamentService.stopTournament(tournament).subscribe((result) => {
+                this.matchService.deleteAllMatchesById(tournament._id).subscribe((result) => {
+                  this.allMatches = [];
+                  this.toastService.success("Tournament stop", "successfully stopped the tournament");
+                  this.isStarted$.next({ propagate: false, value: TnStatus.notStarted })
+                  this.tournament.status = TnStatus.notStarted;
+                  this.getTournamentStanding();
+                });
+              }
+              );
+            }
+            else if (this.isStarted$.getValue().value === TnStatus.finished) {
+              this.tournamentService.endTournament(tournament).subscribe((result) => {
+                  this.toastService.success("Tournament finished", "successfully finished the tournament");
+                  this.isStarted$.next({ propagate: false, value: TnStatus.finished })
+                  this.tournament.status = TnStatus.finished;
+              });
             }
           },
             (error) => {
@@ -123,7 +131,6 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
 
 
   onMatchClick(i) {
-    console.log('test')
     this.currentMatchDisplayed = this.allMatches[i];
     this.showScoreDialog$.next(true);
   }
@@ -132,31 +139,28 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
     return match.winner_id === id ? true : false;
   }
 
-  addMatchClickEvents() {
-    if (this.allMatches.length > 0) {
-      for (let i = 1; i < this.allMatches.length; i++) {
-        // Selecting the specific matches elements
-        const ele = Array.from(document.getElementsByClassName(`match${i}`))[0].children[0].children[0].children[1].children[0];
-        ele?.addEventListener('click', () => { this.onMatchClick(i - 1) })
-      }
-      // last match is the mother node
-      const lastEle = Array.from(document.getElementsByClassName(`match${this.allMatches.length}`))[0].children[0].children[0].children[0].children[0];
-      lastEle?.addEventListener('click', () => { this.onMatchClick(this.allMatches.length - 1) })
-    }
+  getTournamentStanding() {
+    this.tournamentService.getTournamentStanding(this.tournament._id).subscribe(
+      (standing) => {
+        this.tournamentStanding = standing;
+        this.tournamentStanding.forEach(participant => participant.matchesPlayed = participant.matchesPlayed.reverse());
+      });
   }
 
-  refresh(): void {
+
+  refresh(event?): void {
     this.matchService.getAllMatchesByTournamentId(this.tournament._id).subscribe((matches) => {
       this.allMatches = matches;
       this.tournamentService.getById(this.tournament._id).pipe(
         take(1)
       ).subscribe((tournament) => {
         this.tournament = tournament; //refresh the child component
-        this.tournamentService.getTournamentStanding(this.tournament._id).subscribe((standing) => {
-          this.tournamentStanding = standing
-          this.tournamentStanding.forEach(participant => participant.matchesPlayed.reverse())
-        });
-        setTimeout(() => { this.addMatchClickEvents() }, 300);
+        this.getTournamentStanding();
+        if (this.tournament.participants.map(participant => participant.username).includes(this.currentUser.username)) {
+          this.isParticipating = true;
+        } else {
+          this.isParticipating = false;
+        }
       });
     })
   }
@@ -174,7 +178,6 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
         this.refresh();
       },
         (error) => {
-          console.log(error)
           this.toastService.showError("error", "error");
         })
     }
@@ -184,12 +187,12 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
     if (!this.isLoggedIn) {
       this.utilService.navigate("login")
     } else {
-      this.tournament.participants = this.tournament.participants.filter(user => user.username !== this.currentUser.username);
       this.tournamentService.leavetournament(this.tournament._id, this.currentUser as User).pipe(
         take(1)
       ).subscribe((result) => {
         this.isParticipating = false;
-        this.toastService.success("participation", "successfully removed from the tournament")
+        this.toastService.success("participation", "successfully removed from the tournament");
+        this.tournament.participants = this.tournament.participants.filter(user => user.username !== this.currentUser.username);
         this.refresh();
 
       },
@@ -201,23 +204,19 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
 
 
   checkAvailability(): boolean {
-    return this.tournament.size > this.tournament.participants.length ? true : false;
+    if (this.tournament.status === TnStatus.finished) {
+      return false;
+    } else {
+      return this.tournament.size > this.tournament.participants.length ? true : false;
+    }
   }
 
   startTournament(): void {
-    if (!this.isLoggedIn) {
-      this.utilService.navigate("login")
-    } else {
-        this.isStarted$.next({ propagate: true, value: TnStatus.ongoing })
-    }
+    this.isStarted$.next({ propagate: true, value: TnStatus.ongoing });
   }
 
   stopTournament(): void {
-    if (!this.isLoggedIn) {
-      this.utilService.navigate("login")
-    } else {
-      this.isStarted$.next({ propagate: true, value: TnStatus.notStarted })
-    }
+    this.isStarted$.next({ propagate: true, value: TnStatus.notStarted });
   }
 
   updateSeeding(): void {
@@ -233,20 +232,16 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
     console.log(this.tournament.participants)
   }
 
-  onScoreDialogClose(bool) {
-    this.showScoreDialog$.next(bool);
+  showTournament() {
+    console.log(this.tournament)
   }
 
-  onScoreDialogSubmit(match) {
-    this.matchService.reportMatch(match).pipe(
-      take(1)
-    ).subscribe(() => {
-      this.refresh();
-    });
+  onScoreDialogClose(event) {
+    this.showScoreDialog$.next(event)
   }
 
   endTournament() {
-    this.tournamentService.endTournament(this.tournament).subscribe();
+    this.isStarted$.next({ propagate: true, value: TnStatus.finished });
   }
 
   isStartable() {
