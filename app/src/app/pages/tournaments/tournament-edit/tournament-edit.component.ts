@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output,EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Tournament } from '../tournament';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentService } from '../tournament.service';
@@ -11,6 +11,7 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ValidationErrorsService } from '@tn/src/app/shared/validation/services/validation-errors.service';
 import { ToastService } from '@tn/src/app/shared/services/toast.service';
 import { User } from '../../users/user';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-tournament-edit',
@@ -46,13 +47,14 @@ export class TournamentEditComponent implements OnInit {
   get format() { return this.tournamentForm.value.format; }
   get size() { return this.tournamentForm.value.size; }
   get startDate() { return this.tournamentForm.value.startDate; }
-
+  currentUser: any;
   constructor(private tournamentService: TournamentService, private fb: FormBuilder, private validation: ValidationErrorsService, private router: Router, private readonly store: Store<fromAuth.ApplicationState>, public utilService: UtilService, public toastService: ToastService) {
 
-      
+
   }
 
   ngOnInit(): void {
+    this.setCurrentUser();
     this.store.pipe(select(userSelector)).subscribe((appState) => {
       if (appState?.currentUser?.username !== this.tournament?.organizer.username && appState.currentUser.role !== 'admin') { // if owner or admin, has edit rights
         this.utilService.navigate('forbidden');
@@ -78,27 +80,32 @@ export class TournamentEditComponent implements OnInit {
         startDate: [this.utilService.formatDate(this.tournament?.startDate), []],
       });
     });
+
+  }
+
+  setCurrentUser() {
+    this.store.select(userSelector).subscribe((appState) => {
+      this.currentUser = appState?.currentUser?.username;
+    });
   }
 
   updateTournament() {
     if (this.tournamentForm.valid) {
-      this.store.select(userSelector).subscribe((appState) => {
-        const _organizer = appState.currentUser
-        const tournamentId = this.tournament._id;
-        this.tournament = { ...this.tournament, name: this.name, description: this.description, game: this.game, format: this.format, size: this.size, startDate: this.startDate, organizer: _organizer };
-        this.tournamentService.update(tournamentId, this.tournament).subscribe((result) => {
-          this.toastService.success('Success', 'Edit successful');
-          this.editedTournament.emit(true);
-          this.router.navigate([`/tournament/${result._id}`]);
-        },
-          (error) => {
-            if (error.status) {
-              this.toastService.showError('Error', 'Edit failed');
-            }
-          });
-      });
-
+      const _organizer = this.currentUser;
+      const tournamentId = this.tournament._id;
+      this.tournament = { ...this.tournament, name: this.name, description: this.description, game: this.game, format: this.format, size: this.size, startDate: this.startDate, organizer: _organizer };
+      this.tournamentService.update(tournamentId, this.tournament).subscribe((result) => {
+        this.toastService.success('Success', 'Edit successful');
+        this.editedTournament.emit(true);
+        this.router.navigate([`/tournament/${result._id}`]);
+      },
+        (error) => {
+          if (error.status) {
+            this.toastService.showError('Error', 'Edit failed');
+          }
+        });
     }
+
   }
 
   removeUser(user: User) {

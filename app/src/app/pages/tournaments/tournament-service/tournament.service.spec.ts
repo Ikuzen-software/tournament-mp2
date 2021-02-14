@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { Store } from '@ngrx/store';
 
 import { TournamentService } from './tournament.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -13,7 +14,8 @@ describe('TournamentService', () => {
         HttpClientTestingModule,
       ],
       providers:[
-        MessageService
+        MessageService,
+        Store
       ]
     });
     service = TestBed.inject(TournamentService);
@@ -22,4 +24,8 @@ describe('TournamentService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  it('',()=>{
+    expect(1).toBe(1)
+  })
 });

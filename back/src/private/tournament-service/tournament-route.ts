@@ -35,14 +35,19 @@ tournamentRouter.post("/", isLoggedIn, async (request, response) => {
 tournamentRouter.put("/:id", isTournamentOwner, async (request, response) => {
     try {
         const tournament = await TournamentModel.findById(request.params.id).exec();
-        tournament.set(request.body);
-        const token = request.headers.authorization?.split(" ")[1];
-        const user = getUserFromToken(token);
-        const organizer = await UserModel.findById(user._id);
-        organizer.tournaments.push({ _id: user.id, username: user.username })
-        const organizerResult = await organizer.save();
-        const tournamentResult = await tournament.save();
-        response.send(tournamentResult);
+        if(tournament.status === TnStatus.notStarted){
+
+            tournament.set(request.body);
+            const token = request.headers.authorization?.split(" ")[1];
+            const user = getUserFromToken(token);
+            const organizer = await UserModel.findById(user._id);
+            organizer.tournaments.push({ _id: user.id, username: user.username })
+            const organizerResult = await organizer.save();
+            const tournamentResult = await tournament.save();
+            response.send(tournamentResult);
+        }else{
+            response.status(500).send(`tournament can't be modified if it has already been started or finished`);
+        }
     } catch (error) {
         response.status(500).send(`tournament ${request.params.id} not found`);
     }
