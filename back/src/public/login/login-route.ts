@@ -1,5 +1,5 @@
 import { UserModel } from '../../models/users/user-model'
-import { _secret } from '../../auth';
+import { _secret } from '../../config';
 import { request } from 'express';
 const jwt = require('jsonwebtoken');
 const randtoken = require('rand-token')

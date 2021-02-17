@@ -165,7 +165,6 @@ export function getTreeRounds(tree: Tournament, withBye = false): (TournamentNod
     getArrayOfMatchesInOrderAndSetIdentifier(tree.root)
     const numRounds = calculateRounds(tree.players.length);
     let numMatches = 1;
-    console.log(numRounds)
     let result = [];
     for (let currentRound = 1; currentRound <= numRounds; currentRound++) {
         result.push(tree.findMatchUpForRound(currentRound));

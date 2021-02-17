@@ -15,4 +15,4 @@ export interface Match {
     winner_id: string;
     loser_id: string;
     score: string;
-}
+};

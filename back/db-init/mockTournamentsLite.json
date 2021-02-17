@@ -1,0 +1,74 @@
+[
+    {
+        "_id":"5f58a74f22c47c0a10a3bf21",
+        "name": "BlackListed3",
+        "description":"Sequel to the world biggest tournament, blacklisted. The serie is back",
+        "game":"Project M",
+        "size": 16,
+        "format": "double-eliminiation",
+        "startDate":"2020-11-23T21:46:46.618Z",
+        "createdAt": "2020-05-23T21:46:46.618Z",
+        "organizer":{
+            "username":"maman",
+            "organizer_id":"5f43945aa70c26242c0cdf9a"
+        },
+        "participants":[
+            {
+                "username":"ikuzen",
+                "participant_id":"5f63982c7fe4a1024f7a10fc"
+            },
+            {
+                "username":"user2",
+                "participant_id":"5f4399cc9eea3a2eb0d576ab"
+            }
+        ]
+    },
+    {
+        "_id":"5f58d8b136283128dcf8d292",
+        "name": "My test tournament",
+        "description":"Be indulgent please",
+        "game":"Mario 64",
+        "size": 16,
+        "format": "single-eliminiation",
+        "startDate":"2020-11-23T21:46:46.618Z",
+        "createdAt": "2020-05-23T21:46:46.618Z",
+        "organizer":{
+            "username":"ikuzen",
+            "organizer_id":"5f63982c7fe4a1024f7a10fc"
+        },
+        "participants":[
+            {
+                "username":"ikuzen",
+                "participant_id":"5f63982c7fe4a1024f7a10fc"
+            },
+            {
+                "username":"user2",
+                "participant_id":"5f4399cc9eea3a2eb0d576ab"
+            },
+            {
+                "username":"Widah",
+                "participant_id":"5f63982c7fe4a1024f7a10fd"
+            },
+            {
+                "username":"Norback",
+                "participant_id":"5f63982c7fe4a1024f7a10fe"
+            },
+            {
+                "username":"Eu00",
+                "participant_id":"5f63982c7fe4a1024f7a10ff"
+            },
+            {
+                "username":"Kenmak",
+                "participant_id":"5f63982c7fe4a1024f7a10f3"
+            },
+            {
+                "username":"MiniBoulet",
+                "participant_id":"5f63982c7fe4a1024f7a11fa"
+            },
+            {
+                "username":"otek",
+                "participant_id":"5f63982c7fe4a1024f7a11f1"
+            }
+        ]
+    }
+] 

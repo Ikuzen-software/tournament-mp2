@@ -1,6 +1,8 @@
 import express = require('express');
 import debug = require('debug');
 import * as config from './config';
+import * as WebSocket from 'ws';
+import * as http from 'http';
 
 console.log("Starting Application \s")
 
@@ -31,6 +33,9 @@ fs.readFile('./keys/private.pem', (err, data) => {
     privateKey = data;
 })
 
+const server = http.createServer(app);
+
+
 
 app.use(cors())
 app.use(BodyParser.json());
@@ -52,5 +57,28 @@ app.get('/', (req, res) => {
     res.send(`<h1>tournament API</h1>`);
 });
 
-app.listen(PORT, () => log('Listening on port', PORT));
+// WEBSOCKET //
+//////////////
+const wss = new WebSocket.Server({ server, port:8080 });
+wss.on('connection', (ws: WebSocket) => {
+    console.log("client connected un truc du genre")
+    //connection is up, let's add a simple simple event
+    ws.on('message', (message: string) => {
+
+        //log the received message and send it back to the client
+        console.log('received: %s', message);
+
+        ws.send(`Hello, you sent -> ${message}`);
+        
+    });
+
+    //send immediatly a feedback to the incoming connection    
+    ws.send('Hi there, I am a WebSocket server');
+});
+
+//start our server
+server.listen(PORT || 8999, () => {
+    console.log(`Server started on port ${PORT} :)`);
+});
+
 

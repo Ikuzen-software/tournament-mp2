@@ -1,4 +1,4 @@
-import { _secret } from "../../auth";
+import { _secret } from "../../config";
 
 const jwt = require('njwt');
 
