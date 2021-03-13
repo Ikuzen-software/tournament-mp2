@@ -3,9 +3,8 @@ import {UserModel} from '../../models/users/user-model'
 const exjwt = require('express-jwt');
 const Bcrypt = require("bcryptjs");
 const express = require('express');
-const cors = require('cors')
 const userRouter = express.Router();
-userRouter.use(cors({origin: allowedOrigins}))
+
 
 //POST
 userRouter.post("/",  async (request, response) => {

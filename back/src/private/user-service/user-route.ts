@@ -4,9 +4,7 @@ import { allowedOrigins } from '../../config';
 const exjwt = require('express-jwt');
 
 const express = require('express');
-const cors = require('cors')
 const userRouter = express.Router();
-userRouter.use(cors({origin: allowedOrigins}))
 userRouter.use(jwtMW)
 //UPDATE by id
 

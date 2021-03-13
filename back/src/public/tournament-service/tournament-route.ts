@@ -8,8 +8,6 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 
 const express = require('express');
 const tournamentRouter = express.Router();
-const cors = require('cors')
-tournamentRouter.use(cors({ origin: allowedOrigins }))
 
 tournamentRouter.get("/", async (request, response) => {
     try {

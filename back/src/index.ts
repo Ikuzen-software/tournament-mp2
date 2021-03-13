@@ -32,6 +32,7 @@ fs.readFile('./keys/private.pem', (err, data) => {
 })
 
 
+app.use(cors({ origin: config.allowedOrigins }))
 app.use(BodyParser.json());
 app.use('/token', tokenRoute)
 app.use('/login', loginRoute)

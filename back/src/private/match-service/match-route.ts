@@ -9,8 +9,6 @@ import {STATUS as MATCH_STATUS} from "../../models/matches/match-status.enum"
 import { allowedOrigins } from '../../config';
 const express = require('express');
 const matchRouter = express.Router();
-const cors = require('cors')
-matchRouter.use(cors({ origin: allowedOrigins }))
 matchRouter.use(jwtMW);
 
 // CREATE all matches from a single elimination tournament

@@ -6,9 +6,7 @@ import { MatchModel } from '../../models/matches/matches-model'
 import { TournamentModel } from '../../models/tournaments/tournament-model';
 import * as tournamentTree from '../../utils/fight-tree'
 const express = require('express');
-const cors = require('cors')
 const matchRouter = express.Router();
-matchRouter.use(cors({ origin: allowedOrigins }))
 
 //GET all matches from a tournament
 matchRouter.get("/all/:id", async (request, response) => {
