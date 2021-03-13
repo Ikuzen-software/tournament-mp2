@@ -1,12 +1,12 @@
-import { _secret } from "./config";
 import { MatchModel } from "./models/matches/matches-model";
 import { TournamentModel } from "./models/tournaments/tournament-model";
 
-var atob = require('atob');
+const atob = require('atob');
 
 const exjwt = require('express-jwt');
 const jwt = require('njwt');
 
+export const _secret = "kRRorxJyC1pUVDpFldyGz1jRPt8koOyj1xdHF9zxnvht2D1iwOXZDhBQdOKakJOc"
 
 //jwtMW variable to protect entire routes
 export const jwtMW = exjwt({
@@ -167,6 +167,7 @@ export async function isReportable(req, res, next) {
             }
         }
     } catch (err) {
+        console.log(err)
         return res.status(401).send({
             success: false,
             message: "Sign in to continue. ",

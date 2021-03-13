@@ -26,7 +26,7 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
   isParticipating: boolean;
   isTournamentOwner: boolean = false;
   isAvailable$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  isStarted$: BehaviorSubject<{ propagate: boolean, value: string }> = new BehaviorSubject({ propagate: false, value: '' })
+  isStarted$: BehaviorSubject<{ propagate: boolean, value: string }> = new BehaviorSubject({ propagate: false, value: '' });
   allMatches: Match[];
   showScoreDialog$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   currentMatchDisplayed: Match;
@@ -245,7 +245,7 @@ export class TournamentDetailComponent implements OnInit, AfterViewInit {
   }
 
   isStartable() {
-    return this.tournament?.participants?.length > 1 ? true : false
+    return this.tournament?.participants?.length > 1 ? true : false;
   }
 
 }
