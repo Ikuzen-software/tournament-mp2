@@ -32,9 +32,7 @@ fs.readFile('./keys/private.pem', (err, data) => {
 })
 
 
-app.use(cors())
 app.use(BodyParser.json());
-app.use(cors());
 app.use('/token', tokenRoute)
 app.use('/login', loginRoute)
 app.use('/user', userRoutePublic)
