@@ -129,7 +129,7 @@
   "defaultProject": "Tournament-masterpiece",
   "schematics": {
     "@schematics/angular:component": {
-      "styleext": "scss"
+      "style": "scss"
     }
   },
   "cli": {
