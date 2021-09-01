@@ -25,7 +25,7 @@
     "@angular/platform-browser-dynamic": "~11.2.14",
     "@angular/router": "~11.2.14",
     "@ngrx/schematics": "^9.0.0",
-    "@ngrx/store": "^9.2.1",
+    "@ngrx/store": "^12.4.0",
     "@ngrx/store-devtools": "^9.2.0",
     "buffer": "^5.6.0",
     "ngx-take-until-destroy": "^5.4.0",
