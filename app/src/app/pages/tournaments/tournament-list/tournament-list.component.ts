@@ -5,7 +5,6 @@ import { TournamentService } from '../tournament.service';
 import { take, tap } from 'rxjs/operators';
 import { SelectItem } from 'primeng/api';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FilterUtils } from 'primeng/utils';
 
 @Component({
   selector: 'app-tournament-list',

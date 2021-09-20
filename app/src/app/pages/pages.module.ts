@@ -37,7 +37,6 @@ import {PanelModule} from 'primeng/panel';
 import {DropdownModule} from 'primeng/dropdown';
 import { TournamentNotFoundComponent } from './tournaments/tournament-not-found/tournament-not-found.component';
 import {InputTextareaModule} from 'primeng/inputtextarea';
-import {FilterUtils} from 'primeng/utils';
 import { TournamentEditComponent } from './tournaments/tournament-edit/tournament-edit.component';
 import {ProgressBarModule} from 'primeng/progressbar';
 import { MatchesComponent } from './matches/matches.component';
